@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Waitlist from "../../components/Waitlist.astro";
+import { glossary, site, type Term } from "../../data/site";
+import { breadcrumbLd } from "../../data/schema";
+
+export function getStaticPaths() {
+  return glossary.map((t) => ({ params: { slug: t.slug }, props: { t } }));
+}
+
+const { t } = Astro.props as { t: Term };
+const crumbs = [{ name: "Glossary", href: "/glossary/" }, { name: t.term, href: `/glossary/${t.slug}/` }];
+const related = t.related.map((s) => glossary.find((g) => g.slug === s)).filter((g): g is Term => !!g);
+const termLd = {
+  "@type": "DefinedTerm",
+  name: t.term,
+  description: t.short,
+  url: new URL(`/glossary/${t.slug}/`, site.url).href,
+  inDefinedTermSet: `${site.url}/glossary/#set`,
+};
+---
+<Base title={`${t.term}: definition`} description={t.short} jsonLd={[termLd, breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow="Glossary" title={t.term} lede={t.short} crumbs={crumbs} />
+  <div class="wrap layout">
+    <article class="prose">
+      {t.body.map((p) => <p>{p}</p>)}
+      <p class="cta">Want to see this handled for you? <a href="/how-it-works/">See how {site.name} works</a>.</p>
+    </article>
+    {related.length > 0 && (
+      <aside aria-labelledby="related-title">
+        <h2 id="related-title" class="eyebrow">Related terms</h2>
+        <ul>{related.map((r) => <li><a href={`/glossary/${r.slug}/`}><strong>{r.term}</strong><span>{r.short}</span></a></li>)}</ul>
+      </aside>
+    )}
+  </div>
+  <Waitlist />
+</Base>
+
+<style>
+  .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); padding-bottom: clamp(64px, 8vw, 112px); align-items: start; }
+  .prose p { font-size: 19px; line-height: 1.7; }
+  .cta a { color: var(--accent-text); font-weight: 700; text-underline-offset: 3px; }
+  aside ul { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 16px; }
+  aside a { display: grid; gap: 4px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius-md); text-decoration: none; background: var(--surface); }
+  aside a:hover { border-color: var(--accent); }
+  aside strong { font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em; font-size: 18px; }
+  aside span { color: var(--muted); font-size: 15px; }
+  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+</style>

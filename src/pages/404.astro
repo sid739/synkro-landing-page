@@ -1,0 +1,22 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Page not found" description="This page doesn't exist." noindex>
+  <section class="section">
+    <div class="dots dots-tr"></div>
+    <div class="wrap nf">
+      <p class="eyebrow">404</p>
+      <h1>Out of <span class="hl">sync.</span></h1>
+      <p class="lede">We couldn't find that page. It may have moved, or the link may be wrong.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="/">Go to the homepage</a>
+        <a class="btn btn-secondary" href="/sync-licensing/">Read the sync licensing guide</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { display: grid; gap: 24px; justify-items: start; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>

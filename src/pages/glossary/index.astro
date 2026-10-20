@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Waitlist from "../../components/Waitlist.astro";
+import { glossary, site } from "../../data/site";
+import { breadcrumbLd } from "../../data/schema";
+
+const crumbs = [{ name: "Glossary", href: "/glossary/" }];
+const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
+const setLd = {
+  "@type": "DefinedTermSet",
+  "@id": `${site.url}/glossary/#set`,
+  name: "Music licensing glossary",
+  hasDefinedTerm: sorted.map((t) => ({ "@type": "DefinedTerm", name: t.term, description: t.short, url: new URL(`/glossary/${t.slug}/`, site.url).href })),
+};
+---
+<Base
+  title="Music licensing glossary"
+  description="Plain-English definitions of sync licensing terms: sync license, master use license, one-stop, MFN, publishing split, cue sheet, PRO and more."
+  jsonLd={[setLd, breadcrumbLd(crumbs)]}
+>
+  <PageHero eyebrow="Glossary" title='Music licensing, <span class="hl">in plain English.</span>' lede="The terms you'll meet when you license music for film, TV, ads and games, explained in a sentence or two." crumbs={crumbs} />
+  <section class="wrap list-wrap" aria-label="Terms">
+    <ul class="terms">
+      {sorted.map((t) => (
+        <li>
+          <a href={`/glossary/${t.slug}/`}>
+            <h2>{t.term}</h2>
+            <p>{t.short}</p>
+            <span class="go" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+  <Waitlist />
+</Base>
+
+<style>
+  .list-wrap { padding-bottom: clamp(64px, 8vw, 112px); }
+  .terms { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .terms a { position: relative; display: grid; gap: 10px; height: 100%; padding: 28px 64px 28px 28px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); text-decoration: none; transition: border-color .15s; }
+  .terms a:hover { border-color: var(--accent); }
+  .terms h2 { font-size: clamp(24px, 2.4vw, 30px); line-height: 1.05; }
+  .terms p { color: var(--muted); }
+  .go { position: absolute; right: 28px; top: 28px; font-size: 22px; color: var(--accent-text); }
+  @media (max-width: 760px) { .terms { grid-template-columns: 1fr; } }
+</style>

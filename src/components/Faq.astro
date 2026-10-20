@@ -1,0 +1,37 @@
+---
+import type { Faq } from "../data/site";
+interface Props { items: Faq[]; title?: string; eyebrow?: string }
+const { items, title = "Questions, answered.", eyebrow = "FAQ" } = Astro.props;
+---
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="wrap grid">
+    <div class="section-head">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 id="faq-title">{title}</h2>
+    </div>
+    <div class="items">
+      {items.map((f, i) => (
+        <details open={i === 0}>
+          <summary><h3>{f.q}</h3><span class="icon" aria-hidden="true"></span></summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 48px; align-items: start; }
+  .items { border-top: 1px solid var(--line); }
+  details { border-bottom: 1px solid var(--line); }
+  summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 0; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { font-size: clamp(19px, 1.8vw, 23px); }
+  .icon { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--line); position: relative; }
+  .icon::before, .icon::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.8px; background: currentColor; transform: translate(-50%, -50%); transition: transform .2s; }
+  .icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+  details[open] .icon { background: var(--accent); border-color: var(--accent); color: #fff; }
+  details[open] .icon::after { transform: translate(-50%, -50%) rotate(0); }
+  details p { color: var(--muted); padding-bottom: 24px; max-width: 62ch; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; gap: 0; } }
+</style>

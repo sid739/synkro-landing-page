@@ -1,0 +1,41 @@
+---
+import { partners } from "../data/site";
+---
+<section class="section ink" id="catalog" aria-labelledby="proof-title">
+  <div class="dots dots-tr"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Partnerships</p>
+      <h2 id="proof-title">Partnered with the industry, <span class="hl">before launch.</span></h2>
+      <p class="lede">Rights holders are already live on Synkro, and licensees are running pilot deals ahead of the January 2027 launch.</p>
+    </div>
+    <ul class="partners">
+      {partners.map((p) => (
+        <li>
+          <h3>{p.name}</h3>
+          <p>{p.detail}</p>
+          <span>{p.songs}</span>
+        </li>
+      ))}
+    </ul>
+    <dl class="traction">
+      <div><dt>Songs live</dt><dd class="num">150K+</dd></div>
+      <div><dt>Licensees piloting</dt><dd class="num">5</dd></div>
+      <div><dt>Deals closed on Synkro</dt><dd class="num">3</dd></div>
+      <div><dt>Full launch</dt><dd class="num">Jan 2027</dd></div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .partners { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .partners li { background: var(--band); border-radius: var(--radius-lg); padding: 30px; display: grid; gap: 8px; align-content: start; min-height: 200px; }
+  .partners h3 { font-size: clamp(30px, 3vw, 40px); }
+  .partners p { color: rgba(255,255,255,.82); }
+  .partners span { margin-top: auto; padding-top: 18px; font-weight: 800; }
+  .traction { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  .traction div { border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column-reverse; gap: 6px; }
+  .traction dt { color: var(--muted); font-weight: 600; font-size: 15px; }
+  .traction dd { font-size: clamp(32px, 3.6vw, 48px); line-height: 1; }
+  @media (max-width: 900px) { .partners { grid-template-columns: 1fr; } .partners li { min-height: 0; } .traction { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

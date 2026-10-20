@@ -1,0 +1,71 @@
+---
+import { pillars } from "../data/site";
+---
+<section class="section band" id="solution" aria-labelledby="solution-title">
+  <div class="dots dots-tr"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">The solution</p>
+      <h2 id="solution-title">From first search to final payment, the whole deal runs on Synkro.</h2>
+      <p class="lede">Semantic search and automated deal workflows, in one place for both sides of the deal.</p>
+    </div>
+
+    <ol class="pillars">
+      {pillars.map((p, i) => (
+        <li>
+          <div class="tab">
+            <span class="num">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{p.title}</h3>
+            <span class="tag">{p.tag}</span>
+          </div>
+          <p class="body">{p.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <figure class="compare" aria-labelledby="compare-cap">
+      <figcaption id="compare-cap" class="eyebrow">Time from first search to final payment, to scale</figcaption>
+      <div class="row">
+        <span class="who">Email and spreadsheets</span>
+        <div class="track"><div class="bar old" style="--w: 100%"><span>6–8 weeks</span></div></div>
+      </div>
+      <div class="row">
+        <span class="who">Synkro</span>
+        <div class="track"><div class="bar new" style="--w: 25%"><span>1–2 weeks</span></div></div>
+      </div>
+      <div class="scale" aria-hidden="true">{[0, 2, 4, 6, 8].map((w) => <span>{w}w</span>)}</div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .pillars { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .pillars li { display: grid; grid-template-rows: auto 1fr; gap: 14px; }
+  .tab { background: var(--paper); color: #0b0b10; padding: 22px 48px 22px 24px; clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 50%, calc(100% - 28px) 100%, 0 100%); display: grid; gap: 6px; }
+  .tab .num { color: #5443d8; font-size: 18px; }
+  .tab h3 { font-size: 22px; }
+  .tag { color: #5443d8; font-weight: 700; font-size: 15px; }
+  .body { background: #000; color: #fff; border-radius: var(--radius-lg); padding: 26px; font-size: 16px; line-height: 1.55; }
+
+  .compare { margin-top: clamp(48px, 6vw, 80px); display: grid; gap: 14px; background: rgba(0, 0, 0, .22); border-radius: var(--radius-lg); padding: clamp(22px, 3vw, 36px); }
+  .compare .eyebrow { color: var(--on-band); margin-bottom: 6px; }
+  .row { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: center; gap: 16px; }
+  .who { font-weight: 700; }
+  .track { height: 52px; border-radius: 999px; background: rgba(0, 0, 0, .25); overflow: hidden; }
+  .bar { height: 100%; width: var(--w); border-radius: 999px; display: flex; align-items: center; padding-inline: 20px; font-family: var(--font-display); font-weight: 850; letter-spacing: -.03em; white-space: nowrap; }
+  .old { background: repeating-linear-gradient(-45deg, rgba(255,255,255,.18) 0 10px, rgba(255,255,255,.08) 10px 20px); }
+  .new { background: var(--paper); color: #5443d8; min-width: 132px; }
+  .scale { display: flex; justify-content: space-between; margin-left: 216px; font-size: 12px; color: var(--on-band-muted); font-variant-numeric: tabular-nums; }
+
+  @supports (animation-timeline: view()) {
+    .bar { animation: grow linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+    @keyframes grow { from { width: 0; } to { width: var(--w); } }
+  }
+
+  @media (max-width: 960px) { .pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) {
+    .pillars { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; gap: 8px; }
+    .scale { margin-left: 0; }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Team from "../components/Team.astro";
+import Proof from "../components/Proof.astro";
+import Waitlist from "../components/Waitlist.astro";
+import { site, team } from "../data/site";
+import { breadcrumbLd } from "../data/schema";
+
+const crumbs = [{ name: "About", href: "/about/" }];
+const aboutLd = {
+  "@type": "AboutPage",
+  name: `About ${site.name}`,
+  url: new URL("/about/", site.url).href,
+  about: { "@id": `${site.url}/#organization` },
+  mentions: team.map((p) => ({ "@type": "Person", name: p.name, jobTitle: p.role, worksFor: { "@id": `${site.url}/#organization` } })),
+};
+---
+<Base
+  title="About Synkro"
+  description="Synkro is building the transaction layer for music licensing, starting with sync. Meet the team of label, music-tech, music supervision, AI and finance operators behind it."
+  jsonLd={[aboutLd, breadcrumbLd(crumbs)]}
+>
+  <PageHero
+    eyebrow="About"
+    title='Sync is the wedge. <span class="hl">The music operating system is the company.</span>'
+    lede="We're starting with the slowest, most manual part of the music business, sync licensing, and building the rights data the rest of the industry can run on."
+    crumbs={crumbs}
+  />
+
+  <section class="section ink" aria-labelledby="vision-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Where we're going</p>
+        <h2 id="vision-title">From one sync deal to <span class="hl">one rights graph.</span></h2>
+      </div>
+      <div class="phases">
+        <article>
+          <span class="num">01</span>
+          <p class="eyebrow">Now · Foundation</p>
+          <h3>The fastest way to clear a sync deal</h3>
+          <ul><li>Catalogs from Believe, Bella Figura and Felt Music live on {site.name}</li><li>Licensees closing real deals in pilot</li><li>Full launch in {site.launch}</li></ul>
+        </article>
+        <article>
+          <span class="num">02</span>
+          <p class="eyebrow">Long term · Industry infrastructure</p>
+          <h3>The operating system for music</h3>
+          <ul><li>One rights graph: who owns what, worldwide</li><li>Catalog valuation priced on real deal data</li><li>A&amp;R tools, analytics and the rest of the music stack</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <Team />
+  <Proof />
+  <Waitlist />
+</Base>
+
+<style>
+  .phases { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .phases article { background: var(--paper); color: #0b0b10; border-radius: var(--radius-lg); padding: clamp(26px, 3.4vw, 44px); display: grid; gap: 14px; align-content: start; }
+  .phases .num { font-size: 40px; color: #5443d8; line-height: 1; }
+  .phases .eyebrow { color: #5443d8; }
+  .phases h3 { font-size: clamp(26px, 2.6vw, 34px); }
+  .phases ul { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 8px; }
+  .phases li { padding-left: 28px; position: relative; font-weight: 700; }
+  .phases li::before { content: ""; position: absolute; left: 0; top: .55em; width: 16px; height: 7px; border: 2px solid #5443d8; border-radius: 50%; transform: rotate(-12deg); }
+  @media (max-width: 860px) { .phases { grid-template-columns: 1fr; } }
+</style>

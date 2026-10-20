@@ -1,0 +1,140 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Faq from "../components/Faq.astro";
+import Waitlist from "../components/Waitlist.astro";
+import { site, type Faq as FaqItem } from "../data/site";
+import { breadcrumbLd, faqLd } from "../data/schema";
+
+const crumbs = [{ name: "Sync licensing guide", href: "/sync-licensing/" }];
+const published = "2026-10-20";
+const title = "What is sync licensing? A practical guide";
+const description = "Sync licensing explained: what a sync license is, the two permissions every song needs, what a license covers, what affects the fee, how long clearance takes, and the steps to license a song.";
+
+const toc = [
+  ["what", "What is a sync license?"],
+  ["two-licenses", "The two permissions every song needs"],
+  ["covers", "What a sync license covers"],
+  ["cost", "How much does sync licensing cost?"],
+  ["time", "How long does it take?"],
+  ["steps", "How to license a song for sync"],
+];
+
+const faq: FaqItem[] = [
+  { q: "Do I need a sync license for YouTube or social videos?", a: "Yes, if you use someone else's music in a video you publish, you need permission from the owners of the composition and the recording. Platform content-ID tools may claim or block videos that use music without a license." },
+  { q: "What is the difference between a sync license and a master license?", a: "A sync license covers the composition (the song itself) and comes from the publishers. A master use license covers a specific recording and comes from the master owner, usually a label. Using an existing recording needs both." },
+  { q: "What does one-stop mean in sync licensing?", a: "A one-stop track is one where a single party can license both the master and the publishing, so the licensee signs one agreement instead of several." },
+  { q: "Who pays performance royalties when music is used in a film or ad?", a: "Broadcasters and venues pay performance royalties to performing rights organisations, which pass them to writers and publishers based on cue sheets. They are separate from the one-off sync fee." },
+];
+
+const articleLd = {
+  "@type": "Article",
+  headline: title,
+  description,
+  datePublished: published,
+  dateModified: published,
+  author: { "@id": `${site.url}/#organization` },
+  publisher: { "@id": `${site.url}/#organization` },
+  mainEntityOfPage: new URL("/sync-licensing/", site.url).href,
+};
+---
+<Base title={title} description={description} type="article" jsonLd={[articleLd, breadcrumbLd(crumbs), faqLd(faq)]}>
+  <PageHero eyebrow="Guide" title='What is <span class="hl">sync licensing?</span>' crumbs={crumbs}>
+    <div class="answer">
+      <p class="eyebrow">The short answer</p>
+      <p>Sync licensing is how music gets permission to appear in film, TV, ads, games and online video. Using an existing recording takes two permissions: a <a href="/glossary/sync-license/">sync license</a> for the composition, from its publishers, and a <a href="/glossary/master-use-license/">master use license</a> for the recording, from its owner. Each license sets the media, term, territory and fee.</p>
+    </div>
+    <p class="meta">By the {site.name} team · Updated <time datetime={published}>20 October 2026</time></p>
+  </PageHero>
+
+  <div class="wrap article">
+    <nav class="toc" aria-label="On this page">
+      <p class="eyebrow">On this page</p>
+      <ol>{toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol>
+    </nav>
+
+    <article class="body">
+      <section id="what">
+        <h2>What is a sync license?</h2>
+        <p>A sync (synchronization) license is permission to use a piece of music in timed relation with moving images. It covers a film scene, a TV episode, an advert, a trailer, a game, a podcast with video, or a brand's social clip.</p>
+        <p>Without one, using music in visual media infringes the copyright of the people who wrote and recorded it, even if the clip is short or not for profit.</p>
+      </section>
+
+      <section id="two-licenses">
+        <h2>The two permissions every song needs</h2>
+        <p>Every recorded song has two separate copyrights, often owned by different companies.</p>
+        <div class="split">
+          <div><h3>The composition</h3><p>The melody and lyrics, owned by the songwriters and their <strong>publishers</strong>. Licensed with a <a href="/glossary/sync-license/">sync license</a>. A song with three writers may have three publishers, each owning a share. That's the <a href="/glossary/publishing-split/">publishing split</a>.</p></div>
+          <div><h3>The recording</h3><p>The specific recorded performance, owned by the <strong>master owner</strong>, usually a record label or the artist. Licensed with a <a href="/glossary/master-use-license/">master use license</a>.</p></div>
+        </div>
+        <p>If you re-record a song yourself, you only need the sync license. If a single party controls both sides, the track is <a href="/glossary/one-stop/">one-stop</a> and you sign one agreement.</p>
+      </section>
+
+      <section id="covers">
+        <h2>What a sync license covers</h2>
+        <dl class="terms">
+          <div><dt>Media</dt><dd>Where the music appears: broadcast TV, online, social, cinema, in-game, trailers.</dd></div>
+          <div><dt>Term</dt><dd>How long the use is allowed, from a few months to perpetuity.</dd></div>
+          <div><dt>Territory</dt><dd>Where it can be shown: one country, a region, or worldwide.</dd></div>
+          <div><dt>Exclusivity</dt><dd>Whether other brands or productions can use the same track at the same time.</dd></div>
+          <div><dt>Fee</dt><dd>A one-off payment, usually split between master and publishing owners, often on <a href="/glossary/mfn/">MFN</a> terms.</dd></div>
+        </dl>
+      </section>
+
+      <section id="cost">
+        <h2>How much does sync licensing cost?</h2>
+        <p>Sync fees vary more than almost any other music price. A production-library track in a small online use can cost a few hundred dollars. A well-known song in a national advertising campaign can cost six figures or more.</p>
+        <p>The main factors are how well known the track is, how prominently it's used (background or featured), the media, the term, the territory, exclusivity, and how many owners need to agree.</p>
+      </section>
+
+      <section id="time">
+        <h2>How long does sync licensing take?</h2>
+        <p>Clearing a track over email typically takes six to eight weeks. Most of that time goes on finding every owner, waiting for replies and reconciling terms across threads before a lawyer sees a contract.</p>
+        <p>On {site.name}, pilot deals have gone from first search to final payment in one to two weeks, because ownership is visible up front and every owner negotiates on the same deal.</p>
+      </section>
+
+      <section id="steps">
+        <h2>How to license a song for sync</h2>
+        <ol class="howto">
+          <li><strong>Find the track.</strong> Search by brief, mood or reference track, and shortlist options.</li>
+          <li><strong>Identify every owner.</strong> Find the master owner and every publisher, with their splits.</li>
+          <li><strong>Send a request.</strong> State the media, term, territory, exclusivity and your fee or budget.</li>
+          <li><strong>Negotiate.</strong> Each owner approves, declines or counters. Fees are often aligned across owners.</li>
+          <li><strong>Sign the licenses.</strong> Have your lawyers review and sign with each owner, or once for one-stop tracks.</li>
+          <li><strong>Pay and deliver.</strong> Pay each owner their share, receive the files, and file the <a href="/glossary/cue-sheet/">cue sheet</a> after release.</li>
+        </ol>
+        <p><a class="btn btn-primary" href="/how-it-works/">See how Synkro runs these steps</a></p>
+      </section>
+    </article>
+  </div>
+
+  <Faq items={faq} title="Sync licensing questions" />
+  <Waitlist />
+</Base>
+
+<style>
+  .answer { max-width: 760px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius-md); padding: 24px 28px; display: grid; gap: 10px; box-shadow: var(--shadow); }
+  .answer p:last-child { font-size: 18px; }
+  .answer a, .body a:not(.btn) { color: var(--accent-text); text-underline-offset: 3px; }
+  .meta { font-size: 14px; color: var(--faint); }
+  .article { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); padding-bottom: clamp(64px, 8vw, 112px); }
+  .toc { position: sticky; top: 100px; align-self: start; display: grid; gap: 14px; }
+  .toc ol { list-style: none; padding: 0; display: grid; gap: 10px; border-left: 1px solid var(--line); }
+  .toc a { display: block; padding-left: 16px; text-decoration: none; color: var(--muted); font-size: 15px; }
+  .toc a:hover { color: var(--fg); }
+  .body { display: grid; gap: clamp(48px, 6vw, 72px); max-width: 760px; }
+  .body section { display: grid; gap: 16px; scroll-margin-top: 100px; }
+  .body h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1; }
+  .body p, .body dd, .howto li { color: var(--muted); }
+  .body strong { color: var(--fg); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .split > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 22px; display: grid; gap: 10px; align-content: start; }
+  .terms { display: grid; border-top: 1px solid var(--line); }
+  .terms div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .terms dt { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; }
+  .howto { padding: 0; list-style: none; counter-reset: s; display: grid; gap: 12px; }
+  .howto li { counter-increment: s; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .howto li::before { content: counter(s, decimal-leading-zero); font-family: var(--font-display); font-weight: 850; font-stretch: 125%; color: var(--accent-text); font-size: 18px; line-height: 1.6; }
+  @media (max-width: 900px) { .article { grid-template-columns: 1fr; } .toc { position: static; } }
+  @media (max-width: 560px) { .split { grid-template-columns: 1fr; } .terms div { grid-template-columns: 1fr; gap: 4px; } }
+</style>

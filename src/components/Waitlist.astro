@@ -1,0 +1,88 @@
+---
+import { site } from "../data/site";
+// The waitlist posts to PUBLIC_WAITLIST_ENDPOINT (JSON: { email, role }).
+// Until that is configured the form validates but does not send, and says so.
+const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT ?? "";
+---
+<section class="section ink" id="waitlist" aria-labelledby="waitlist-title">
+  <div class="dots dots-bl"></div>
+  <div class="wrap grid">
+    <div class="copy">
+      <p class="eyebrow">Early access</p>
+      <h2 id="waitlist-title">Backed by catalog. <span class="hl">Built for scale.</span></h2>
+      <p class="lede">{site.name} launches fully in {site.launch}. Join the waitlist and we'll be in touch about early access.</p>
+    </div>
+    <form class="form" data-waitlist data-endpoint={endpoint} novalidate>
+      <div class="field">
+        <label for="wl-email">Work email</label>
+        <input id="wl-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+      </div>
+      <div class="field">
+        <label for="wl-role">I'm a</label>
+        <select id="wl-role" name="role">
+          <option>Music supervisor</option>
+          <option>Sync or ad agency</option>
+          <option>Production company or studio</option>
+          <option>Game studio</option>
+          <option>Label or publisher</option>
+          <option>Distributor or catalog owner</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Join the waitlist</button>
+      <p class="note" role="status" data-note>We'll only use your email to contact you about {site.name}.</p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .copy { display: grid; gap: 22px; }
+  .copy h2 { font-size: clamp(44px, 6vw, 88px); }
+  .form { display: grid; gap: 16px; background: #0d0d11; border: 1px solid #26262e; border-radius: var(--radius-lg); padding: clamp(22px, 3vw, 34px); }
+  .field { display: grid; gap: 8px; }
+  label { font-family: var(--font-display); font-weight: 650; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #a8a8b4; }
+  input, select { min-height: 56px; border-radius: 16px; border: 1px solid #26262e; background: #000; color: #fff; padding: 0 18px; font: 16px var(--font-body); width: 100%; }
+  input::placeholder { color: #6e6e7c; }
+  input:focus, select:focus { outline: none; border-color: #8b7dff; box-shadow: 0 0 0 3px rgba(139, 125, 255, .25); }
+  input[aria-invalid="true"] { border-color: #e5484d; }
+  .btn { min-height: 56px; }
+  .note { font-size: 14px; color: #a8a8b4; }
+  .note.ok { color: #8b7dff; }
+  .note.err { color: #ff8a8d; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-waitlist]");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = form.querySelector<HTMLInputElement>("#wl-email")!;
+    const role = form.querySelector<HTMLSelectElement>("#wl-role")!;
+    const note = form.querySelector<HTMLElement>("[data-note]")!;
+    const button = form.querySelector<HTMLButtonElement>("button")!;
+    const say = (text: string, kind: "ok" | "err") => { note.textContent = text; note.className = `note ${kind}`; };
+
+    if (!email.value || !email.checkValidity()) {
+      email.setAttribute("aria-invalid", "true");
+      email.focus();
+      return say("Enter a work email address, for example you@company.com.", "err");
+    }
+    email.removeAttribute("aria-invalid");
+
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) return say("The waitlist isn't connected yet. Set PUBLIC_WAITLIST_ENDPOINT to start collecting sign-ups.", "err");
+
+    button.disabled = true;
+    try {
+      const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: email.value, role: role.value }) });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      say("You're on the list. We'll be in touch before launch.", "ok");
+    } catch {
+      say("We couldn't add you just now. Check your connection and try again.", "err");
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>

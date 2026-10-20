@@ -1,0 +1,187 @@
+---
+import { stats } from "../data/site";
+
+// Illustrative product demo. Track names are fictional and labelled as such.
+const briefs = [
+  {
+    query: "Tense cinematic build for a night-time car chase, rising strings",
+    results: [
+      { title: "Undertow", by: "Halden Reach", match: 97, rights: "One-stop" },
+      { title: "Glass Meridian", by: "Okoro & Vale", match: 94, rights: "2 owners" },
+      { title: "Low Orbit", by: "Saskia Brann", match: 91, rights: "One-stop" },
+    ],
+  },
+  {
+    query: "Warm, hopeful acoustic for a family brand ad, 30 seconds",
+    results: [
+      { title: "Kitchen Light", by: "The Marlows", match: 96, rights: "One-stop" },
+      { title: "Paper Boats", by: "Ines Calder", match: 93, rights: "3 owners" },
+      { title: "Sunday Drive", by: "Field Notes", match: 90, rights: "One-stop" },
+    ],
+  },
+  {
+    query: "Dark synthwave like our reference track, 110 BPM",
+    results: [
+      { title: "Neon Static", by: "Vektor Bloom", match: 98, rights: "One-stop" },
+      { title: "Afterhours", by: "Ruby Kestrel", match: 95, rights: "2 owners" },
+      { title: "Chrome Tide", by: "Night Index", match: 92, rights: "One-stop" },
+    ],
+  },
+];
+const first = briefs[0]!;
+---
+<section class="hero section" aria-labelledby="hero-title">
+  <div class="dots dots-tr"></div>
+  <div class="wrap grid">
+    <div class="copy">
+      <p class="eyebrow">The transaction layer for music licensing</p>
+      <h1 id="hero-title">Sync <span class="hl">anything.</span></h1>
+      <p class="lede">Search catalogs by sound, verify rights, negotiate terms and sign licenses in one workflow. From first search to final payment in one to two weeks.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
+        <a class="btn btn-secondary" href="/how-it-works/">See how it works</a>
+      </div>
+      <ul class="built" aria-label="Built for">
+        <li class="eyebrow">Built for</li>
+        <li><a class="pill" href="/for/music-supervisors/">Music supervisors</a></li>
+        <li><a class="pill" href="/for/labels-and-publishers/">Labels &amp; publishers</a></li>
+        <li><a class="pill" href="/for/ad-agencies/">Creative teams</a></li>
+      </ul>
+    </div>
+
+    <figure class="demo" aria-label="Example: searching for music by describing a scene" data-demo={JSON.stringify(briefs)}>
+      <div class="demo-top">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="demo-label">Illustrative example</span>
+      </div>
+      <div class="query">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <span data-query>{first.query}</span><span class="caret" aria-hidden="true"></span>
+      </div>
+      <ol class="results" data-results>
+        {first.results.map((r, i) => (
+          <li class:list={["result", { top: i === 0 }]}>
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span class="meta"><strong>{r.title}</strong><small>{r.by}</small></span>
+            <span class="rights">{r.rights}</span>
+            <span class="match"><b>{r.match}%</b> match</span>
+          </li>
+        ))}
+      </ol>
+      <div class="deal">
+        <div><span class="eyebrow">Next step</span><p>Request a license from every owner at once</p></div>
+        <span class="btn btn-primary small" aria-hidden="true">Request license</span>
+      </div>
+    </figure>
+  </div>
+
+  <div class="wrap">
+    <dl class="stats">
+      {stats.map((s) => (
+        <div>
+          <dt class="sr-only">{s.label}</dt>
+          <dd class="num">{s.value}</dd>
+          <dd class="label">{s.label}</dd>
+          <dd class="src">{s.source}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(56px, 8vw, 104px) clamp(56px, 7vw, 88px); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .copy { display: grid; gap: 26px; justify-items: start; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+  .built { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; list-style: none; padding: 0; margin-top: 10px; }
+  .built .eyebrow { margin-right: 4px; }
+  .built .pill { text-decoration: none; text-transform: none; letter-spacing: 0; font-family: var(--font-body); font-size: 14px; font-weight: 600; }
+  .built .pill:hover { border-color: var(--fg); }
+
+  .demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow); display: grid; gap: 14px; min-width: 0; }
+  .demo-top { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--surface-2); }
+  .demo-label { margin-left: auto; font-size: 12px; color: var(--faint); }
+  .query { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-radius: var(--radius-md); background: var(--surface-2); font-weight: 600; min-height: 76px; }
+  .query svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; }
+  .caret { width: 2px; height: 20px; background: var(--accent); animation: blink 1s steps(1) infinite; flex: none; margin-left: -8px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .results { list-style: none; padding: 0; display: grid; gap: 8px; }
+  .result { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-md); transition: opacity .35s, transform .35s; }
+  .result.top { border-color: var(--accent); background: var(--accent-soft); }
+  .result.out { opacity: 0; transform: translateY(6px); }
+  .play { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--fg); }
+  .play svg { width: 14px; height: 14px; fill: var(--bg); }
+  .result.top .play { background: var(--accent); }
+  .result.top .play svg { fill: #fff; }
+  .meta { display: grid; min-width: 0; line-height: 1.3; }
+  .meta strong { font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .meta small { color: var(--muted); font-size: 13px; }
+  .rights { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+  .match { font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .match b { font-family: var(--font-display); font-weight: 850; color: var(--fg); font-size: 16px; letter-spacing: -.02em; }
+  .deal { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border-radius: var(--radius-md); background: var(--ink-card); color: #fff; }
+  .deal .eyebrow { color: #8b7dff; font-size: 11px; }
+  .deal p { font-weight: 600; font-size: 15px; margin-top: 2px; }
+  .small { min-height: 40px; padding: 0 16px; font-size: 14px; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(56px, 7vw, 96px); border-top: 1px solid var(--line); }
+  .stats > div { padding: 28px 24px 0 0; display: grid; gap: 4px; align-content: start; }
+  .stats > div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+  .stats .num { font-size: clamp(36px, 4vw, 56px); line-height: 1; font-stretch: 110%; white-space: nowrap; }
+  .stats .label { font-weight: 600; margin-top: 8px; }
+  .stats .src { font-size: 13px; color: var(--faint); }
+
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr; }
+    .stats > div, .stats > div + div { padding: 22px 0; border-left: 0; border-bottom: 1px solid var(--line); }
+    .result { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .rights { display: none; }
+    .deal { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<script>
+  type Brief = { query: string; results: { title: string; by: string; match: number; rights: string }[] };
+  const demo = document.querySelector<HTMLElement>("[data-demo]");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (demo && !reduce) {
+    const briefs: Brief[] = JSON.parse(demo.dataset.demo ?? "[]");
+    const q = demo.querySelector<HTMLElement>("[data-query]")!;
+    const list = demo.querySelector<HTMLElement>("[data-results]")!;
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    let i = 0;
+    let visible = true;
+    new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting; }).observe(demo);
+
+    const render = (b: Brief) => {
+      list.innerHTML = b.results.map((r, n) => `
+        <li class="result out${n === 0 ? " top" : ""}">
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          <span class="meta"><strong>${r.title}</strong><small>${r.by}</small></span>
+          <span class="rights">${r.rights}</span>
+          <span class="match"><b>${r.match}%</b> match</span>
+        </li>`).join("");
+      // Injected markup needs the component's scoped-style attribute to pick up its styles.
+      const scope = [...list.attributes].find((a) => a.name.startsWith("data-astro-cid"))?.name;
+      if (scope) list.querySelectorAll("*").forEach((el) => el.setAttribute(scope, ""));
+      list.querySelectorAll(".result").forEach((el, n) => setTimeout(() => el.classList.remove("out"), 120 * n + 60));
+    };
+
+    (async function loop() {
+      while (true) {
+        await wait(4200);
+        if (!visible || document.hidden) continue;
+        i = (i + 1) % briefs.length;
+        const b = briefs[i]!;
+        list.querySelectorAll(".result").forEach((el) => el.classList.add("out"));
+        q.textContent = "";
+        for (const ch of b.query) { q.textContent += ch; await wait(22); }
+        await wait(250);
+        render(b);
+      }
+    })();
+  }
+</script>

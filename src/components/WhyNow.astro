@@ -1,0 +1,38 @@
+---
+import { whyNow } from "../data/site";
+---
+<section class="section" aria-labelledby="why-title">
+  <div class="dots dots-bl"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Why now</p>
+      <h2 id="why-title">AI can finally understand music. <span class="hl">Content now outpaces licensing.</span></h2>
+    </div>
+    <div class="cards">
+      {whyNow.map((w) => (
+        <article>
+          <h3>{w.title}</h3>
+          <div class="card">
+            <div class="then"><span class="badge">Then</span><p>{w.then}</p></div>
+            <div class="now"><span class="badge">Now</span><p>{w.now}</p></div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  article { display: grid; gap: 18px; align-content: start; }
+  .card { border-radius: var(--radius-lg); overflow: hidden; border: 1.5px solid var(--then); display: grid; grid-template-rows: 1fr auto; }
+  .then, .now { padding: 24px; display: grid; gap: 14px; align-content: start; }
+  .then { background: color-mix(in srgb, var(--then) 6%, var(--surface)); }
+  .then p { color: var(--muted); }
+  .now { background: var(--band); color: #fff; min-height: 160px; }
+  .now p { font-family: var(--font-display); font-weight: 800; letter-spacing: -.035em; font-size: 21px; line-height: 1.2; }
+  .badge { justify-self: start; padding: 4px 14px; border-radius: 999px; font-weight: 700; font-size: 14px; }
+  .then .badge { background: var(--then); color: #fff; }
+  .now .badge { background: #fff; color: #5443d8; }
+  @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+</style>

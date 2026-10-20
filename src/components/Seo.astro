@@ -1,0 +1,58 @@
+---
+import { site } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  type?: "website" | "article";
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, path, type = "website", jsonLd = [], noindex = false } = Astro.props;
+const canonical = new URL(path, site.url).href;
+const fullTitle = path === "/" ? `${site.name}: ${title}` : title.includes(site.name) ? title : `${title} | ${site.name}`;
+const ogImage = new URL("/og.png", site.url).href;
+
+const sameAs = Object.values(site.social).filter(Boolean);
+const graph = [
+  {
+    "@type": "Organization",
+    "@id": `${site.url}/#organization`,
+    name: site.name,
+    legalName: site.legalName,
+    url: site.url,
+    logo: new URL("/favicon.svg", site.url).href,
+    description: site.description,
+    ...(sameAs.length ? { sameAs } : {}),
+  },
+  {
+    "@type": "WebSite",
+    "@id": `${site.url}/#website`,
+    name: site.name,
+    url: site.url,
+    publisher: { "@id": `${site.url}/#organization` },
+    inLanguage: "en",
+  },
+  ...jsonLd,
+];
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content={site.locale} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": graph })} />

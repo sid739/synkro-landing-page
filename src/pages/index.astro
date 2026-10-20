@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Problems from "../components/Problems.astro";
+import Solution from "../components/Solution.astro";
+import WhyNow from "../components/WhyNow.astro";
+import Proof from "../components/Proof.astro";
+import BothSides from "../components/BothSides.astro";
+import Team from "../components/Team.astro";
+import Faq from "../components/Faq.astro";
+import Waitlist from "../components/Waitlist.astro";
+import { homeFaq } from "../data/site";
+import { faqLd, softwareLd } from "../data/schema";
+---
+<Base
+  title="Music licensing from first search to final payment"
+  description="Synkro is the transaction layer for music licensing. Search catalogs by sound, clear every rights holder, negotiate, sign and get paid in one workflow, in one to two weeks instead of six to eight."
+  jsonLd={[softwareLd(), faqLd(homeFaq)]}
+>
+  <Hero />
+  <Problems />
+  <Solution />
+  <WhyNow />
+  <Proof />
+  <BothSides />
+  <Team />
+  <Faq items={homeFaq} />
+  <Waitlist />
+</Base>

@@ -1,0 +1,90 @@
+---
+import { nav, site } from "../data/site";
+const current = Astro.url.pathname;
+---
+<header class="header">
+  <div class="wrap bar">
+    <a class="brand" href="/" aria-label={`${site.name} home`}>{site.name}</a>
+
+    <nav aria-label="Main">
+      <ul class="links">
+        {nav.map((item) => (
+          <li><a href={item.href} aria-current={current.startsWith(item.href) ? "page" : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <button class="theme" type="button" aria-label="Switch colour theme" data-theme-toggle>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      </button>
+      <a class="btn btn-primary cta" href="/#waitlist">Join the waitlist</a>
+      <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu>
+        <span class="sr-only">Menu</span><i></i><i></i>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile" aria-label="Mobile" hidden>
+    <ul class="wrap">
+      {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      <li><a class="btn btn-primary" href="/#waitlist">Join the waitlist</a></li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: saturate(1.4) blur(16px); -webkit-backdrop-filter: saturate(1.4) blur(16px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; }
+  .brand { font-family: var(--font-display); font-weight: 900; font-size: 26px; letter-spacing: -.06em; text-decoration: none; }
+  .links { display: flex; gap: 30px; list-style: none; padding: 0; }
+  .links a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; }
+  .links a:hover, .links a[aria-current="page"] { color: var(--fg); }
+  .actions { display: flex; align-items: center; gap: 10px; }
+  .cta { min-height: 44px; padding: 0 20px; font-size: 15px; }
+  .theme, .menu { width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--fg); display: grid; place-items: center; cursor: pointer; }
+  .theme:hover, .menu:hover { border-color: var(--fg); }
+  .theme svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; grid-area: 1 / 1; }
+  .i-moon { display: none; }
+  :global(:root[data-theme="dark"]) .i-sun { display: none; }
+  :global(:root[data-theme="dark"]) .i-moon { display: block; }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .i-sun { display: none; }
+    :global(:root:not([data-theme="light"])) .i-moon { display: block; }
+  }
+  .menu { display: none; gap: 5px; align-content: center; }
+  .menu i { display: block; width: 16px; height: 1.8px; background: currentColor; border-radius: 2px; transition: transform .2s; }
+  .menu[aria-expanded="true"] i:first-of-type { transform: translateY(3.4px) rotate(45deg); }
+  .menu[aria-expanded="true"] i:last-of-type { transform: translateY(-3.4px) rotate(-45deg); }
+  .mobile { border-top: 1px solid var(--line); background: var(--bg); }
+  .mobile ul { list-style: none; display: grid; gap: 4px; padding-block: 16px 24px; }
+  .mobile a:not(.btn) { display: block; padding: 12px 0; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 26px; letter-spacing: -.04em; }
+  .mobile .btn { margin-top: 12px; width: 100%; }
+  @media (max-width: 960px) {
+    nav[aria-label="Main"] { display: none; }
+    .menu { display: grid; }
+  }
+  @media (max-width: 520px) { .cta { display: none; } }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const media = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : media.matches;
+  document.querySelector<HTMLButtonElement>("[data-theme-toggle]")?.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    root.dataset.theme = next;
+    try { localStorage.setItem("theme", next); } catch {}
+  });
+
+  const menu = document.querySelector<HTMLButtonElement>("[data-menu]");
+  const panel = document.getElementById("mobile-nav");
+  menu?.addEventListener("click", () => {
+    const open = menu.getAttribute("aria-expanded") !== "true";
+    menu.setAttribute("aria-expanded", String(open));
+    if (panel) panel.hidden = !open;
+  });
+  panel?.addEventListener("click", (e) => {
+    if ((e.target as HTMLElement).closest("a")) { menu?.setAttribute("aria-expanded", "false"); panel.hidden = true; }
+  });
+</script>
