@@ -1,0 +1,87 @@
+---
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import Faq from "../../components/Faq.astro";
+import Cta from "../../components/Cta.astro";
+import { roles, type Role } from "../../data/roles";
+import { earlyAccessHref } from "../../data/site";
+import { breadcrumbLd, faqLd } from "../../data/schema";
+
+export function getStaticPaths() {
+  return roles.map((r) => ({ params: { slug: r.slug }, props: { r } }));
+}
+
+const { r } = Astro.props as { r: Role };
+const crumbs = [{ name: r.name, href: `/for/${r.slug}/` }];
+const others = roles.filter((o) => o.slug !== r.slug);
+---
+<Base title={r.metaTitle} description={r.metaDescription} jsonLd={[breadcrumbLd(crumbs), faqLd(r.faq)]}>
+  <PageHero eyebrow={`For ${r.name.toLowerCase()}`} title={r.headline} lede={r.intro} crumbs={crumbs}>
+    <div class="ctas">
+      <a class="btn btn-primary" href={earlyAccessHref}>Request Early Access</a>
+      <a class="btn btn-secondary" href="/#how">See how it works</a>
+    </div>
+  </PageHero>
+
+  <section class="section ink" aria-labelledby="pain-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">The problem</p>
+        <h2 id="pain-title">What slows {r.name.toLowerCase()} down today.</h2>
+      </div>
+      <ol class="cards">
+        {r.pains.map((p, i) => (
+          <li data-reveal style={`--rd: ${i * 90}ms`}><span class="num">{String(i + 1).padStart(2, "0")}</span><h3>{p.title}</h3><p>{p.body}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section band" aria-labelledby="gain-title">
+    <div class="dots dots-tr"></div>
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How Synkro helps</p>
+        <h2 id="gain-title">One workflow, from first search to final payment.</h2>
+      </div>
+      <ul class="gains">
+        {r.gains.map((g, i) => (<li data-reveal style={`--rd: ${i * 90}ms`}><span class="tick">✓</span><h3>{g.title}</h3><p>{g.body}</p></li>))}
+      </ul>
+      <div class="features" data-reveal>
+        <p class="eyebrow">Features you'll use most</p>
+        <ul>{r.features.map((f) => <li>{f}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={r.faq} title={`${r.name}: common questions`} />
+
+  <section class="more" aria-labelledby="more-title">
+    <div class="wrap">
+      <h2 id="more-title" class="eyebrow">Also built for</h2>
+      <ul>{others.map((o) => <li><a href={`/for/${o.slug}/`}>{o.name} <span aria-hidden="true">→</span></a></li>)}</ul>
+    </div>
+  </section>
+
+  <Cta />
+</Base>
+
+<style>
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .cards li { background: #0d0d11; border: 1px solid #26262e; border-left: 3px solid #e5484d; border-radius: var(--radius-lg); padding: 28px; display: grid; gap: 12px; align-content: start; }
+  .cards .num { font-size: 36px; color: #3a3a44; line-height: 1; }
+  .cards p { color: #a8a8b4; }
+  .gains { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .gains li { background: #000; color: #fff; border-radius: var(--radius-lg); padding: 30px; display: grid; gap: 12px; align-content: start; }
+  .gains .tick { background: #8b7dff; width: 30px; height: 30px; font-size: 14px; }
+  .gains p { color: #b9b9c4; }
+  .features { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .features ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .features li { padding: 8px 14px; border-radius: 999px; background: rgba(0,0,0,.28); font-weight: 700; font-size: 14px; }
+  .more { padding-block: 0 clamp(64px, 8vw, 104px); }
+  .more ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .more a { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px; border: 1.5px solid var(--line); border-radius: 999px; text-decoration: none; font-weight: 700; }
+  .more a:hover { border-color: var(--fg); }
+  @media (max-width: 900px) { .cards, .gains { grid-template-columns: 1fr; } }
+</style>

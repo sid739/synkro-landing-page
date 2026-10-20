@@ -16,15 +16,16 @@ npm run preview   # serve the built site
 | Path | What it holds |
 |------|---------------|
 | `src/data/site.ts` | All copy: hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
+| `src/data/roles.ts` | Who it's for: the eight user types (homepage switcher and `/for/*` pages) and the AI principles. |
 | `src/data/schema.ts` | Helpers that build schema.org structured data (FAQPage, BreadcrumbList, SoftwareApplication). |
 | `src/styles/global.css` | Design tokens (light and dark), type scale, buttons, dot-grid motif, motion. |
 | `src/components/` | Homepage sections, header, footer, SEO head, FAQ, call to action. |
-| `src/pages/` | Routes. `glossary/[slug]` generates one page per entry in `site.ts`. |
+| `src/pages/` | Routes. `for/[slug]` and `glossary/[slug]` generate one page per entry in the data files. |
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
 | `public/` | Static files: `og.png` share image, favicon, `robots.txt`, artist photos, label logos. |
 
-Adding a glossary term is a data change only: add an entry to `glossary` in `src/data/site.ts`. The page, sitemap entry, structured data and `llms.txt` line are generated from it.
+Adding a glossary term or a user type is a data change only: add an entry to `glossary` in `src/data/site.ts` or `roles` in `src/data/roles.ts`. The page, sitemap entry, structured data and `llms.txt` line are generated from it.
 
 ## SEO and AEO built in
 

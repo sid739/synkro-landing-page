@@ -1,0 +1,202 @@
+---
+// A few named subgenres per family, drawn as a drifting dot field. Real data lives in the app;
+// these are examples of the taxonomy, and the full list is also in the HTML for crawlers.
+const families = [
+  { name: "Electronic", subs: ["Hard techno", "Melodic house", "IDM", "Synthwave", "Drum & bass", "UK garage", "Ambient techno", "Future bass"] },
+  { name: "Rock & metal", subs: ["Power metal", "Post-rock", "Shoegaze", "Garage rock", "Doom metal", "Math rock", "Stoner rock", "Indie rock"] },
+  { name: "Hip-hop & R&B", subs: ["Boom bap", "Trap", "Lo-fi hip-hop", "Neo-soul", "Drill", "Alt R&B", "G-funk", "Jazz rap"] },
+  { name: "Pop", subs: ["Synth-pop", "Dream pop", "Indie pop", "Hyperpop", "Electropop", "Bedroom pop", "Art pop", "Ambient pop"] },
+  { name: "Jazz, soul & funk", subs: ["Nu jazz", "Bebop", "Northern soul", "Funk", "Acid jazz", "Modal jazz", "Disco", "Gospel"] },
+  { name: "Cinematic", subs: ["Epic orchestral", "Neo-classical", "Trailer hybrid", "Minimalism", "Dark ambient", "String quartet", "Solo piano", "Suspense"] },
+  { name: "Folk & acoustic", subs: ["Indie folk", "Americana", "Bluegrass", "Singer-songwriter", "Celtic folk", "Alt-country", "Chamber folk", "Acoustic blues"] },
+  { name: "Global", subs: ["Afrobeats", "Reggaeton", "Highlife", "Cumbia", "Bossa nova", "Qawwali", "Dancehall", "Bollywood"] },
+];
+---
+<figure class="constellation" data-reveal aria-labelledby="const-cap">
+  <canvas data-constellation={JSON.stringify(families)} aria-hidden="true"></canvas>
+  <figcaption id="const-cap">
+    <span class="eyebrow">1,000+ subgenres</span>
+    <span class="hint">Hover to explore a few of them</span>
+  </figcaption>
+  <div class="sr-only">
+    {families.map((f) => <p>{f.name}: {f.subs.join(", ")}</p>)}
+  </div>
+</figure>
+
+<style>
+  .constellation { position: relative; margin-top: clamp(32px, 4vw, 56px); border-radius: var(--radius-lg); border: 1px solid var(--line); background: radial-gradient(ellipse 70% 80% at 50% 50%, var(--accent-soft), transparent 70%), var(--surface); overflow: hidden; box-shadow: var(--shadow); }
+  canvas { display: block; width: 100%; height: clamp(380px, 40vw, 520px); cursor: crosshair; touch-action: pan-y; }
+  @media (max-width: 640px) { canvas { height: 640px; } }
+  figcaption { position: absolute; left: 24px; bottom: 20px; display: grid; gap: 4px; pointer-events: none; }
+  .hint { font-size: 14px; color: var(--muted); }
+</style>
+
+<script>
+  type Family = { name: string; subs: string[] };
+  type Dot = { x: number; y: number; r: number; f: number; label?: string; a: number; ph: number; sp: number };
+  type Bloom = { x: number; y: number; r: number };
+
+  const canvas = document.querySelector<HTMLCanvasElement>("[data-constellation]");
+  if (canvas) {
+    const families: Family[] = JSON.parse(canvas.dataset.constellation ?? "[]");
+    const ctx = canvas.getContext("2d")!;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let W = 0, H = 0, dots: Dot[] = [], centers: { x: number; y: number }[] = [], blooms: Bloom[] = [];
+    let mouse: { x: number; y: number } | null = null;
+    let active = -1, hoverDot: Dot | null = null, running = false, last = performance.now();
+    // How far each family has bloomed open, 0 (resting cluster) to 1 (labelled ring).
+    let open: number[] = families.map(() => 0);
+    const colors = { dot: "", accent: "", text: "", muted: "" };
+
+    // Seeded random so the layout is the same on every visit.
+    let seed = 7;
+    const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const gauss = () => (rand() + rand() + rand() - 1.5) / 1.5;
+    const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+    const ease = (x: number) => 1 - Math.pow(1 - x, 3);
+
+    const readColors = () => {
+      const cs = getComputedStyle(document.documentElement);
+      colors.dot = cs.getPropertyValue("--faint").trim();
+      colors.accent = cs.getPropertyValue("--accent-text").trim();
+      colors.text = cs.getPropertyValue("--fg").trim();
+      colors.muted = cs.getPropertyValue("--muted").trim();
+    };
+
+    const build = () => {
+      seed = 7;
+      const cols = W < 640 ? 2 : 4, rows = Math.ceil(families.length / cols);
+      centers = families.map((_, i) => ({
+        x: ((i % cols) + 0.5) / cols * W + (rand() - 0.5) * W * 0.05,
+        y: (Math.floor(i / cols) + 0.5) / rows * H + (rand() - 0.5) * H * 0.06,
+      }));
+      // The open ring is sized to the canvas and kept inside it, labels included.
+      const R = Math.min(W * 0.19, H * 0.34, 190);
+      const padX = R + (W < 640 ? 104 : 136), padY = R + 34;
+      blooms = centers.map((c) => ({ x: clamp(c.x, padX, W - padX), y: clamp(c.y, padY, H - padY), r: R }));
+      const spreadX = W / cols * 0.22, spreadY = H / rows * 0.22;
+      dots = [];
+      families.forEach((f, fi) => {
+        const c = centers[fi]!;
+        f.subs.forEach((label, k) => {
+          const a = (k / f.subs.length) * Math.PI * 2 - Math.PI / 2;
+          dots.push({ x: c.x + Math.cos(a) * spreadX * 0.8, y: c.y + Math.sin(a) * spreadY * 0.8, r: 3.2, f: fi, label, a, ph: rand() * 6.28, sp: 0.4 + rand() * 0.6 });
+        });
+        for (let k = 0; k < 34; k++) dots.push({ x: c.x + gauss() * spreadX * 1.6, y: c.y + gauss() * spreadY * 1.6, r: 1 + rand() * 1.2, f: fi, a: 0, ph: rand() * 6.28, sp: 0.3 + rand() * 0.7 });
+      });
+    };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build(); draw(performance.now());
+    };
+
+    const pos = (d: Dot, t: number) => {
+      const wob = reduce ? { x: 0, y: 0 } : { x: Math.sin(t * 0.0004 * d.sp + d.ph) * 3, y: Math.cos(t * 0.0005 * d.sp + d.ph) * 3 };
+      const o = ease(open[d.f]!);
+      if (!d.label || o === 0) return { x: d.x + wob.x, y: d.y + wob.y };
+      const b = blooms[d.f]!;
+      return { x: d.x + (b.x + Math.cos(d.a) * b.r - d.x) * o + wob.x * (1 - o), y: d.y + (b.y + Math.sin(d.a) * b.r - d.y) * o + wob.y * (1 - o) };
+    };
+    const hub = (fi: number) => {
+      const c = centers[fi]!, b = blooms[fi]!, o = ease(open[fi]!);
+      return { x: c.x + (b.x - c.x) * o, y: c.y + (b.y - c.y) * o };
+    };
+
+    const draw = (t: number) => {
+      const dt = Math.min(64, t - last); last = t;
+      open = open.map((v, i) => reduce ? (i === active ? 1 : 0) : clamp(v + (i === active ? 1 : -1) * dt / 450, 0, 1));
+      ctx.clearRect(0, 0, W, H);
+
+      for (const d of dots) {
+        if (d.label && open[d.f]! > 0.02) continue;
+        const p = pos(d, t);
+        ctx.globalAlpha = active < 0 ? (d.label ? 0.85 : 0.45) : d.f === active ? 0.5 : 0.16;
+        ctx.fillStyle = d.label ? colors.accent : colors.dot;
+        ctx.beginPath(); ctx.arc(p.x, p.y, d.r, 0, 6.283); ctx.fill();
+      }
+
+      ctx.textAlign = "center";
+      families.forEach((f, i) => {
+        if (open[i]! > 0.02) return;
+        const c = centers[i]!;
+        ctx.font = "800 14px 'Archivo Variable', sans-serif";
+        ctx.fillStyle = colors.muted;
+        ctx.globalAlpha = active < 0 ? 1 : 0.35;
+        ctx.fillText(f.name, c.x, c.y + 5);
+      });
+
+      // Open families: spokes, ring dots, outward labels.
+      families.forEach((f, fi) => {
+        const o = open[fi]!;
+        if (o <= 0.02) return;
+        const h = hub(fi);
+        ctx.globalAlpha = o;
+        ctx.strokeStyle = colors.accent; ctx.lineWidth = 1;
+        for (const d of dots) if (d.f === fi && d.label) {
+          const p = pos(d, t);
+          ctx.globalAlpha = 0.25 * o;
+          ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+          ctx.globalAlpha = o;
+          ctx.fillStyle = colors.accent;
+          ctx.beginPath(); ctx.arc(p.x, p.y, d === hoverDot ? 7 : 4.5, 0, 6.283); ctx.fill();
+          const cx = Math.cos(d.a), cy = Math.sin(d.a);
+          ctx.textAlign = cx > 0.3 ? "left" : cx < -0.3 ? "right" : "center";
+          ctx.font = `${d === hoverDot ? 800 : 600} ${W < 640 ? 12 : 14}px 'Manrope Variable', sans-serif`;
+          ctx.fillStyle = d === hoverDot ? colors.accent : colors.text;
+          ctx.fillText(d.label!, p.x + cx * 12, p.y + cy * 14 + 4);
+        }
+        ctx.textAlign = "center";
+        ctx.font = `800 ${W < 640 ? 17 : 22}px 'Archivo Variable', sans-serif`;
+        ctx.fillStyle = colors.text;
+        ctx.fillText(f.name, h.x, h.y + 7);
+        ctx.globalAlpha = 1;
+      });
+    };
+
+    const loop = (t: number) => { draw(t); if (running) requestAnimationFrame(loop); };
+    const start = () => { if (!running && !reduce) { running = true; last = performance.now(); requestAnimationFrame(loop); } };
+    const stop = () => { running = false; };
+
+    const pick = (x: number, y: number) => {
+      // Stay on the open family while the pointer is over its ring.
+      if (active >= 0) {
+        const b = blooms[active]!;
+        if ((b.x - x) ** 2 + (b.y - y) ** 2 < (b.r + 70) ** 2) return active;
+      }
+      let best = -1, bd = Infinity;
+      centers.forEach((c, i) => { const d = (c.x - x) ** 2 + (c.y - y) ** 2; if (d < bd) { bd = d; best = i; } });
+      return best;
+    };
+    const onMove = (x: number, y: number) => {
+      mouse = { x, y };
+      active = pick(x, y);
+      const t = performance.now();
+      hoverDot = null;
+      let bd = 26 * 26;
+      for (const d of dots) if (d.label && d.f === active) { const p = pos(d, t); const dd = (p.x - x) ** 2 + (p.y - y) ** 2; if (dd < bd) { bd = dd; hoverDot = d; } }
+      if (reduce) draw(t);
+    };
+    canvas.addEventListener("pointermove", (e) => { const r = canvas.getBoundingClientRect(); onMove(e.clientX - r.left, e.clientY - r.top); });
+    canvas.addEventListener("pointerdown", (e) => { const r = canvas.getBoundingClientRect(); onMove(e.clientX - r.left, e.clientY - r.top); });
+    canvas.addEventListener("pointerleave", () => { mouse = null; hoverDot = null; active = -1; if (reduce) draw(performance.now()); });
+
+    // Open each family in turn until someone hovers, so the idea reads at a glance.
+    window.setInterval(() => {
+      if (mouse || document.hidden) return;
+      active = (active + 1) % families.length;
+      if (reduce) draw(performance.now());
+    }, 2600);
+
+    new IntersectionObserver(([e]) => (e?.isIntersecting ? start() : stop())).observe(canvas);
+    new MutationObserver(() => { readColors(); draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { readColors(); draw(performance.now()); });
+    addEventListener("resize", resize);
+    readColors();
+    resize();
+    document.fonts?.ready.then(() => draw(performance.now()));
+  }
+</script>

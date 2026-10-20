@@ -1,5 +1,6 @@
 ---
 import { site } from "../data/site";
+import { roles } from "../data/roles";
 const year = new Date().getFullYear();
 ---
 <footer class="footer ink">
@@ -15,8 +16,13 @@ const year = new Date().getFullYear();
           <ul>
             <li><a href="/#how">How it works</a></li>
             <li><a href="/#catalog">Catalog</a></li>
-            <li><a href="/#sides">For both sides</a></li>
+            <li><a href="/#roles">Who it's for</a></li>
+            <li><a href="/#principles">AI principles</a></li>
           </ul>
+        </div>
+        <div>
+          <h2 class="eyebrow">Built for</h2>
+          <ul>{roles.map((r) => <li><a href={`/for/${r.slug}/`}>{r.name}</a></li>)}</ul>
         </div>
         <div>
           <h2 class="eyebrow">Learn</h2>
@@ -44,10 +50,10 @@ const year = new Date().getFullYear();
 
 <style>
   .footer { padding-block: 72px 32px; }
-  .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
+  .top { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.8fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
   .brand { font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 8vw, 104px); letter-spacing: -.07em; line-height: .9; text-decoration: none; }
   .lockup p { color: var(--muted); margin-top: 16px; max-width: 36ch; }
-  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
   .cols h2 { font-size: 11px; letter-spacing: .2em; margin-bottom: 16px; line-height: 1.2; }
   .cols ul { list-style: none; padding: 0; display: grid; gap: 10px; }
   .cols a { text-decoration: none; color: #d6d6de; font-size: 15px; overflow-wrap: anywhere; }
@@ -56,6 +62,6 @@ const year = new Date().getFullYear();
   .legal { display: inline-flex; gap: 10px; }
   .legal a { color: var(--muted); text-decoration: none; }
   .legal a:hover { color: #fff; }
-  @media (max-width: 860px) { .top { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) { .top { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .cols { grid-template-columns: 1fr 1fr; } }
 </style>

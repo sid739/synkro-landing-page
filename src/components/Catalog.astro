@@ -1,5 +1,6 @@
 ---
 import { catalogStats, labels } from "../data/site";
+import Constellation from "./Constellation.astro";
 ---
 <section class="section" id="catalog" aria-labelledby="catalog-title">
   <div class="dots dots-tr"></div>
@@ -19,6 +20,7 @@ import { catalogStats, labels } from "../data/site";
   </div>
 
   <div class="wrap">
+    <Constellation />
     <dl class="stats" data-play>
       {catalogStats.map((s, i) => (
         <div class:list={["a", { wide: s.wide }]} style={`--i: ${i}`}>

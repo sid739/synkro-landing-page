@@ -1,5 +1,15 @@
 ---
 import { phases, steps } from "../data/site";
+
+// A deterministic little waveform per clip, drawn as SVG bars.
+const wave = (seed: number) => {
+  let s = seed * 9301 + 49297;
+  const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+  return Array.from({ length: 28 }, (_, i) => {
+    const h = 3 + Math.round((0.35 + 0.65 * Math.abs(Math.sin(i * 0.55 + seed))) * r() * 15);
+    return `<rect x="${i * 4}" y="${(20 - h) / 2}" width="2.4" height="${h}" rx="1.2"/>`;
+  }).join("");
+};
 ---
 <section class="section band" id="how" aria-labelledby="how-title">
   <div class="dots dots-tr"></div>
@@ -9,21 +19,27 @@ import { phases, steps } from "../data/site";
       <h2 id="how-title">Licensing at the speed of <span class="hl">modern production.</span></h2>
     </div>
 
-    <div class="tabs-scroll" data-reveal>
-      <div class="tabs" role="tablist" aria-label="Workflow steps">
+    <div class="daw-scroll" data-reveal>
+      <div class="daw" role="tablist" aria-label="Workflow steps">
+        <div class="ruler" aria-hidden="true">
+          <span class="corner">Phase</span>
+          {steps.map((s) => <span class="bar">{Number(s.n)}</span>)}
+        </div>
         {phases.map((ph, pi) => (
-          <div class="phase" data-phase={pi}>
-            <div class="phase-tab"><span class="num">Phase {String(pi + 1).padStart(2, "0")}</span><b>{ph}</b></div>
-            <div class="phase-steps">
-              {steps.filter((s) => s.phase === pi).map((s) => (
-                <button class="step" type="button" role="tab" id={`tab-${s.n}`} aria-controls={`panel-${s.n}`} aria-selected={s.n === "01" ? "true" : "false"} tabindex={s.n === "01" ? 0 : -1} data-step={s.n}>
-                  <span class="num">{s.n}</span>{s.title}
-                  <i class="timer" aria-hidden="true"></i>
-                </button>
-              ))}
-            </div>
+          <div class="lane" data-phase={pi}>
+            <div class="lane-head"><span class="num">{String(pi + 1).padStart(2, "0")}</span><b>{ph}</b></div>
+            {steps.filter((s) => s.phase === pi).map((s) => (
+              <button class="clip" type="button" role="tab" id={`tab-${s.n}`} aria-controls={`panel-${s.n}`}
+                aria-selected={s.n === "01" ? "true" : "false"} tabindex={s.n === "01" ? 0 : -1} data-step={s.n}
+                style={`grid-column: ${Number(s.n) + 1}`}>
+                <span class="num">{s.n}</span>
+                <span class="name">{s.title}</span>
+                <svg class="wave" viewBox="0 0 112 20" preserveAspectRatio="none" aria-hidden="true" set:html={wave(Number(s.n))} />
+              </button>
+            ))}
           </div>
         ))}
+        <span class="playhead" aria-hidden="true"><i></i></span>
       </div>
     </div>
 
@@ -35,17 +51,34 @@ import { phases, steps } from "../data/site";
           <p class="tagline a" style="--i: 2">{s.tagline}</p>
           <p class="body a" style="--i: 3">{s.body}</p>
         </div>
-        <ul class="mock" aria-label="Example">
-          {s.mock.map((m, i) => (
-            <li class:list={["a", m.kind]} style={`--i: ${i + 2}`}>
-              {m.kind === "ok" && <span class="tick" style={`--i: ${i + 1}; --d: 300ms`}>✓</span>}
-              {m.kind === "play" && <span class="ico play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>}
-              {m.kind === "plus" && <span class="ico plus" aria-hidden="true">+</span>}
-              {m.kind === "file" && <span class="ico file" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg></span>}
-              <span class="t">{m.text}</span>
-            </li>
-          ))}
-        </ul>
+        <div class="right">
+          {s.mixer && (
+            <div class="mixer a" style="--i: 2" aria-label="Ownership splits">
+              {s.mixer.map((ch, i) => (
+                <div class="ch">
+                  <span class="pct num" data-count={ch.value} data-suffix="%">{ch.value}%</span>
+                  <div class="strip">
+                    <span class="meter" aria-hidden="true"><i style={`--h: ${ch.value * 1.6}%; --s: ${0.7 + i * 0.17}s`}></i><i style={`--h: ${ch.value * 1.5}%; --s: ${0.9 + i * 0.13}s`}></i></span>
+                    <span class="track" aria-hidden="true"><span class="cap" style={`--v: ${ch.value}; --i: ${i}`}></span></span>
+                  </div>
+                  <span class="ch-label">{ch.label}</span>
+                  <b>{ch.holder}</b>
+                </div>
+              ))}
+            </div>
+          )}
+          <ul class="mock" aria-label="Example">
+            {s.mock.map((m, i) => (
+              <li class:list={["a", m.kind]} style={`--i: ${i + 2}; --d: ${s.mixer ? "900ms" : "0ms"}`}>
+                {m.kind === "ok" && <span class="tick" style={`--i: ${i + 1}; --d: ${s.mixer ? "1400ms" : "300ms"}`}>✓</span>}
+                {m.kind === "play" && <span class="ico play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>}
+                {m.kind === "plus" && <span class="ico plus" aria-hidden="true">+</span>}
+                {m.kind === "file" && <span class="ico file" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg></span>}
+                <span class="t">{m.text}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </article>
     ))}
 
@@ -54,26 +87,28 @@ import { phases, steps } from "../data/site";
 </section>
 
 <style>
-  .tabs-scroll { overflow-x: auto; margin-inline: -4px; padding: 4px; scrollbar-width: none; }
-  .tabs-scroll::-webkit-scrollbar { display: none; }
-  .tabs { min-width: 900px; display: grid; grid-template-columns: 2fr 4fr 2fr; gap: 14px; }
-  .phase { display: grid; gap: 12px; align-content: start; }
-  .phase-tab { background: var(--paper); color: #0b0b10; padding: 18px 44px 18px 24px; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%); opacity: .5; transition: opacity .3s; }
-  .phase:not(:first-child) .phase-tab { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%, 22px 50%); padding-left: 42px; }
-  .phase.active .phase-tab { opacity: 1; }
-  .phase-tab .num { color: #5443d8; font-size: 13px; }
-  .phase-tab b { display: block; font-family: var(--font-display); font-weight: 800; letter-spacing: -.04em; font-size: 20px; line-height: 1.1; margin-top: 2px; }
-  .phase-steps { display: grid; gap: 8px; }
-  .phase:nth-child(1) .phase-steps, .phase:nth-child(3) .phase-steps { grid-template-columns: repeat(2, 1fr); }
-  .phase:nth-child(2) .phase-steps { grid-template-columns: repeat(4, 1fr); }
-  .step { position: relative; overflow: hidden; text-align: left; background: rgba(0,0,0,.25); border: 0; border-radius: 16px; color: rgba(255,255,255,.85); padding: 14px; cursor: pointer; font: 700 14px/1.3 var(--font-body); display: grid; gap: 6px; transition: background .2s, color .2s; }
-  .step .num { font-size: 12px; color: rgba(255,255,255,.6); }
-  .step:hover { background: rgba(0,0,0,.45); color: #fff; }
-  .step[aria-selected="true"] { background: #000; color: #fff; }
-  .step[aria-selected="true"] .num { color: #8b7dff; }
-  .timer { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #8b7dff; }
-  .step[aria-selected="true"].running .timer { animation: timer var(--dur, 5s) linear forwards; }
-  @keyframes timer { to { width: 100%; } }
+  .daw-scroll { overflow-x: auto; margin-inline: -4px; padding: 4px; scrollbar-width: none; }
+  .daw-scroll::-webkit-scrollbar { display: none; }
+  .daw { --head: 190px; position: relative; min-width: 940px; display: grid; gap: 8px; background: rgba(0,0,0,.28); border-radius: var(--radius-lg); padding: 14px; }
+  .ruler, .lane { display: grid; grid-template-columns: var(--head) repeat(8, minmax(0, 1fr)); gap: 6px; align-items: stretch; }
+  .ruler { font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+  .ruler .bar { border-left: 1px solid rgba(255,255,255,.25); padding: 2px 0 6px 6px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0 1px, transparent 1px 25%) left bottom / 100% 5px no-repeat; }
+  .corner { padding: 2px 10px 6px; }
+  .lane { min-height: 74px; }
+  .lane-head { display: grid; align-content: center; gap: 2px; padding: 10px 14px; border-radius: 14px; background: rgba(255,255,255,.08); }
+  .lane-head .num { font-size: 12px; color: rgba(255,255,255,.6); }
+  .lane-head b { font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em; font-size: 16px; line-height: 1.15; }
+  .clip { position: relative; text-align: left; border: 0; border-radius: 12px; padding: 10px 10px 30px; cursor: pointer; font: 700 13px/1.25 var(--font-body); color: #fff; background: rgba(255,255,255,.14); overflow: hidden; display: grid; align-content: start; gap: 2px; transition: background .2s, transform .2s; }
+  .lane[data-phase="1"] .clip { background: rgba(255,255,255,.2); }
+  .lane[data-phase="2"] .clip { background: rgba(255,255,255,.26); }
+  .clip:hover { background: rgba(0,0,0,.4); transform: translateY(-1px); }
+  .clip .num { font-size: 11px; opacity: .7; }
+  .wave { position: absolute; left: 10px; right: 10px; bottom: 8px; height: 18px; width: calc(100% - 20px); fill: rgba(255,255,255,.55); }
+  .clip[aria-selected="true"] { background: #000; }
+  .clip[aria-selected="true"] .num { color: #8b7dff; opacity: 1; }
+  .clip[aria-selected="true"] .wave { fill: #8b7dff; }
+  .playhead { --pos: 0; position: absolute; top: 8px; bottom: 8px; left: calc(20px + var(--head) + var(--pos) * ((100% - 76px - var(--head)) / 8 + 6px)); width: 2px; background: #fff; box-shadow: 0 0 12px rgba(255,255,255,.7); pointer-events: none; z-index: 2; transition: left .45s cubic-bezier(.3,.7,.2,1); }
+  .playhead i { position: absolute; top: -6px; left: -5px; width: 12px; height: 10px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); }
 
   .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #000; color: #fff; border-radius: var(--radius-lg); align-items: center; min-height: 320px; }
   .panel[hidden] { display: none; }
@@ -82,6 +117,7 @@ import { phases, steps } from "../data/site";
   .copy h3 { font-size: clamp(32px, 3.6vw, 48px); margin-top: 6px; }
   .tagline { font-weight: 700; color: #d6d6de; font-style: italic; }
   .body { color: #a8a8b4; max-width: 34em; }
+  .right { display: grid; gap: 12px; }
   .mock { list-style: none; padding: 0; display: grid; gap: 10px; }
   .mock li { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border: 1px solid #26262e; border-radius: 16px; font-size: 15px; background: #0d0d11; }
   .mock .t { min-width: 0; overflow-wrap: anywhere; }
@@ -93,6 +129,26 @@ import { phases, steps } from "../data/site";
   .ico svg { width: 14px; height: 14px; fill: currentColor; }
   .ico.file svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
   .ico.play { background: #5443d8; color: #fff; }
+
+  /* Mixing desk */
+  .mixer { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 16px; border-radius: 16px; background: #0d0d11; border: 1px solid #26262e; }
+  .ch { display: grid; justify-items: center; gap: 8px; text-align: center; }
+  .pct { font-size: 20px; color: #8b7dff; }
+  .strip { display: flex; gap: 10px; align-items: stretch; height: 150px; }
+  .meter { display: flex; gap: 3px; align-items: flex-end; }
+  .meter i { width: 5px; height: var(--h); max-height: 100%; border-radius: 2px; background: linear-gradient(0deg, #5443d8, #8b7dff 70%, #e5e1ff); transform-origin: bottom; animation: level var(--s) ease-in-out infinite alternate; }
+  @keyframes level { from { transform: scaleY(.55); } to { transform: scaleY(1); } }
+  .track { position: relative; width: 8px; border-radius: 4px; background: #17171d; box-shadow: inset 0 0 0 1px #26262e; }
+  .cap { position: absolute; left: 50%; bottom: calc(var(--v) * 1% - 9px); width: 34px; height: 18px; margin-left: -17px; border-radius: 5px; background: linear-gradient(#f1f1f2, #b9b9c4); box-shadow: 0 2px 6px rgba(0,0,0,.5), inset 0 -2px 0 rgba(0,0,0,.2); }
+  .cap::after { content: ""; position: absolute; left: 6px; right: 6px; top: 8px; height: 2px; background: #5443d8; }
+  .ch-label { font-family: var(--font-display); font-weight: 700; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #a8a8b4; }
+  .ch b { font-size: 14px; margin-top: -6px; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) [data-play]:not(.play) .cap { bottom: -9px; }
+    :global(.js) [data-play].play .cap { transition: bottom 1.2s cubic-bezier(.3,.8,.2,1); transition-delay: calc(var(--i) * 180ms + 300ms); }
+  }
+  @media (prefers-reduced-motion: reduce) { .meter i { animation: none; } }
+
   .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--on-band-muted); }
   .speed strong { color: #fff; }
   @media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
@@ -103,6 +159,7 @@ import { phases, steps } from "../data/site";
   const root = document.getElementById("how");
   if (root) {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-step]")];
+    const head = root.querySelector<HTMLElement>(".playhead")!;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const DUR = 5200;
     let index = 0;
@@ -110,17 +167,28 @@ import { phases, steps } from "../data/site";
     let timer = 0;
     let visible = false;
 
+    // The playhead sits at the start of the active clip, then sweeps across it while auto-play runs.
+    const movePlayhead = (i: number) => {
+      head.style.transition = "left .45s cubic-bezier(.3,.7,.2,1)";
+      head.style.setProperty("--pos", String(i));
+      if (!auto || !visible) return;
+      window.setTimeout(() => {
+        if (index !== i || !auto) return;
+        head.style.transition = `left ${DUR - 500}ms linear`;
+        head.style.setProperty("--pos", String(i + 1));
+      }, 460);
+    };
+
     const select = (i: number, focus = false) => {
       index = i;
       tabs.forEach((t, j) => {
         const on = j === i;
         t.setAttribute("aria-selected", String(on));
         t.tabIndex = on ? 0 : -1;
-        t.classList.toggle("running", on && auto);
         const panel = root.querySelector<HTMLElement>(`[data-panel="${t.dataset.step}"]`);
         if (panel) { panel.hidden = !on; if (on) play(panel); }
       });
-      root.querySelectorAll<HTMLElement>(".phase").forEach((p) => p.classList.toggle("active", p.contains(tabs[i]!)));
+      movePlayhead(i);
       if (focus) tabs[i]!.focus();
       schedule();
     };
@@ -128,9 +196,8 @@ import { phases, steps } from "../data/site";
       window.clearTimeout(timer);
       if (auto && visible && !document.hidden) timer = window.setTimeout(() => select((index + 1) % tabs.length), DUR);
     };
-    const stopAuto = () => { auto = false; window.clearTimeout(timer); tabs.forEach((t) => t.classList.remove("running")); };
+    const stopAuto = () => { auto = false; window.clearTimeout(timer); };
 
-    root.style.setProperty("--dur", `${DUR}ms`);
     tabs.forEach((t, i) => {
       t.addEventListener("click", () => { stopAuto(); select(i); });
       t.addEventListener("keydown", (e) => {

@@ -1,0 +1,42 @@
+---
+import { principles } from "../data/roles";
+const icons: Record<string, string> = {
+  voice: `<path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>`,
+  shield: `<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>`,
+  lock: `<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>`,
+  vault: `<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5V7M12 17v-1.5M15.5 12H17M7 12h1.5"/>`,
+};
+---
+<section class="section ink" id="principles" aria-labelledby="principles-title">
+  <div class="dots dots-bl"></div>
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Our AI principles</p>
+      <h2 id="principles-title">AI in the search. <span class="hl">Humans in the music.</span></h2>
+      <p class="lede">AI powers how you find, check and clear music on Synkro. It never makes the music, and it never learns from yours.</p>
+    </div>
+    <ol class="list">
+      {principles.map((p, i) => (
+        <li data-reveal style={`--rd: ${i * 90}ms`}>
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icons[p.icon]} /></span>
+          <span class="n num">{String(i + 1).padStart(2, "0")}</span>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .list li { position: relative; background: #0d0d11; border: 1px solid #26262e; border-radius: var(--radius-lg); padding: 28px; display: grid; gap: 14px; align-content: start; overflow: hidden; }
+  .list li::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, #5443d8, #8b7dff); transform-origin: left; }
+  .icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(125, 110, 247, .14); color: #8b7dff; }
+  .icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .n { position: absolute; top: 24px; right: 26px; color: #3a3a44; font-size: 28px; }
+  .list h3 { font-size: 22px; }
+  .list p { color: #a8a8b4; font-size: 15px; line-height: 1.6; }
+  @media (max-width: 1060px) { .list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .list { grid-template-columns: 1fr; } }
+</style>

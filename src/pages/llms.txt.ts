@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { catalogStats, glossary, homeFaq, site, steps } from "../data/site";
+import { principles, roles } from "../data/roles";
 
 // llms.txt: a plain-text map of the site for AI assistants and answer engines (llmstxt.org).
 export const GET: APIRoute = () => {
@@ -17,6 +18,12 @@ export const GET: APIRoute = () => {
     "",
     "## How a license works on Synkro",
     ...steps.map((s) => `${Number(s.n)}. ${s.title} (${s.feature}, ${s.badge.toLowerCase()}): ${s.body}`),
+    "",
+    "## Who it's for",
+    ...roles.map((r) => `- [${r.name}](${url(`/for/${r.slug}/`)}): ${r.intro}`),
+    "",
+    "## AI principles",
+    ...principles.map((p) => `- ${p.title}: ${p.body}`),
     "",
     "## Pages",
     `- [Home](${url("/")})`,

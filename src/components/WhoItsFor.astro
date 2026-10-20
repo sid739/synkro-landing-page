@@ -1,0 +1,126 @@
+---
+import { roles } from "../data/roles";
+const groups = [
+  { label: "For licensees", side: "licensee" },
+  { label: "For rights holders", side: "rights-holder" },
+] as const;
+---
+<section class="section band" id="roles" aria-labelledby="roles-title">
+  <div class="dots dots-tr"></div>
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Built for both sides</p>
+      <h2 id="roles-title">A unified workspace built for both <span class="hl">licensees and rights holders.</span></h2>
+    </div>
+
+    <div class="layout" data-roles>
+      <div class="picker" role="tablist" aria-label="Who it's for" aria-orientation="vertical" data-reveal>
+        {groups.map((g) => (
+          <div class="group">
+            <p class="eyebrow">{g.label}</p>
+            {roles.filter((r) => r.side === g.side).map((r, i) => (
+              <button class="tab" type="button" role="tab" id={`role-tab-${r.slug}`} aria-controls={`role-${r.slug}`}
+                aria-selected={g.side === "licensee" && i === 0 ? "true" : "false"} tabindex={g.side === "licensee" && i === 0 ? 0 : -1} data-role={r.slug}>
+                {r.name}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div class="panels" data-reveal style="--rd: 120ms">
+        {roles.map((r, i) => (
+          <article class="panel" role="tabpanel" id={`role-${r.slug}`} aria-labelledby={`role-tab-${r.slug}`} data-panel={r.slug} data-play data-manual hidden={i !== 0}>
+            <p class="eyebrow a">For {r.name.toLowerCase()}</p>
+            <h3 class="a" style="--i: 1">{r.headline}</h3>
+            <p class="intro a" style="--i: 2">{r.intro}</p>
+            <div class="cols">
+              <div>
+                <p class="label a" style="--i: 3">The problem</p>
+                <ul class="pains">{r.pains.map((p, j) => <li class="a" style={`--i: ${j + 4}`}><b>{p.title}</b> {p.body}</li>)}</ul>
+              </div>
+              <div>
+                <p class="label a" style="--i: 3">How Synkro helps</p>
+                <ul class="gains">{r.gains.map((g, j) => <li class="a" style={`--i: ${j + 4}`}><span class="tick" style={`--i: ${j + 1}; --d: 500ms`}>✓</span><span><b>{g.title}</b> {g.body}</span></li>)}</ul>
+              </div>
+            </div>
+            <div class="foot a" style="--i: 7">
+              <ul class="features" aria-label="Features you'll use">{r.features.map((f) => <li>{f}</li>)}</ul>
+              <a class="more" href={`/for/${r.slug}/`}>More for {r.name.toLowerCase()} <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .picker { display: grid; gap: 22px; position: sticky; top: 96px; }
+  .group { display: grid; gap: 6px; }
+  .group .eyebrow { color: rgba(255,255,255,.75); margin-bottom: 4px; }
+  .tab { text-align: left; border: 0; background: transparent; color: rgba(255,255,255,.82); font: 700 16px var(--font-body); padding: 12px 16px; border-radius: 14px; cursor: pointer; transition: background .2s, color .2s; position: relative; }
+  .tab:hover { background: rgba(0,0,0,.2); color: #fff; }
+  .tab[aria-selected="true"] { background: #000; color: #fff; }
+  .tab[aria-selected="true"]::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #8b7dff; }
+
+  .panel { background: #000; color: #fff; border-radius: var(--radius-lg); padding: clamp(26px, 4vw, 48px); display: grid; gap: 16px; }
+  .panel[hidden] { display: none; }
+  .panel .eyebrow { color: #8b7dff; }
+  .panel h3 { font-size: clamp(32px, 3.8vw, 52px); line-height: 1; }
+  .intro { color: #b9b9c4; font-size: 18px; max-width: 46em; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 12px; }
+  .label { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #a8a8b4; margin-bottom: 12px; }
+  .pains, .gains { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .pains li, .gains li { padding: 14px 16px; border-radius: 14px; background: #0d0d11; border: 1px solid #26262e; color: #b9b9c4; font-size: 15px; line-height: 1.5; }
+  .pains b, .gains b { color: #fff; display: block; margin-bottom: 2px; }
+  .pains li { border-left: 3px solid #e5484d; }
+  .gains li { display: flex; gap: 12px; align-items: flex-start; }
+  .gains .tick { margin-top: 2px; }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 18px; margin-top: 8px; border-top: 1px solid #26262e; }
+  .features { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .features li { padding: 6px 12px; border-radius: 999px; background: #17171d; color: #d6d6de; font-size: 13px; font-weight: 600; }
+  .more { color: #fff; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  .more:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    .picker { position: static; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+    .picker::-webkit-scrollbar { display: none; }
+    .group { display: flex; gap: 8px; align-items: center; }
+    .group .eyebrow { display: none; }
+    .tab { white-space: nowrap; background: rgba(0,0,0,.2); }
+    .tab[aria-selected="true"]::after { display: none; }
+  }
+  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { play } from "../scripts/motion";
+  const root = document.querySelector<HTMLElement>("[data-roles]");
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-role]")];
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, j) => {
+        const on = j === i;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = root.querySelector<HTMLElement>(`[data-panel="${t.dataset.role}"]`);
+        if (panel) { panel.hidden = !on; if (on) play(panel); }
+      });
+      if (focus) { tabs[i]!.focus(); tabs[i]!.scrollIntoView({ block: "nearest", inline: "nearest" }); }
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        const d = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : ["ArrowUp", "ArrowLeft"].includes(e.key) ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        select((i + d + tabs.length) % tabs.length, true);
+      });
+    });
+    const first = root.querySelector<HTMLElement>("[data-panel]:not([hidden])");
+    if (first) new IntersectionObserver(([e], o) => { if (e?.isIntersecting) { play(first); o.disconnect(); } }, { threshold: 0.3 }).observe(first);
+  }
+</script>

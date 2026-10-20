@@ -26,7 +26,7 @@ export const demoHref = `mailto:${site.email}?subject=${encodeURIComponent(`${si
 export const nav = [
   { href: "/#how", label: "How it works" },
   { href: "/#catalog", label: "Catalog" },
-  { href: "/#sides", label: "For both sides" },
+  { href: "/#roles", label: "Who it's for" },
   { href: "/sync-licensing/", label: "Guide" },
 ] as const;
 
@@ -55,6 +55,7 @@ export type Step = {
   tagline: string;
   body: string;
   mock: { text: string; kind?: "ok" | "play" | "plus" | "file" | "label" }[];
+  mixer?: { label: string; holder: string; value: number }[];
 };
 
 export const steps: Step[] = [
@@ -63,7 +64,8 @@ export const steps: Step[] = [
     mock: [{ text: "Search: upbeat electronic, energetic chord progressions", kind: "label" }, { text: "01_horizon_cut.wav · 98% Acoustic Match", kind: "play" }] },
   { n: "02", phase: 0, title: "Verify Rights", badge: "Instant", feature: "Instant Splits Audit", tagline: "100% ownership transparency",
     body: "Clear splits automatically. Reconciles master and publishing registries in real-time to avoid production delays.",
-    mock: [{ text: "Master: Believe (50%)" }, { text: "Publishing: Sony (25%) / Warner (25%)" }, { text: "Split Registry Audit Complete", kind: "ok" }] },
+    mock: [{ text: "Split Registry Audit Complete", kind: "ok" }],
+    mixer: [{ label: "Master", holder: "Believe", value: 50 }, { label: "Publishing", holder: "Sony", value: 25 }, { label: "Publishing", holder: "Warner", value: 25 }] },
   { n: "03", phase: 1, title: "Pitch Clients", badge: "Instant", feature: "Portal Pitching", tagline: "Frictionless client portals",
     body: "Pitch with synced video. Creative leads audition, rate, and approve track placements directly in-browser.",
     mock: [{ text: "Pitch Link: Campaign Horizon", kind: "label" }, { text: "scene_cut_v2.mp4", kind: "file" }, { text: "Linked Player", kind: "play" }] },
