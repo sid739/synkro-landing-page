@@ -17,8 +17,8 @@ npm run preview   # serve the built site
 |------|---------------|
 | `src/data/site.ts` | All copy: hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
 | `src/data/schema.ts` | Helpers that build schema.org structured data (FAQPage, BreadcrumbList, SoftwareApplication). |
-| `src/styles/global.css` | Design tokens (light and dark), type scale, buttons, deck motifs. |
-| `src/components/` | Homepage sections, header, footer, SEO head, FAQ, waitlist form. |
+| `src/styles/global.css` | Design tokens (light and dark), type scale, buttons, dot-grid motif, motion. |
+| `src/components/` | Homepage sections, header, footer, SEO head, FAQ, call to action. |
 | `src/pages/` | Routes. `glossary/[slug]` generates one page per entry in `site.ts`. |
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
