@@ -1,71 +1,36 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
+import Workflow from "../components/Workflow.astro";
+import Platform from "../components/Platform.astro";
 import Faq from "../components/Faq.astro";
 import Waitlist from "../components/Waitlist.astro";
-import { howItWorksFaq, steps } from "../data/site";
+import { howItWorksFaq, site, steps } from "../data/site";
+import { clearance, discovery } from "../data/platform";
 import { breadcrumbLd, faqLd } from "../data/schema";
 
 const crumbs = [{ name: "How it works", href: "/how-it-works/" }];
-const phases = [
-  { name: "Discover", note: "Find music and know it can be cleared.", steps: steps.slice(0, 2) },
-  { name: "Clear and draft", note: "Agree terms with every owner on one deal.", steps: steps.slice(2, 6) },
-  { name: "Deliver", note: "Pay everyone and get the files.", steps: steps.slice(6) },
-];
+const howToLd = {
+  "@type": "HowTo",
+  name: `How to clear a sync license with ${site.name}`,
+  description: "The eight steps of a sync deal, from searching by sound to split payouts and file delivery.",
+  step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.title, text: s.detail })),
+};
 ---
 <Base
   title="How sync licensing works on Synkro"
-  description="The eight steps of a sync deal on Synkro, from searching by sound to split payouts and file delivery. One workflow for licensees and rights holders, in one to two weeks."
-  jsonLd={[breadcrumbLd(crumbs), faqLd(howItWorksFaq)]}
+  description="The eight steps of a sync deal on Synkro: intelligent search, splits audit, client pitching, one-click requests, deal rooms, assisted drafting, escrow payouts and broadcast delivery."
+  jsonLd={[breadcrumbLd(crumbs), howToLd, faqLd(howItWorksFaq)]}
 >
   <PageHero
     eyebrow="How it works"
-    title='Licensing at the speed of <span class="hl">modern production.</span>'
-    lede="A sync deal on Synkro has eight steps in three phases. Both sides of the deal work on the same record, so nothing gets lost between steps."
+    title='From first search to <span class="hl">final payment.</span>'
+    lede="A sync deal on Synkro has eight steps in three phases. Both sides work on the same record, so nothing gets lost between steps."
     crumbs={crumbs}
   />
-
-  <section class="section band flow" aria-label="The eight steps">
-    <div class="wrap">
-      {phases.map((ph, pi) => (
-        <div class="phase">
-          <div class="phase-head">
-            <span class="num">Phase {String(pi + 1).padStart(2, "0")}</span>
-            <h2>{ph.name}</h2>
-            <p>{ph.note}</p>
-          </div>
-          <ol class="steps" start={Number(ph.steps[0]!.n)}>
-            {ph.steps.map((s) => (
-              <li>
-                <span class="num">{s.n}</span>
-                <div>
-                  <h3>{s.title}</h3>
-                  <p class="summary">{s.summary}</p>
-                  <p class="detail">{s.detail}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      ))}
-    </div>
-  </section>
-
+  <Workflow />
+  <Platform {...discovery} />
+  <Platform {...clearance} />
   <Faq items={howItWorksFaq} />
   <Waitlist />
 </Base>
-
-<style>
-  .flow .wrap { display: grid; gap: 20px; }
-  .phase { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); gap: 32px; padding: clamp(24px, 3vw, 40px); background: rgba(0, 0, 0, .2); border-radius: var(--radius-lg); }
-  .phase-head { display: grid; gap: 10px; align-content: start; }
-  .phase-head .num { font-size: 14px; color: rgba(255,255,255,.75); }
-  .phase-head h2 { font-size: clamp(36px, 4vw, 56px); }
-  .phase-head p { color: rgba(255,255,255,.82); }
-  .steps { list-style: none; padding: 0; display: grid; gap: 12px; }
-  .steps li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; background: #000; color: #fff; border-radius: var(--radius-md); padding: 24px; }
-  .steps .num { font-size: 22px; color: #8b7dff; }
-  .summary { font-weight: 700; margin-top: 4px; }
-  .detail { color: #b9b9c4; margin-top: 8px; max-width: 60ch; }
-  @media (max-width: 860px) { .phase { grid-template-columns: 1fr; } }
-</style>

@@ -8,6 +8,11 @@ const year = new Date().getFullYear();
       <div class="lockup">
         <a class="brand" href="/">{site.name}</a>
         <p>{site.tagline}</p>
+        <ul class="social">
+          <li><a href={site.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+          <li><a href={site.social.instagram} rel="me noopener" target="_blank">Instagram</a></li>
+          <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
+        </ul>
       </div>
       <nav aria-label="Footer" class="cols">
         <div>
@@ -43,6 +48,9 @@ const year = new Date().getFullYear();
   .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
   .brand { font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 8vw, 104px); letter-spacing: -.07em; line-height: .9; text-decoration: none; }
   .lockup p { color: var(--muted); margin-top: 16px; }
+  .social { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
+  .social a { color: #d6d6de; font-size: 15px; text-underline-offset: 3px; }
+  .social a:hover { color: #fff; }
   .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
   .cols h2 { font-size: 11px; letter-spacing: .2em; margin-bottom: 16px; line-height: 1.2; }
   .cols ul { list-style: none; padding: 0; display: grid; gap: 10px; }

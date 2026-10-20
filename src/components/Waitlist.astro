@@ -8,9 +8,13 @@ const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT ?? "";
   <div class="dots dots-bl"></div>
   <div class="wrap grid">
     <div class="copy">
-      <p class="eyebrow">Early access</p>
-      <h2 id="waitlist-title">Backed by catalog. <span class="hl">Built for scale.</span></h2>
-      <p class="lede">{site.name} launches fully in {site.launch}. Join the waitlist and we'll be in touch about early access.</p>
+      <p class="eyebrow">Infrastructure for modern licensing</p>
+      <h2 id="waitlist-title">We aren't just building a bigger catalog. <span class="hl">We're building the infrastructure sync always needed.</span></h2>
+      <p class="lede">{site.name} launches fully in {site.launch}. Join the waitlist for early access, or book a live demo. Every deal, song, rights holder and commercial scenario is different, so we'll walk you through yours.</p>
+      <div class="demo">
+        <a class="btn btn-secondary" href={`mailto:${site.email}?subject=${encodeURIComponent(`${site.name} demo request`)}`}>Book a live demo</a>
+        <span>or email <a href={`mailto:${site.email}`}>{site.email}</a></span>
+      </div>
     </div>
     <form class="form" data-waitlist data-endpoint={endpoint} novalidate>
       <div class="field">
@@ -38,7 +42,11 @@ const endpoint = import.meta.env.PUBLIC_WAITLIST_ENDPOINT ?? "";
 <style>
   .grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
   .copy { display: grid; gap: 22px; }
-  .copy h2 { font-size: clamp(44px, 6vw, 88px); }
+  .copy h2 { font-size: clamp(38px, 4.6vw, 68px); }
+  .demo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; color: #a8a8b4; font-size: 15px; }
+  .demo .btn { color: #fff; border-color: #3a3a44; }
+  .demo .btn:hover { border-color: #fff; }
+  .demo span a { color: #fff; text-underline-offset: 3px; }
   .form { display: grid; gap: 16px; background: #0d0d11; border: 1px solid #26262e; border-radius: var(--radius-lg); padding: clamp(22px, 3vw, 34px); }
   .field { display: grid; gap: 8px; }
   label { font-family: var(--font-display); font-weight: 650; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #a8a8b4; }

@@ -1,0 +1,110 @@
+---
+import { phases, steps } from "../data/site";
+interface Props { headingLevel?: "h2" | "h1" }
+const { headingLevel = "h2" } = Astro.props;
+const Heading = headingLevel;
+---
+<section class="section band" id="how" aria-labelledby="how-title">
+  <div class="dots dots-tr"></div>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <Heading id="how-title">Licensing at the speed of modern production.</Heading>
+      <p class="lede">Eight steps that usually take weeks of email, run from one workspace. License a song instantly, or up to 90% faster than the traditional process.</p>
+    </div>
+
+    <div class="tabs-scroll">
+      <div class="tabs" role="tablist" aria-label="Workflow steps">
+        {phases.map((ph, pi) => (
+          <div class="phase" data-phase={pi}>
+            <div class="phase-tab"><span class="num">{String(pi + 1).padStart(2, "0")}</span><b>{ph}</b></div>
+            <div class="phase-steps">
+              {steps.filter((s) => s.phase === pi).map((s) => (
+                <button class="step" type="button" role="tab" id={`tab-${s.n}`} aria-controls={`panel-${s.n}`} aria-selected={s.n === "01" ? "true" : "false"} tabindex={s.n === "01" ? 0 : -1} data-step={s.n}>
+                  <span class="num">{s.n}</span>{s.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {steps.map((s) => (
+      <article class="panel" role="tabpanel" id={`panel-${s.n}`} aria-labelledby={`tab-${s.n}`} data-panel={s.n} hidden={s.n !== "01"}>
+        <div class="copy">
+          <span class="time">{s.time}</span>
+          <h3>{s.feature}</h3>
+          <p class="tagline">{s.tagline}</p>
+          <p class="detail">{s.detail}</p>
+        </div>
+        <ul class="mock" aria-label="Example">
+          {s.mock.map((m) => <li class:list={{ strong: m.strong }}><span>{m.label}</span><span>{m.value}</span></li>)}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .tabs-scroll { overflow-x: auto; margin-inline: -4px; padding: 4px; scrollbar-width: none; }
+  .tabs-scroll::-webkit-scrollbar { display: none; }
+  .tabs { min-width: 880px; display: grid; grid-template-columns: 2fr 4fr 2fr; gap: 14px; }
+  .phase { display: grid; gap: 12px; align-content: start; }
+  .phase-tab { background: var(--paper); color: #0b0b10; padding: 18px 44px 18px 24px; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%); opacity: .55; transition: opacity .25s; }
+  .phase:not(:first-child) .phase-tab { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%, 22px 50%); padding-left: 42px; }
+  .phase.active .phase-tab { opacity: 1; }
+  .phase-tab .num { color: #5443d8; font-size: 15px; }
+  .phase-tab b { display: block; font-family: var(--font-display); font-weight: 800; letter-spacing: -.04em; font-size: 20px; line-height: 1.1; margin-top: 2px; }
+  .phase-steps { display: grid; gap: 8px; }
+  .phase:nth-child(1) .phase-steps, .phase:nth-child(3) .phase-steps { grid-template-columns: repeat(2, 1fr); }
+  .phase:nth-child(2) .phase-steps { grid-template-columns: repeat(4, 1fr); }
+  .step { text-align: left; background: rgba(0,0,0,.25); border: 0; border-radius: 16px; color: rgba(255,255,255,.85); padding: 14px; cursor: pointer; font: 700 14px/1.3 var(--font-body); display: grid; gap: 6px; transition: background .2s, color .2s; }
+  .step .num { font-size: 12px; color: rgba(255,255,255,.6); }
+  .step:hover { background: rgba(0,0,0,.45); color: #fff; }
+  .step[aria-selected="true"] { background: #000; color: #fff; }
+  .step[aria-selected="true"] .num { color: #8b7dff; }
+
+  .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #000; color: #fff; border-radius: var(--radius-lg); align-items: center; }
+  .panel[hidden] { display: none; }
+  .copy { display: grid; gap: 12px; justify-items: start; }
+  .time { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #8b7dff; border: 1.5px solid #8b7dff; border-radius: 999px; padding: 6px 14px; }
+  .copy h3 { font-size: clamp(32px, 3.6vw, 48px); margin-top: 6px; }
+  .tagline { font-weight: 700; color: #d6d6de; }
+  .detail { color: #a8a8b4; max-width: 34em; }
+  .mock { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .mock li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border: 1px solid #26262e; border-radius: 16px; font-size: 15px; }
+  .mock li span:first-child { color: #a8a8b4; min-width: 0; overflow-wrap: anywhere; }
+  .mock li span:last-child { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; text-align: right; overflow-wrap: anywhere; }
+  .mock li.strong { background: #5443d8; border-color: #5443d8; }
+  .mock li.strong span:first-child { color: rgba(255,255,255,.85); }
+  @media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const root = document.getElementById("how");
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-step]")];
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = root.querySelector<HTMLElement>(`[data-panel="${t.dataset.step}"]`);
+        if (panel) panel.hidden = !on;
+      });
+      root.querySelectorAll<HTMLElement>(".phase").forEach((p) => p.classList.toggle("active", p.contains(tab)));
+      if (focus) tab.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(t));
+      t.addEventListener("keydown", (e) => {
+        const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        select(tabs[(i + d + tabs.length) % tabs.length]!, true);
+      });
+    });
+    if (tabs[0]) select(tabs[0]);
+  }
+</script>

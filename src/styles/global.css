@@ -85,7 +85,7 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .section-head { display: grid; gap: 20px; max-width: 900px; margin-bottom: clamp(40px, 5vw, 64px); }
 .band { background: var(--band); color: var(--on-band); }
 .band .eyebrow, .band .lede, .band .prose p { color: var(--on-band-muted); }
-.ink { background: #000; color: #fff; --muted: #a8a8b4; --line: #26262e; --surface: #0d0d11; --surface-2: #17171d; --accent-text: #8b7dff; }
+.ink { background: #000; color: #fff; --shadow: none; --muted: #a8a8b4; --line: #26262e; --surface: #0d0d11; --surface-2: #17171d; --accent-text: #8b7dff; }
 
 /* Buttons and pills */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 999px; font: 700 16px var(--font-body); text-decoration: none; border: 1.5px solid transparent; cursor: pointer; white-space: nowrap; transition: transform .15s ease, background-color .15s ease, border-color .15s ease; }
