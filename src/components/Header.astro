@@ -1,5 +1,5 @@
 ---
-import { nav, site } from "../data/site";
+import { earlyAccessHref, nav, site } from "../data/site";
 const current = Astro.url.pathname;
 ---
 <header class="header">
@@ -9,7 +9,7 @@ const current = Astro.url.pathname;
     <nav aria-label="Main">
       <ul class="links">
         {nav.map((item) => (
-          <li><a href={item.href} aria-current={current.startsWith(item.href) ? "page" : undefined}>{item.label}</a></li>
+          <li><a href={item.href} aria-current={item.href.startsWith("/#") ? undefined : current.startsWith(item.href) ? "page" : undefined}>{item.label}</a></li>
         ))}
       </ul>
     </nav>
@@ -19,7 +19,7 @@ const current = Astro.url.pathname;
         <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
       </button>
-      <a class="btn btn-primary cta" href="/#waitlist">Join the waitlist</a>
+      <a class="btn btn-primary cta" href={earlyAccessHref}>Join waitlist</a>
       <button class="menu" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu>
         <span class="sr-only">Menu</span><i></i><i></i>
       </button>
@@ -28,7 +28,7 @@ const current = Astro.url.pathname;
   <nav id="mobile-nav" class="mobile" aria-label="Mobile" hidden>
     <ul class="wrap">
       {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-      <li><a class="btn btn-primary" href="/#waitlist">Join the waitlist</a></li>
+      <li><a class="btn btn-primary" href={earlyAccessHref}>Join waitlist</a></li>
     </ul>
   </nav>
 </header>

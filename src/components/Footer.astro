@@ -1,5 +1,5 @@
 ---
-import { audiences, site } from "../data/site";
+import { site } from "../data/site";
 const year = new Date().getFullYear();
 ---
 <footer class="footer ink">
@@ -7,58 +7,55 @@ const year = new Date().getFullYear();
     <div class="top">
       <div class="lockup">
         <a class="brand" href="/">{site.name}</a>
-        <p>{site.tagline}</p>
-        <ul class="social">
-          <li><a href={site.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
-          <li><a href={site.social.instagram} rel="me noopener" target="_blank">Instagram</a></li>
-          <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
-        </ul>
+        <p>{site.tagline} · {site.footerLine}</p>
       </div>
       <nav aria-label="Footer" class="cols">
         <div>
           <h2 class="eyebrow">Product</h2>
           <ul>
-            <li><a href="/how-it-works/">How it works</a></li>
-            <li><a href="/#waitlist">Join the waitlist</a></li>
+            <li><a href="/#how">How it works</a></li>
+            <li><a href="/#catalog">Catalog</a></li>
+            <li><a href="/#sides">For both sides</a></li>
           </ul>
-        </div>
-        <div>
-          <h2 class="eyebrow">Built for</h2>
-          <ul>{audiences.map((a) => <li><a href={`/for/${a.slug}/`}>{a.name}</a></li>)}</ul>
         </div>
         <div>
           <h2 class="eyebrow">Learn</h2>
           <ul>
             <li><a href="/sync-licensing/">Sync licensing guide</a></li>
             <li><a href="/glossary/">Licensing glossary</a></li>
-            <li><a href="/about/">About</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="eyebrow">Company</h2>
+          <ul>
+            <li><a href={site.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+            <li><a href={site.social.instagram} rel="me noopener" target="_blank">Instagram</a></li>
+            <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
           </ul>
         </div>
       </nav>
     </div>
     <div class="base">
       <span>© {year} {site.name}</span>
-      <span class="chev" aria-hidden="true">{[0, 1, 2, 3].map(() => <svg viewBox="0 0 26 32"><path d="M2 2l14 14L2 30h8l14-14L10 2z" /></svg>)}</span>
+      <span class="legal"><a href={site.terms}>Terms of Service</a><span aria-hidden="true">·</span><a href={site.privacy}>Privacy Policy</a></span>
     </div>
   </div>
 </footer>
 
 <style>
   .footer { padding-block: 72px 32px; }
-  .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
+  .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 48px; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
   .brand { font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 8vw, 104px); letter-spacing: -.07em; line-height: .9; text-decoration: none; }
-  .lockup p { color: var(--muted); margin-top: 16px; }
-  .social { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
-  .social a { color: #d6d6de; font-size: 15px; text-underline-offset: 3px; }
-  .social a:hover { color: #fff; }
+  .lockup p { color: var(--muted); margin-top: 16px; max-width: 36ch; }
   .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
   .cols h2 { font-size: 11px; letter-spacing: .2em; margin-bottom: 16px; line-height: 1.2; }
   .cols ul { list-style: none; padding: 0; display: grid; gap: 10px; }
-  .cols a { text-decoration: none; color: #d6d6de; font-size: 15px; }
+  .cols a { text-decoration: none; color: #d6d6de; font-size: 15px; overflow-wrap: anywhere; }
   .cols a:hover { color: #fff; }
-  .base { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; color: var(--muted); font-size: 14px; }
-  .chev { display: inline-flex; color: #7d6ef7; }
-  .chev svg { width: 22px; height: 28px; margin-right: -10px; fill: currentColor; }
+  .base { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 24px; color: var(--muted); font-size: 14px; }
+  .legal { display: inline-flex; gap: 10px; }
+  .legal a { color: var(--muted); text-decoration: none; }
+  .legal a:hover { color: #fff; }
   @media (max-width: 860px) { .top { grid-template-columns: 1fr; } }
   @media (max-width: 560px) { .cols { grid-template-columns: 1fr 1fr; } }
 </style>

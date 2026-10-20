@@ -1,33 +1,28 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import Problems from "../components/Problems.astro";
-import Solution from "../components/Solution.astro";
 import Workflow from "../components/Workflow.astro";
-import Platform from "../components/Platform.astro";
+import Discovery from "../components/Discovery.astro";
+import Clearance from "../components/Clearance.astro";
 import Catalog from "../components/Catalog.astro";
 import BothSides from "../components/BothSides.astro";
-import Team from "../components/Team.astro";
+import Cta from "../components/Cta.astro";
 import Faq from "../components/Faq.astro";
-import Waitlist from "../components/Waitlist.astro";
-import { homeFaq } from "../data/site";
-import { clearance, discovery } from "../data/platform";
+import { homeFaq, site } from "../data/site";
 import { faqLd, softwareLd } from "../data/schema";
 ---
-<Base
-  title="Music licensing from first search to final payment"
-  description="Synkro is the transaction layer for music licensing. Search 100,000+ recordings by sound, see every rights holder up front, negotiate, sign and pay in one workflow, in one to two weeks instead of six to eight."
-  jsonLd={[softwareLd(), faqLd(homeFaq)]}
->
+<Base title="Music Licensing, in One Place" description={site.description} jsonLd={[softwareLd(), faqLd(homeFaq)]}>
   <Hero />
-  <Problems />
-  <Solution />
   <Workflow />
-  <Platform {...discovery} />
-  <Platform {...clearance} />
+  <Discovery />
+  <Clearance />
   <Catalog />
   <BothSides />
-  <Team />
-  <Faq items={homeFaq} />
-  <Waitlist />
+  <Cta />
+  <Faq
+    items={homeFaq}
+    eyebrow="FAQ"
+    title='Frequently Asked <span class="hl">Questions.</span>'
+    lede="Everything you need to know about Synkro search, rights verification, and clearance workflow."
+  />
 </Base>

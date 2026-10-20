@@ -2,35 +2,28 @@
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import Workflow from "../components/Workflow.astro";
-import Platform from "../components/Platform.astro";
-import Faq from "../components/Faq.astro";
-import Waitlist from "../components/Waitlist.astro";
-import { howItWorksFaq, site, steps } from "../data/site";
-import { clearance, discovery } from "../data/platform";
-import { breadcrumbLd, faqLd } from "../data/schema";
+import Discovery from "../components/Discovery.astro";
+import Clearance from "../components/Clearance.astro";
+import Cta from "../components/Cta.astro";
+import { site, steps } from "../data/site";
+import { breadcrumbLd } from "../data/schema";
 
 const crumbs = [{ name: "How it works", href: "/how-it-works/" }];
 const howToLd = {
   "@type": "HowTo",
   name: `How to clear a sync license with ${site.name}`,
-  description: "The eight steps of a sync deal, from searching by sound to split payouts and file delivery.",
-  step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.title, text: s.detail })),
+  description: "Search catalogs, verify rights, automate negotiations, and execute licenses through a single workflow.",
+  step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: `${s.title}: ${s.feature}`, text: s.body })),
 };
 ---
 <Base
   title="How sync licensing works on Synkro"
-  description="The eight steps of a sync deal on Synkro: intelligent search, splits audit, client pitching, one-click requests, deal rooms, assisted drafting, escrow payouts and broadcast delivery."
-  jsonLd={[breadcrumbLd(crumbs), howToLd, faqLd(howItWorksFaq)]}
+  description="Find music, verify rights, pitch clients, request sync, negotiate, draft the contract, pay out splits and get files: the eight steps of a sync license on Synkro."
+  jsonLd={[breadcrumbLd(crumbs), howToLd]}
 >
-  <PageHero
-    eyebrow="How it works"
-    title='From first search to <span class="hl">final payment.</span>'
-    lede="A sync deal on Synkro has eight steps in three phases. Both sides work on the same record, so nothing gets lost between steps."
-    crumbs={crumbs}
-  />
+  <PageHero eyebrow="How it works" title='Sync <span class="hl">Anything.</span>' lede="Search catalogs, verify rights, automate negotiations, and execute licenses through a single workflow." crumbs={crumbs} />
   <Workflow />
-  <Platform {...discovery} />
-  <Platform {...clearance} />
-  <Faq items={howItWorksFaq} />
-  <Waitlist />
+  <Discovery />
+  <Clearance />
+  <Cta />
 </Base>

@@ -1,0 +1,85 @@
+---
+import "../styles/cards.css";
+const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg>`;
+const holders = ["Master Approval (Believe)", "Publisher 1 (Sony Publishing)", "Publisher 2 (Universal Publishing)"];
+const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web Only", "All Media & Social"], ["Term Length", "1 Year", "3 Years + Options"]];
+---
+<section class="section ink" id="clearance" aria-labelledby="clearance-title">
+  <div class="dots dots-bl"></div>
+  <div class="wrap">
+    <div class="part-head" data-reveal>
+      <p class="eyebrow">Part 02</p>
+      <h2 id="clearance-title">The Clearance <span class="hl">Workspace.</span></h2>
+      <p class="lede">The commercial project management layer for deals. Bring master rights holders and publishers into secure Deal Rooms to align splits, counter terms, redline contracts, and execute binding licenses instantly.</p>
+    </div>
+
+    <div class="cards-grid">
+      <article class="fcard wide" data-reveal data-play>
+        <div class="text">
+          <h3>All holders on one <span class="hl">thread.</span></h3>
+          <p>Negotiate splits, counter terms, and MFN requirements dynamically in a single project thread.</p>
+        </div>
+        <div class="ui">
+          {holders.map((h, i) => (
+            <div class="holder">
+              <div><span>{h}</span><b class="a" style={`--i: ${i}; --d: 1100ms`}>100% Agreed</b></div>
+              <span class="fill" style={`--i: ${i}`}><i style="--to: 100%"></i></span>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
+        <div class="text">
+          <h3>Synkro Contract <span class="hl">Assistant.</span></h3>
+          <p>Compare contract drafts to agreed terms and flag split or territory mismatches automatically.</p>
+        </div>
+        <div class="ui">
+          {diffs.map(([k, from, to], i) => (
+            <div class="diff">
+              <small>{k}</small>
+              <span><s>{from}</s> <ins class="a" style={`--i: ${i}; --d: 400ms`}>→ {to}</ins></span>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play>
+        <div class="text">
+          <h3>Secure digital <span class="hl">signatures.</span></h3>
+          <p>Execute binding licenses legally in seconds with multi-party digital signature tracking.</p>
+        </div>
+        <div class="ui">
+          {["Licensee Signed", "Publisher Signed", "Master Owner Signed"].map((s, i) => (
+            <div class="sig"><span class="tick" style={`--i: ${i}; --d: 200ms`}>✓</span>{s}</div>
+          ))}
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
+        <div class="text">
+          <h3>Simplified global <span class="hl">payments.</span></h3>
+          <p>The licensee pays once. We split it across every holder, handle withholding and VAT, and settle over RTP, SEPA, and more.</p>
+        </div>
+        <div class="ui">
+          <div class="row"><span>One payment in</span><span class="money" data-count="42000" data-prefix="€">€42,000</span></div>
+          <div class="row a" style="--i: 0; --d: 900ms"><span>↳ Master side · 100%</span><span>€12,000 paid</span></div>
+          <div class="row a" style="--i: 1; --d: 900ms"><span>↳ Publishing side · 50 / 50</span><span>€30,000 paid</span></div>
+          <div class="row a" style="--i: 2; --d: 900ms"><span>Taxes withheld &amp; remitted</span><span>€6,750</span></div>
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play style="--rd: 240ms">
+        <div class="text">
+          <h3>Clearance pack <span class="hl">delivery.</span></h3>
+          <p>Access broadcast-ready WAV files, stems, metadata sheets, and signed license agreements instantly.</p>
+        </div>
+        <div class="ui">
+          {["Track_Master_WAV.zip", "Instrumental_Stems_WAV.zip", "Signed_License_Agreement.pdf"].map((f, i) => (
+            <div class="file a" style={`--i: ${i}`}><span class="ficon" set:html={file} /><span>{f}</span><em>Download</em></div>
+          ))}
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

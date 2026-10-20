@@ -1,30 +1,33 @@
 import type { APIRoute } from "astro";
-import { audiences, glossary, homeFaq, site, stats } from "../data/site";
+import { catalogStats, glossary, homeFaq, site, steps } from "../data/site";
 
 // llms.txt: a plain-text map of the site for AI assistants and answer engines (llmstxt.org).
 export const GET: APIRoute = () => {
   const url = (path: string) => new URL(path, site.url).href;
+  const stat = (s: (typeof catalogStats)[number]) => s.text ?? `${s.value!.toLocaleString("en-US")}${s.suffix ?? ""}`;
   const body = [
     `# ${site.name}`,
     "",
     `> ${site.description}`,
     "",
-    `${site.name} is operated by ${site.legalName}. Full launch: ${site.launch}.`,
+    `${site.name} is operated by ${site.legalName}.`,
     "",
-    "## Key facts",
-    ...stats.map((s) => `- ${s.value} ${s.label} (source: ${s.source})`),
+    "## Catalog",
+    ...catalogStats.map((s) => `- ${s.label}: ${stat(s)} ${s.body}`),
+    "",
+    "## How a license works on Synkro",
+    ...steps.map((s) => `${Number(s.n)}. ${s.title} (${s.feature}, ${s.badge.toLowerCase()}): ${s.body}`),
     "",
     "## Pages",
-    `- [How it works](${url("/how-it-works/")}): the eight steps of a sync deal on ${site.name}`,
-    `- [What is sync licensing?](${url("/sync-licensing/")}): a practical guide to sync licenses, costs and timelines`,
-    `- [About](${url("/about/")}): team and company vision`,
-    ...audiences.map((a) => `- [${a.name}](${url(`/for/${a.slug}/`)}): ${a.metaDescription}`),
-    "",
-    "## Glossary",
-    ...glossary.map((t) => `- [${t.term}](${url(`/glossary/${t.slug}/`)}): ${t.short}`),
+    `- [Home](${url("/")})`,
+    `- [How it works](${url("/how-it-works/")})`,
+    `- [What is sync licensing?](${url("/sync-licensing/")}): a practical guide to sync licenses`,
+    `- [Glossary](${url("/glossary/")}): music licensing terms in plain English`,
+    ...glossary.map((t) => `  - [${t.term}](${url(`/glossary/${t.slug}/`)}): ${t.short}`),
     "",
     "## FAQ",
     ...homeFaq.flatMap((f) => [`### ${f.q}`, f.a, ""]),
+    `Contact: ${site.email}`,
   ].join("\n");
 
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8" } });

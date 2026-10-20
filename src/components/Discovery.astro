@@ -1,0 +1,77 @@
+---
+import "../styles/cards.css";
+const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg>`;
+---
+<section class="section" id="discovery" aria-labelledby="discovery-title">
+  <div class="wrap">
+    <div class="part-head" data-reveal>
+      <p class="eyebrow">Part 01</p>
+      <h2 id="discovery-title">The Discovery <span class="hl">Engine.</span></h2>
+      <p class="lede">A complete search and catalog management infrastructure. Ingest your music, run brief-based searches, resolve ownership shares, and trigger requests for any song in the world: all within your private project dashboards.</p>
+    </div>
+
+    <div class="cards-grid">
+      <article class="fcard wide" data-reveal data-play>
+        <div class="text">
+          <h3>Instant catalog ingestion &amp; <span class="hl">AI enrichment.</span></h3>
+          <p>Import catalogs via CSV, DDEX Feed, Drive, or Manual Upload. Automatically extract over 20 acoustic &amp; AI parameters while finding master &amp; publishing splits instantly.</p>
+        </div>
+        <div class="ui">
+          <span class="cap">Import sources</span>
+          <div class="chips">{["CSV", "DDEX Feed", "Drive", "Manual"].map((c, i) => <span class="chip light" style={`--i: ${i}`}>{c}</span>)}</div>
+          <span class="cap">20+ acoustic &amp; AI parameters</span>
+          <div class="chips">{["G-Major · 124 BPM", "Rising Arc", "Chord: I-V-vi-IV", "Nostalgic Synth"].map((c, i) => <span class="chip a" style={`--i: ${i}; --d: 900ms`}>{c}</span>)}</div>
+          <div class="holder a" style="--i: 0; --d: 1500ms">
+            <div><span class="cap">Finding splits</span><b>Live lookup</b></div>
+            <span class="fill" style="--i: 0; --d: 1600ms"><i style="--to: 100%"></i></span>
+            <div><span>Believe (50%)</span><span>Sony (25%) / Warner (25%)</span></div>
+          </div>
+          <div class="done a" style="--i: 0; --d: 3000ms"><span class="tick" style="--d: 3100ms">✓</span>Splits &amp; Parameters Extracted</div>
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
+        <div class="text">
+          <h3>Direct rights <span class="hl">lookups.</span></h3>
+          <p>Surface splits and send license requests instantly for any song.</p>
+        </div>
+        <div class="ui">
+          <div class="field"><small>Song Name</small><b data-type>Starboy</b></div>
+          <div class="field"><small>Artist Name</small><b data-type data-delay="500">The Weeknd</b></div>
+          <div class="field"><small>Territory</small><b data-type data-delay="1100">Worldwide</b></div>
+          <span class="btnlike a" style="--d: 1700ms">Surface Splits &amp; Request</span>
+        </div>
+      </article>
+
+      <article class="fcard wide" data-reveal data-play>
+        <div class="text">
+          <h3>Search as a <span class="hl">workspace.</span></h3>
+          <p>Upload briefs, drag in audio &amp; video reference files, and have real-time back and forths with your search agent to continuously refine results.</p>
+        </div>
+        <div class="ui">
+          <div class="row"><span class="cap">Creative Brief</span><span class="chip on">🔒 NDA Secure</span></div>
+          <div class="field"><small>Brief</small><b data-type>TV Spot: Upbeat electronic for luxury watch...</b></div>
+          <div class="split">
+            <div class="file a" style="--i: 0; --d: 1400ms"><span class="ficon" set:html={file} /><span>Audio_Ref.wav</span></div>
+            <div class="file a" style="--i: 1; --d: 1400ms"><span class="ficon" set:html={file} /><span>Scene_Cut.mp4</span></div>
+          </div>
+          <p class="bubble me a" style="--d: 2000ms">Make it more energetic during the climax scene at 0:24</p>
+          <p class="bubble ai a" style="--d: 2600ms">Adjusted energy curve to match the climax drop at 0:24. Filtered 3 matching electronic tracks.</p>
+        </div>
+      </article>
+
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
+        <div class="text">
+          <h3>Custom terms <span class="hl">license requests.</span></h3>
+          <p>Create custom terms for license requests by packaging media scope, paid options, territories, and much more.</p>
+        </div>
+        <div class="ui">
+          <div class="row a" style="--i: 0"><span>Media Scope</span><span>Paid &amp; Unpaid Social</span></div>
+          <div class="row a" style="--i: 1"><span>Territory</span><span>Worldwide</span></div>
+          <div class="row a" style="--i: 2"><span>Options</span><span>+1 Year Option (10% lift)</span></div>
+          <span class="chip on a" style="--i: 3">+ 5 more terms</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

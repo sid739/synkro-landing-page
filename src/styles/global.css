@@ -117,3 +117,26 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* Motion. Start states apply only with JS and full motion, so content is never hidden otherwise. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--rd, 0ms); }
+  .js [data-reveal].in { opacity: 1; transform: none; }
+
+  /* Children of a playing card: .a rises in, staggered by --i. */
+  .js [data-play]:not(.play) .a { opacity: 0; }
+  .js [data-play].play .a { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 160ms + var(--d, 0ms)); }
+  /* Bars fill to --to. */
+  .js [data-play]:not(.play) .fill > i { width: 0 !important; }
+  .js [data-play].play .fill > i { transition: width 1.3s cubic-bezier(.3,.7,.2,1); transition-delay: calc(var(--i, 0) * 220ms + var(--d, 0ms)); }
+  /* Ticks pop. */
+  .js [data-play]:not(.play) .tick { transform: scale(0); }
+  .js [data-play].play .tick { animation: pop .45s cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(var(--i, 0) * 420ms + var(--d, 0ms)); }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.typing::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -2px; background: currentColor; animation: caret .8s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.fill { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.fill > i { display: block; height: 100%; width: var(--to, 100%); border-radius: inherit; background: var(--accent); }
+.tick { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; flex: none; }

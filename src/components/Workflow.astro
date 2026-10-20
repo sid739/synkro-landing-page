@@ -1,27 +1,24 @@
 ---
 import { phases, steps } from "../data/site";
-interface Props { headingLevel?: "h2" | "h1" }
-const { headingLevel = "h2" } = Astro.props;
-const Heading = headingLevel;
 ---
 <section class="section band" id="how" aria-labelledby="how-title">
   <div class="dots dots-tr"></div>
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <p class="eyebrow">How it works</p>
-      <Heading id="how-title">Licensing at the speed of modern production.</Heading>
-      <p class="lede">Eight steps that usually take weeks of email, run from one workspace. License a song instantly, or up to 90% faster than the traditional process.</p>
+      <h2 id="how-title">Licensing at the speed of <span class="hl">modern production.</span></h2>
     </div>
 
-    <div class="tabs-scroll">
+    <div class="tabs-scroll" data-reveal>
       <div class="tabs" role="tablist" aria-label="Workflow steps">
         {phases.map((ph, pi) => (
           <div class="phase" data-phase={pi}>
-            <div class="phase-tab"><span class="num">{String(pi + 1).padStart(2, "0")}</span><b>{ph}</b></div>
+            <div class="phase-tab"><span class="num">Phase {String(pi + 1).padStart(2, "0")}</span><b>{ph}</b></div>
             <div class="phase-steps">
               {steps.filter((s) => s.phase === pi).map((s) => (
                 <button class="step" type="button" role="tab" id={`tab-${s.n}`} aria-controls={`panel-${s.n}`} aria-selected={s.n === "01" ? "true" : "false"} tabindex={s.n === "01" ? 0 : -1} data-step={s.n}>
                   <span class="num">{s.n}</span>{s.title}
+                  <i class="timer" aria-hidden="true"></i>
                 </button>
               ))}
             </div>
@@ -31,80 +28,124 @@ const Heading = headingLevel;
     </div>
 
     {steps.map((s) => (
-      <article class="panel" role="tabpanel" id={`panel-${s.n}`} aria-labelledby={`tab-${s.n}`} data-panel={s.n} hidden={s.n !== "01"}>
+      <article class="panel" role="tabpanel" id={`panel-${s.n}`} aria-labelledby={`tab-${s.n}`} data-panel={s.n} data-play data-manual hidden={s.n !== "01"}>
         <div class="copy">
-          <span class="time">{s.time}</span>
-          <h3>{s.feature}</h3>
-          <p class="tagline">{s.tagline}</p>
-          <p class="detail">{s.detail}</p>
+          <span class="badge a">{s.badge}</span>
+          <h3 class="a" style="--i: 1">{s.feature}</h3>
+          <p class="tagline a" style="--i: 2">{s.tagline}</p>
+          <p class="body a" style="--i: 3">{s.body}</p>
         </div>
         <ul class="mock" aria-label="Example">
-          {s.mock.map((m) => <li class:list={{ strong: m.strong }}><span>{m.label}</span><span>{m.value}</span></li>)}
+          {s.mock.map((m, i) => (
+            <li class:list={["a", m.kind]} style={`--i: ${i + 2}`}>
+              {m.kind === "ok" && <span class="tick" style={`--i: ${i + 1}; --d: 300ms`}>✓</span>}
+              {m.kind === "play" && <span class="ico play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>}
+              {m.kind === "plus" && <span class="ico plus" aria-hidden="true">+</span>}
+              {m.kind === "file" && <span class="ico file" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg></span>}
+              <span class="t">{m.text}</span>
+            </li>
+          ))}
         </ul>
       </article>
     ))}
+
+    <p class="speed" data-reveal>License a song instantly or up to <strong>90% faster</strong> with our modern pipeline.</p>
   </div>
 </section>
 
 <style>
   .tabs-scroll { overflow-x: auto; margin-inline: -4px; padding: 4px; scrollbar-width: none; }
   .tabs-scroll::-webkit-scrollbar { display: none; }
-  .tabs { min-width: 880px; display: grid; grid-template-columns: 2fr 4fr 2fr; gap: 14px; }
+  .tabs { min-width: 900px; display: grid; grid-template-columns: 2fr 4fr 2fr; gap: 14px; }
   .phase { display: grid; gap: 12px; align-content: start; }
-  .phase-tab { background: var(--paper); color: #0b0b10; padding: 18px 44px 18px 24px; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%); opacity: .55; transition: opacity .25s; }
+  .phase-tab { background: var(--paper); color: #0b0b10; padding: 18px 44px 18px 24px; clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%); opacity: .5; transition: opacity .3s; }
   .phase:not(:first-child) .phase-tab { clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 50%, calc(100% - 24px) 100%, 0 100%, 22px 50%); padding-left: 42px; }
   .phase.active .phase-tab { opacity: 1; }
-  .phase-tab .num { color: #5443d8; font-size: 15px; }
+  .phase-tab .num { color: #5443d8; font-size: 13px; }
   .phase-tab b { display: block; font-family: var(--font-display); font-weight: 800; letter-spacing: -.04em; font-size: 20px; line-height: 1.1; margin-top: 2px; }
   .phase-steps { display: grid; gap: 8px; }
   .phase:nth-child(1) .phase-steps, .phase:nth-child(3) .phase-steps { grid-template-columns: repeat(2, 1fr); }
   .phase:nth-child(2) .phase-steps { grid-template-columns: repeat(4, 1fr); }
-  .step { text-align: left; background: rgba(0,0,0,.25); border: 0; border-radius: 16px; color: rgba(255,255,255,.85); padding: 14px; cursor: pointer; font: 700 14px/1.3 var(--font-body); display: grid; gap: 6px; transition: background .2s, color .2s; }
+  .step { position: relative; overflow: hidden; text-align: left; background: rgba(0,0,0,.25); border: 0; border-radius: 16px; color: rgba(255,255,255,.85); padding: 14px; cursor: pointer; font: 700 14px/1.3 var(--font-body); display: grid; gap: 6px; transition: background .2s, color .2s; }
   .step .num { font-size: 12px; color: rgba(255,255,255,.6); }
   .step:hover { background: rgba(0,0,0,.45); color: #fff; }
   .step[aria-selected="true"] { background: #000; color: #fff; }
   .step[aria-selected="true"] .num { color: #8b7dff; }
+  .timer { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #8b7dff; }
+  .step[aria-selected="true"].running .timer { animation: timer var(--dur, 5s) linear forwards; }
+  @keyframes timer { to { width: 100%; } }
 
-  .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #000; color: #fff; border-radius: var(--radius-lg); align-items: center; }
+  .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #000; color: #fff; border-radius: var(--radius-lg); align-items: center; min-height: 320px; }
   .panel[hidden] { display: none; }
   .copy { display: grid; gap: 12px; justify-items: start; }
-  .time { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #8b7dff; border: 1.5px solid #8b7dff; border-radius: 999px; padding: 6px 14px; }
+  .badge { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #8b7dff; border: 1.5px solid #8b7dff; border-radius: 999px; padding: 6px 14px; }
   .copy h3 { font-size: clamp(32px, 3.6vw, 48px); margin-top: 6px; }
-  .tagline { font-weight: 700; color: #d6d6de; }
-  .detail { color: #a8a8b4; max-width: 34em; }
+  .tagline { font-weight: 700; color: #d6d6de; font-style: italic; }
+  .body { color: #a8a8b4; max-width: 34em; }
   .mock { list-style: none; padding: 0; display: grid; gap: 10px; }
-  .mock li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; border: 1px solid #26262e; border-radius: 16px; font-size: 15px; }
-  .mock li span:first-child { color: #a8a8b4; min-width: 0; overflow-wrap: anywhere; }
-  .mock li span:last-child { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; text-align: right; overflow-wrap: anywhere; }
-  .mock li.strong { background: #5443d8; border-color: #5443d8; }
-  .mock li.strong span:first-child { color: rgba(255,255,255,.85); }
+  .mock li { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border: 1px solid #26262e; border-radius: 16px; font-size: 15px; background: #0d0d11; }
+  .mock .t { min-width: 0; overflow-wrap: anywhere; }
+  .mock .label { color: #a8a8b4; border-style: dashed; }
+  .mock .ok { background: #5443d8; border-color: #5443d8; font-weight: 700; }
+  .mock .ok .tick { background: #fff; color: #5443d8; }
+  .mock .play .t { font-weight: 700; }
+  .ico { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex: none; background: #17171d; color: #8b7dff; font-weight: 800; }
+  .ico svg { width: 14px; height: 14px; fill: currentColor; }
+  .ico.file svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+  .ico.play { background: #5443d8; color: #fff; }
+  .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--on-band-muted); }
+  .speed strong { color: #fff; }
   @media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
 </style>
 
 <script>
+  import { play } from "../scripts/motion";
   const root = document.getElementById("how");
   if (root) {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-step]")];
-    const select = (tab: HTMLButtonElement, focus = false) => {
-      tabs.forEach((t) => {
-        const on = t === tab;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const DUR = 5200;
+    let index = 0;
+    let auto = !reduce;
+    let timer = 0;
+    let visible = false;
+
+    const select = (i: number, focus = false) => {
+      index = i;
+      tabs.forEach((t, j) => {
+        const on = j === i;
         t.setAttribute("aria-selected", String(on));
         t.tabIndex = on ? 0 : -1;
+        t.classList.toggle("running", on && auto);
         const panel = root.querySelector<HTMLElement>(`[data-panel="${t.dataset.step}"]`);
-        if (panel) panel.hidden = !on;
+        if (panel) { panel.hidden = !on; if (on) play(panel); }
       });
-      root.querySelectorAll<HTMLElement>(".phase").forEach((p) => p.classList.toggle("active", p.contains(tab)));
-      if (focus) tab.focus();
+      root.querySelectorAll<HTMLElement>(".phase").forEach((p) => p.classList.toggle("active", p.contains(tabs[i]!)));
+      if (focus) tabs[i]!.focus();
+      schedule();
     };
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (auto && visible && !document.hidden) timer = window.setTimeout(() => select((index + 1) % tabs.length), DUR);
+    };
+    const stopAuto = () => { auto = false; window.clearTimeout(timer); tabs.forEach((t) => t.classList.remove("running")); };
+
+    root.style.setProperty("--dur", `${DUR}ms`);
     tabs.forEach((t, i) => {
-      t.addEventListener("click", () => select(t));
+      t.addEventListener("click", () => { stopAuto(); select(i); });
       t.addEventListener("keydown", (e) => {
         const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
         if (!d) return;
-        e.preventDefault();
-        select(tabs[(i + d + tabs.length) % tabs.length]!, true);
+        e.preventDefault(); stopAuto();
+        select((i + d + tabs.length) % tabs.length, true);
       });
     });
-    if (tabs[0]) select(tabs[0]);
+    new IntersectionObserver(([e]) => {
+      const was = visible;
+      visible = !!e?.isIntersecting;
+      if (visible && !was) select(index); else if (!visible) window.clearTimeout(timer);
+    }, { threshold: 0.3 }).observe(root);
+    document.addEventListener("visibilitychange", schedule);
+    root.querySelectorAll<HTMLElement>("[data-panel]").forEach((p) => p.hidden || p.classList.add("play"));
   }
 </script>

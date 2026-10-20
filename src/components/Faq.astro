@@ -1,15 +1,16 @@
 ---
 import type { Faq } from "../data/site";
-interface Props { items: Faq[]; title?: string; eyebrow?: string }
-const { items, title = "Questions, answered.", eyebrow = "FAQ" } = Astro.props;
+interface Props { items: Faq[]; title?: string; eyebrow?: string; lede?: string }
+const { items, title = "Questions, answered.", eyebrow = "FAQ", lede } = Astro.props;
 ---
 <section class="section" id="faq" aria-labelledby="faq-title">
   <div class="wrap grid">
-    <div class="section-head">
+    <div class="section-head" data-reveal>
       <p class="eyebrow">{eyebrow}</p>
-      <h2 id="faq-title">{title}</h2>
+      <h2 id="faq-title" set:html={title} />
+      {lede && <p class="lede">{lede}</p>}
     </div>
-    <div class="items">
+    <div class="items" data-reveal style="--rd: 120ms">
       {items.map((f, i) => (
         <details open={i === 0}>
           <summary><h3>{f.q}</h3><span class="icon" aria-hidden="true"></span></summary>

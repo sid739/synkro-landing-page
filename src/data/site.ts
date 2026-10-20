@@ -1,215 +1,132 @@
-// Single source of truth for brand facts, copy that appears on more than one page,
-// and the structured data built from it. Facts here are quoted by search engines
-// and AI answer engines, so every number must be one the company stands behind.
+// Single source of truth for the site's copy and brand facts. All product copy comes from the
+// current zenmusicgroup.com landing page, with the product name changed to Synkro.
 
 export const site = {
   name: "Synkro",
   legalName: "Zen Music Group",
   url: "https://synkro.com",
-  tagline: "The transaction layer for music licensing.",
+  tagline: "Music licensing, in one place",
+  footerLine: "Built for buyers, labels, publishers, and rights holders",
   description:
-    "Synkro is a music licensing platform that takes a sync deal from first search to final payment in one workflow: semantic search, rights clearance, negotiation, contracts and split payouts.",
-  launch: "January 2027",
-  launchISO: "2027-01",
-  locale: "en_GB",
+    "Synkro helps creative teams find the right music by feeling, understand the rights behind every track, and clear sync licenses in days, not months. Discovery, rights, negotiation, and payment in one workflow.",
+  locale: "en_US",
   email: "hello@zenmusicgroup.com",
   contactEmail: "contact@zenmusicgroup.com",
+  terms: "https://www.zenmusicgroup.com/terms",
+  privacy: "https://www.zenmusicgroup.com/privacy",
   social: {
     linkedin: "https://www.linkedin.com/company/zen-music-group",
     instagram: "https://www.instagram.com/zen_music_group",
   },
 } as const;
 
+export const earlyAccessHref = `mailto:${site.email}?subject=${encodeURIComponent(`${site.name} early access`)}`;
+export const demoHref = `mailto:${site.email}?subject=${encodeURIComponent(`${site.name} demo request`)}`;
+
 export const nav = [
-  { href: "/how-it-works/", label: "How it works" },
-  { href: "/for/music-supervisors/", label: "Licensees" },
-  { href: "/for/labels-and-publishers/", label: "Rights holders" },
+  { href: "/#how", label: "How it works" },
+  { href: "/#catalog", label: "Catalog" },
+  { href: "/#sides", label: "For both sides" },
   { href: "/sync-licensing/", label: "Guide" },
-  { href: "/about/", label: "About" },
 ] as const;
 
-// Headline proof points. Each carries its source so the page can cite it.
-export const stats = [
-  { value: "100,000+", label: "master recordings in the catalog", source: "Synkro catalog, October 2026" },
-  { value: "1–2 weeks", label: "from first search to final payment", source: "Synkro pilot deals" },
-  { value: "$2.4B+", label: "global sync deal value", source: "IFPI Global Music Report 2026" },
+export const builtFor = ["Music Supervisors", "Labels & Publishers", "Creative Teams"] as const;
+
+export const artists = [
+  { name: "Aphex Twin", genre: "IDM & Electronic", photo: "/artists/aphex-twin.jpg" },
+  { name: "M83", genre: "Synthpop & Ambient", photo: "/artists/m83.jpg" },
+  { name: "A.R. Rahman", genre: "Cinematic & World", photo: "/artists/ar-rahman.jpg" },
+  { name: "Royel Otis", genre: "Indie Pop", photo: "/artists/royel-otis.jpg" },
+  { name: "Sara Landry", genre: "Hard Techno", photo: "/artists/sara-landry.jpg" },
+  { name: "Novo Amor", genre: "Indie Folk", photo: "/artists/novo-amor.jpg" },
+  { name: "Vancouver Sleep Clinic", genre: "Ambient Pop", photo: "/artists/vancouver-sleep-clinic.jpg" },
+  { name: "Sabaton", genre: "Power Metal", photo: "/artists/sabaton.jpg" },
+  { name: "Petit Biscuit", genre: "Melodic Electronic", photo: "/artists/petit-biscuit.jpg" },
 ] as const;
 
-export const problems = [
-  {
-    title: "The blind search",
-    body: "Keyword search finds the hits. The rest of every catalog stays buried.",
-  },
-  {
-    title: "The rights-holder ghost hunt",
-    body: "Weeks lost tracking down every label, publisher and writer on a single song.",
-  },
-  {
-    title: "Workflow anarchy",
-    body: "Around 50 emails a deal before a lawyer sees it. Terms get buried, and every lost detail costs more time.",
-  },
-  {
-    title: "The deal killer",
-    body: "6–8 weeks and legal fees on both sides. Productions stall, and some deals die.",
-  },
-] as const;
-
-export const pillars = [
-  { title: "Find the track", tag: "Semantic search", body: "Search by sound and mood. Every catalog gets heard, not just the hits." },
-  { title: "Clear every owner", tag: "One-click clearance", body: "Labels, publishers and writers cleared in a single transaction." },
-  { title: "Agree the terms", tag: "One shared deal room", body: "Every term and message lives on the deal, not in an inbox." },
-  { title: "Sign and get paid", tag: "Contracts and payouts", body: "Drafted from the agreed terms, signed off by your lawyers. Payouts split automatically." },
-] as const;
+export const phases = ["Discover & Search", "Clearance & Drafting", "Deliver"] as const;
 
 export type Step = {
   n: string;
   phase: 0 | 1 | 2;
   title: string;
+  badge: string;
   feature: string;
   tagline: string;
-  time: string;
-  detail: string;
-  mock: { label: string; value: string; strong?: boolean }[];
+  body: string;
+  mock: { text: string; kind?: "ok" | "play" | "plus" | "file" | "label" }[];
 };
 
-// The eight steps of a deal, with the feature that handles each one. Mock rows are illustrative.
 export const steps: Step[] = [
-  { n: "01", phase: 0, title: "Find music", feature: "Intelligent search", tagline: "Find the right song, instantly", time: "Instant",
-    detail: "Describe the scene or drop in a reference track. Synkro matches on sound, not just keywords, and returns ranked results in under a second.",
-    mock: [{ label: "Search", value: "upbeat electronic, energetic chord progressions" }, { label: "horizon_cut.wav", value: "98% acoustic match", strong: true }] },
-  { n: "02", phase: 0, title: "Verify rights", feature: "Instant splits audit", tagline: "Full ownership transparency", time: "Instant",
-    detail: "Master and publishing registries are reconciled as you search, so every result shows who owns it and in what share before anyone falls in love with it.",
-    mock: [{ label: "Master", value: "Believe · 50%" }, { label: "Publishing", value: "Publisher A 25% · Publisher B 25%" }, { label: "Split registry audit", value: "Complete", strong: true }] },
-  { n: "03", phase: 1, title: "Pitch clients", feature: "Portal pitching", tagline: "Frictionless client portals", time: "Instant",
-    detail: "Share a pitch link with music synced to your cut. Creative leads audition, rate and approve placements in the browser.",
-    mock: [{ label: "Pitch link", value: "Campaign Horizon" }, { label: "Picture", value: "scene_cut_v2.mp4" }, { label: "Player", value: "Linked to picture", strong: true }] },
-  { n: "04", phase: 1, title: "Request sync", feature: "One-click requests", tagline: "Pre-filled deal terms", time: "Instant",
-    detail: "Key deal terms are filled in and checked up front, then routed straight to each verified rights holder's sync desk.",
-    mock: [{ label: "Territory", value: "Worldwide" }, { label: "Term", value: "1 year" }, { label: "Routed to", value: "All verified holders", strong: true }] },
-  { n: "05", phase: 1, title: "Negotiate", feature: "Unified deal rooms", tagline: "One secure workspace", time: "A few days",
-    detail: "No email chains. Offers, counters, terms and chat for every rights holder sit in one transparent deal room.",
-    mock: [{ label: "Buyer proposed", value: "$5,000 all-in" }, { label: "Holder countered", value: "$6,000" }, { label: "Deal room", value: "Aligned", strong: true }] },
-  { n: "06", phase: 1, title: "Draft contract", feature: "Assisted drafting", tagline: "AI redlining in minutes", time: "1–2 days",
-    detail: "The license is drafted on the rights holder's own contract. Built-in checks flag territory and split conflicts against the agreed terms.",
-    mock: [{ label: "Clause 7.1", value: "Worldwide rights approved" }, { label: "Clause 7.2", value: "Split payouts enabled" }, { label: "Compliance", value: "14 rules checked", strong: true }] },
-  { n: "07", phase: 2, title: "Payout splits", feature: "Instant settlement", tagline: "Escrow-based split payouts", time: "Instant",
-    detail: "The licensee pays once. Escrow pays every rights holder their share on signature, with no quarterly wait.",
-    mock: [{ label: "Escrow disbursed", value: "$6,000", strong: true }, { label: "Believe", value: "50%" }, { label: "Publisher A · Publisher B", value: "25% · 25%" }] },
-  { n: "08", phase: 2, title: "Get files", feature: "Broadcast delivery", tagline: "Certified clearance package", time: "Instant",
-    detail: "Ready to air. Download broadcast WAVs, stems, the signed license and cue sheet information in one package.",
-    mock: [{ label: "clearance_pack.zip", value: "Ready", strong: true }, { label: "Includes", value: "WAV · stems · license PDF" }] },
+  { n: "01", phase: 0, title: "Find Music", badge: "Instant", feature: "Intelligent Search", tagline: "Find the perfect song, instantly",
+    body: "Find the right song instantly. Input briefs or reference tracks to locate matching acoustics in sub-seconds.",
+    mock: [{ text: "Search: upbeat electronic, energetic chord progressions", kind: "label" }, { text: "01_horizon_cut.wav · 98% Acoustic Match", kind: "play" }] },
+  { n: "02", phase: 0, title: "Verify Rights", badge: "Instant", feature: "Instant Splits Audit", tagline: "100% ownership transparency",
+    body: "Clear splits automatically. Reconciles master and publishing registries in real-time to avoid production delays.",
+    mock: [{ text: "Master: Believe (50%)" }, { text: "Publishing: Sony (25%) / Warner (25%)" }, { text: "Split Registry Audit Complete", kind: "ok" }] },
+  { n: "03", phase: 1, title: "Pitch Clients", badge: "Instant", feature: "Portal Pitching", tagline: "Frictionless client portals",
+    body: "Pitch with synced video. Creative leads audition, rate, and approve track placements directly in-browser.",
+    mock: [{ text: "Pitch Link: Campaign Horizon", kind: "label" }, { text: "scene_cut_v2.mp4", kind: "file" }, { text: "Linked Player", kind: "play" }] },
+  { n: "04", phase: 1, title: "Request Sync", badge: "Instant", feature: "One-Click Requests", tagline: "Pre-populated deal terms",
+    body: "Automate intake. Key deal parameters are pre-validated and routed directly to verified sync desks.",
+    mock: [{ text: "Outgoing license request", kind: "label" }, { text: "Territory: Worldwide" }, { text: "Term: 1 Year" }, { text: "Pre-populated terms routed to verified holders", kind: "ok" }] },
+  { n: "05", phase: 1, title: "Negotiate", badge: "A few days", feature: "Unified Deal Rooms", tagline: "Secure workspace bidding",
+    body: "Banish email chains. Align counter-offers, terms, and chat in one secure, transparent workspace.",
+    mock: [{ text: "Buyer proposed: $5,000 all-in" }, { text: "Holder counter: $6,000" }, { text: "Deal Workspace Aligned", kind: "ok" }] },
+  { n: "06", phase: 1, title: "Draft Contract", badge: "1-2 days", feature: "Assisted Drafting", tagline: "AI redlining in minutes",
+    body: "Draft sync agreements in minutes. Built-in compliance checks catch territory and split conflicts instantly.",
+    mock: [{ text: "Clause 7.1: worldwide rights approved", kind: "plus" }, { text: "Clause 7.2: split payouts enabled", kind: "plus" }, { text: "Checked against 14 compliance rules", kind: "ok" }] },
+  { n: "07", phase: 2, title: "Payout Splits", badge: "Instant", feature: "Instant Settlement", tagline: "Escrow-based split payouts",
+    body: "Direct split payouts. Escrow funds disburse directly to all rights holders upon signature, with no quarterly delays.",
+    mock: [{ text: "$6,000 Escrow Disbursed", kind: "label" }, { text: "Believe: 50%" }, { text: "Sony: 25%" }, { text: "Warner: 25%" }] },
+  { n: "08", phase: 2, title: "Get Files", badge: "Instant", feature: "Broadcast Delivery", tagline: "Certified clearance package",
+    body: "Ready to air. Download broadcast WAVs, stem files, signed license PDFs, and cue sheets in one package.",
+    mock: [{ text: "clearance_pack_certified.zip", kind: "file" }, { text: "Download Package", kind: "ok" }] },
 ];
 
-export const phases = ["Discover and search", "Clearance and drafting", "Deliver"] as const;
+export type Stat = { value?: number; suffix?: string; text?: string; label: string; body: string; wide?: boolean };
 
-export type Feature = { title: string; body: string; rows: { label: string; value: string }[]; wide?: boolean };
-
-export const discoveryFeatures: Feature[] = [
-  { title: "Catalog ingestion and AI enrichment", wide: true,
-    body: "Import catalogs by CSV, DDEX feed, Drive or manual upload. Synkro extracts more than 20 acoustic and AI parameters and finds master and publishing splits automatically.",
-    rows: [{ label: "Import from", value: "CSV · DDEX · Drive · Upload" }, { label: "Key · tempo", value: "G major · 124 BPM" }, { label: "Shape · chords", value: "Rising arc · I–V–vi–IV" }, { label: "Splits", value: "Found" }] },
-  { title: "Direct rights lookups",
-    body: "Look up any song, see its splits and send a license request straight away.",
-    rows: [{ label: "Song", value: "Any released track" }, { label: "Territory", value: "Worldwide" }] },
-  { title: "Search as a workspace", wide: true,
-    body: "Upload briefs, drag in audio and video references, and refine results in a back-and-forth with your search agent. Briefs stay under NDA.",
-    rows: [{ label: "Brief", value: "TV spot: upbeat electronic for a luxury watch" }, { label: "References", value: "audio_ref.wav · scene_cut.mp4" }] },
-  { title: "Custom-terms license requests",
-    body: "Package media scope, paid options, territories and more into one request.",
-    rows: [{ label: "Media", value: "Paid and unpaid social" }, { label: "Option", value: "+1 year at 10% uplift" }] },
+export const catalogStats: Stat[] = [
+  { value: 100000, suffix: "+", label: "Catalog", body: "master recordings ready to be discovered, filtered, shortlisted, and routed into licensing workflows.", wide: true },
+  { value: 1000, suffix: "+", label: "Subgenres", body: "niche musical subgenres for extremely precise search and filtering." },
+  { value: 10000, suffix: "+", label: "Artists", body: "creators represented across the catalog." },
+  { value: 11000, suffix: "+", label: "Albums & Releases", body: "distinct releases spanning singles, EPs, and full-length records.", wide: true },
+  { value: 60000, suffix: "+", label: "One-Stop", body: "tracks cleared for both master and publishing, ready for immediate sync licensing.", wide: true },
+  { value: 20, suffix: "+", label: "Labels & Publishers", body: "labels, publishers and music companies, from Believe and Nuclear Blast to R&S Records and Bella Figura.", wide: true },
+  { text: "1956 — 2026", label: "Catalog Era", body: "seven decades of recordings, from early masters to this week's releases.", wide: true },
 ];
-
-export const clearanceFeatures: Feature[] = [
-  { title: "All rights holders on one thread", wide: true,
-    body: "Negotiate splits, counter terms and MFN requirements with every master owner and publisher in a single deal thread.",
-    rows: [{ label: "Master owner", value: "Agreed" }, { label: "Publisher 1", value: "Agreed" }, { label: "Publisher 2", value: "Agreed" }] },
-  { title: "Contract assistant",
-    body: "Compares each draft with the agreed terms and flags split or territory mismatches.",
-    rows: [{ label: "Territory", value: "North America → Worldwide" }, { label: "Term", value: "1 year → 3 years + options" }] },
-  { title: "Secure digital signatures",
-    body: "Sign binding licenses with multi-party signature tracking.",
-    rows: [{ label: "Licensee", value: "Signed" }, { label: "Publisher", value: "Signed" }, { label: "Master owner", value: "Signed" }] },
-  { title: "Simple global payments",
-    body: "One payment in. Synkro splits it across every holder, handles withholding tax and VAT, and settles over RTP, SEPA and more.",
-    rows: [{ label: "Payment in", value: "€42,000" }, { label: "Master side", value: "€12,000" }, { label: "Publishing side", value: "€30,000" }] },
-  { title: "Clearance pack delivery",
-    body: "Broadcast-ready WAVs, stems, metadata sheets and signed agreements, ready the moment the deal closes.",
-    rows: [{ label: "Master", value: "WAV" }, { label: "Stems", value: "WAV" }, { label: "License", value: "Signed PDF" }] },
-];
-
-export const catalogStats = [
-  { value: "100,000+", label: "master recordings", body: "ready to be discovered, shortlisted and routed into licensing.", wide: true },
-  { value: "60,000+", label: "one-stop tracks", body: "cleared for both master and publishing, ready to license immediately.", wide: true },
-  { value: "10,000+", label: "artists", body: "represented across the catalog." },
-  { value: "11,000+", label: "releases", body: "singles, EPs and full-length records." },
-  { value: "1,000+", label: "subgenres", body: "for precise search and filtering.", wide: true },
-  { value: "20+", label: "labels and publishers", body: "from Believe and Nuclear Blast to R&S Records and Bella Figura.", wide: true },
-  { value: "1956–2026", label: "catalog era", body: "seven decades, from early masters to this week's releases.", wide: true },
-] as const;
 
 export const labels = [
-  { name: "Nuclear Blast Records", file: "logo-nuclear-blast.png" },
-  { name: "R&S Records", file: "logo-rs-records.png" },
-  { name: "Bella Figura Music", file: "logo-bella-figura-white.png" },
-  { name: "Felt Music", file: "logo-felt-music.png" },
-  { name: "Communion", file: "logo-communion.png" },
-  { name: "Naïve", file: "logo-naive.png" },
-  { name: "Ishtar Music", file: "logo-ishtar.png" },
-  { name: "Allpoints Label Services", file: "logo-allpoints.png" },
   { name: "Versatile", file: "logo-versatile.png" },
+  { name: "R&S Records", file: "logo-rs-records.png" },
+  { name: "Communion", file: "logo-communion.png" },
   { name: "Blurred Recordings", file: "logo-blurred-recordings.png" },
+  { name: "Ishtar Music", file: "logo-ishtar.png" },
+  { name: "Bella Figura Music", file: "logo-bella-figura-white.png" },
+  { name: "Allpoints Label Services", file: "logo-allpoints.png" },
   { name: "Greco-Roman", file: "logo-greco-roman.png" },
+  { name: "Naive", file: "logo-naive.png" },
   { name: "Animal63", file: "logo-animal63.png" },
   { name: "b:electronic", file: "logo-belectronic.png" },
+  { name: "Felt Music", file: "logo-felt-music.png" },
   { name: "Think Music", file: "logo-think-music.png" },
   { name: "All Night Long", file: "logo-all-night-long.png" },
+  { name: "Nuclear Blast Records", file: "logo-nuclear-blast.png" },
 ] as const;
 
-export const artists = [
-  { name: "Aphex Twin", genre: "IDM and electronic" },
-  { name: "M83", genre: "Synth-pop and ambient" },
-  { name: "A.R. Rahman", genre: "Cinematic and world" },
-  { name: "Royel Otis", genre: "Indie pop" },
-  { name: "Sara Landry", genre: "Hard techno" },
-  { name: "Novo Amor", genre: "Indie folk" },
-  { name: "Vancouver Sleep Clinic", genre: "Ambient pop" },
-  { name: "Sabaton", genre: "Power metal" },
-  { name: "Petit Biscuit", genre: "Melodic electronic" },
-] as const;
-
-export const whyNow = [
-  { title: "The shift to semantic AI", then: "Keyword guesswork. Great tracks went unheard.", now: "Describe the scene. Get the right track in minutes." },
-  { title: "The demand for instant scale", then: "Slow production made 6–8 week clearance tolerable.", now: "Content ships weekly. Licensing that takes weeks loses the deal." },
-  { title: "Catalogs need scalable infrastructure", then: "A few big deals a year, done by hand.", now: "Sync volume needs software, not more headcount." },
-] as const;
-
-export const partners = [
-  { name: "Believe", detail: "One of the world's largest music companies", songs: "100K songs on Synkro" },
-  { name: "Bella Figura", detail: "Boutique publisher and label", songs: "Full catalog on Synkro" },
-  { name: "Felt Music", detail: "Production music library", songs: "Full catalog on Synkro" },
-] as const;
-
-export const team = [
-  { name: "Himant Prasansu", role: "Founder, CEO", photo: "/team/himant-prasansu.jpg", bio: "Executive across music and music tech. Previously at Cleopatra Records, Chaos Club Digital and Holdr." },
-  { name: "Siddhanth Jain", role: "Co-founder, CFO", photo: "/team/siddhanth-jain.jpg", bio: "IIM MBA. Contributed to $70M+ of enterprise wins at L&T and ran finance for a lending business across four branches." },
-  { name: "Sergio Pimentel", role: "COO", photo: "/team/sergio-pimentel.jpg", bio: "Award-winning music supervisor. Former head of licensing at Sony PlayStation, Activision and Big Sync." },
-  { name: "Mokshesh Jain", role: "Co-founder, CTO", photo: "/team/mokshesh-jain.jpg", bio: "Master's in AI from the University of Sheffield. Formerly at Infosys, specialising in natural language processing." },
-] as const;
-
-export const advisor = { name: "Pete Beck", role: "Global Head of Sync at Believe" } as const;
+export const licensees = ["Production Houses", "Sync Agencies", "Ad Agencies", "Gaming Studios", "Film & TV", "Streaming", "Supervisors"] as const;
+export const rightsHolders = ["Record Labels", "Publishers", "Distributors", "Catalog Owners"] as const;
 
 export type Faq = { q: string; a: string };
 
 export const homeFaq: Faq[] = [
-  { q: "What is Synkro?", a: "Synkro is a music licensing platform for sync deals. Licensees search catalogs by sound and mood, check who owns each track, and request, negotiate, sign and pay for a license in one workflow. Rights holders use it to turn their catalog into licensable inventory." },
-  { q: "How fast can a sync license be cleared on Synkro?", a: "Clearance can take anywhere from minutes to about a week, depending on the rights holder. Pilot deals have gone from first search to final payment in one to two weeks, compared with six to eight weeks over email." },
-  { q: "Can we clear a track if a co-publisher isn't on Synkro?", a: "Yes. Co-owners who aren't registered get a secure link by email. They can review the terms, join the negotiation thread, upload redlines and sign, without creating an account." },
-  { q: "Whose contracts are used?", a: "The rights holders' own. Synkro doesn't impose a template agreement. Rights holders upload their contracts, and buyers review, redline and negotiate them in the workspace." },
-  { q: "Does Synkro use AI-generated music?", a: "No. Every track on Synkro was recorded by human artists. AI is used only for search and discovery, and every license on Synkro pays the people who made the music." },
-  { q: "Is my catalog used to train AI models?", a: "No. Music from labels, publishers and artists on Synkro is never used to train AI generation models. Audio analysis is descriptive only: tempo, key, structure and mood, so buyers can find your tracks." },
-  { q: "Are our briefs and reference files used to train AI?", a: "No. Briefs, scripts, reference audio and video are processed only to run your search. They are never used to train any model and never shared with third parties." },
-  { q: "How is our music stored?", a: "Catalogs are held in encrypted cloud storage with strict access controls. Previews stream at low bitrate, and master WAV files are released only when a license is fully signed and paid for." },
-  { q: "When does Synkro launch?", a: "Synkro is running pilots now and launches fully in January 2027. Join the waitlist or book a live demo for early access." },
+  { q: "Can we clear tracks if one of the co-publishers is not a registered Synkro user?", a: "Yes. Unregistered co-owners receive secure, sign-in-free portal links via email. They can review the terms sheet, chat directly in the negotiation thread, upload redlines, and execute digital signatures without needing to create a permanent account." },
+  { q: "Does Synkro use AI-generated music?", a: "No. Synkro has no AI-generated catalog. Every track in the platform was recorded by a human artist. AI is used only to power the search and discovery experience. Every license on Synkro pays a human being for their work." },
+  { q: "Does Synkro use my uploaded briefs, videos, or reference tracks to train AI models?", a: "Absolutely not. We enforce strict privacy boundaries. Any creative briefs, script PDFs, reference audio tracks, or videos you upload to Synkro are processed in isolated, transient memory buffers for search calculations only. Your confidential assets are never used to train public or proprietary models, nor are they ever shared with third parties." },
+  { q: "Does Synkro use my catalog's music to train AI models?", a: "No. We believe in absolute artist sovereignty. We never use any music from our labels, publishers, or independent artists to train AI generation models. Audio analysis is purely descriptive (extracting tempo, key, structure, and emotional profiles) to help buyers search and find your tracks." },
+  { q: "How safe and secure is my music stored on Synkro?", a: "Your catalog is hosted on enterprise-grade, encrypted cloud storage with strict access controls. Audio previews are low-bitrate streams, and original master WAV files are stored in cold storage, accessible only when a sync transaction is successfully completed, fully signed, and paid for." },
+  { q: "How fast can a sync license be cleared on Synkro?", a: "Synkro is designed to clear sync licenses rapidly. It can range from instantly up to a week depending on the rights holder. The platform accelerates the traditional timeline by bringing discovery, early rights visibility, and multi-party negotiation into a single synchronized workspace." },
+  { q: "Whose contracts are used for licensing on Synkro?", a: "Licensing is executed using the contracts of the rights holders who own the music. Synkro does not impose third-party template agreements; instead, it provides a digital workspace where rights holders upload their own contracts, allowing buyers to review, redline, and negotiate terms with smart mapping on the backend." },
 ];
 
 export type Term = { slug: string; term: string; short: string; body: string[]; related: string[] };
@@ -318,113 +235,3 @@ export const glossary: Term[] = [
   },
 ];
 
-export type Audience = {
-  slug: string;
-  name: string;
-  side: "licensee" | "rights-holder";
-  title: string;
-  metaTitle: string;
-  metaDescription: string;
-  intro: string;
-  pains: { title: string; body: string }[];
-  gains: { title: string; body: string }[];
-  faq: Faq[];
-};
-
-export const audiences: Audience[] = [
-  {
-    slug: "music-supervisors",
-    name: "Music supervisors",
-    side: "licensee",
-    title: "Find music you can actually use.",
-    metaTitle: "Music licensing software for music supervisors",
-    metaDescription: "Search catalogs by sound, see who owns every track, and clear sync licenses in one to two weeks instead of six to eight. Built with a career music supervisor.",
-    intro: "Synkro lets music supervisors search by sound and mood, see every owner of a track before shortlisting it, and clear it with one request instead of dozens of emails.",
-    pains: [
-      { title: "Shortlists that can't be cleared", body: "A director falls for a track, then you find out a publisher won't approve it." },
-      { title: "Chasing owners", body: "Splits, contacts and territories are spread across databases and inboxes." },
-      { title: "Deadlines that don't move", body: "Edits lock in days. Clearance still takes weeks." },
-    ],
-    gains: [
-      { title: "Search by brief or reference", body: "Describe the scene or drop in a reference track and get ranked matches across every catalog on Synkro." },
-      { title: "Ownership on every result", body: "Master and publishing owners, splits and territory restrictions are visible before you pitch." },
-      { title: "One request, every owner", body: "Send media, term, territory and fee once. Track approvals and counters on a single deal." },
-    ],
-    faq: [
-      { q: "Can I search by reference track?", a: "Yes. Upload or link a reference track and Synkro ranks catalog tracks by how closely they match its sound." },
-      { q: "Can my director or client listen without an account?", a: "Yes. Share a playlist link and they can play every track on it." },
-    ],
-  },
-  {
-    slug: "ad-agencies",
-    name: "Ad agencies and production companies",
-    side: "licensee",
-    title: "License music at the speed of a campaign.",
-    metaTitle: "Ad agency and production music licensing",
-    metaDescription: "Clear commercial music for campaigns in one to two weeks. Search by mood, check ownership up front, and negotiate media, term and territory in one place.",
-    intro: "Campaigns ship weekly. Synkro gives agency and production teams a search-to-signature workflow, so music clearance stops being the reason a spot is late.",
-    pains: [
-      { title: "Fee guesswork", body: "Quotes come back weeks later, often outside budget." },
-      { title: "Scope changes", body: "Adding a territory or a cut-down restarts the conversation with every owner." },
-      { title: "Paper trails", body: "Terms agreed by email are hard to find when legal asks." },
-    ],
-    gains: [
-      { title: "Fee ranges up front", body: "Set the media, term, territory and budget in the request so owners respond to a real offer." },
-      { title: "Every change on the deal", body: "Extensions and new media are negotiated on the same deal, with the full history." },
-      { title: "Contracts from the terms", body: "The license is drafted from what both sides agreed, ready for your legal team." },
-    ],
-    faq: [
-      { q: "Can I license the same track for several territories?", a: "Yes. Territory, term and media are set per request and can be extended on the same deal later." },
-    ],
-  },
-  {
-    slug: "game-studios",
-    name: "Game studios",
-    side: "licensee",
-    title: "Licensed music for games, without the clearance backlog.",
-    metaTitle: "Music licensing for game studios",
-    metaDescription: "Search licensed music for games, trailers and live-ops content, and clear in-game and marketing rights from every owner in one workflow.",
-    intro: "Synkro was built with a former head of licensing at Sony PlayStation and Activision. It handles the long tail of tracks a live game and its marketing need, not just the headline song.",
-    pains: [
-      { title: "Volume", body: "Seasons, trailers and live events each need music, every few weeks." },
-      { title: "Complex rights", body: "In-game, trailer and streaming rights are often negotiated separately." },
-      { title: "Small teams", body: "A handful of people clear music for a whole portfolio." },
-    ],
-    gains: [
-      { title: "Search at catalog scale", body: "Semantic search across every catalog on Synkro, by mood, tempo and reference." },
-      { title: "All media on one deal", body: "Request in-game, trailer and marketing use together, or extend later." },
-      { title: "Software, not headcount", body: "Handle more deals without growing the licensing team." },
-    ],
-    faq: [
-      { q: "Does Synkro cover in-game and marketing use?", a: "Yes. The media you need are set in the license request, and owners approve or counter each one." },
-    ],
-  },
-  {
-    slug: "labels-and-publishers",
-    name: "Labels and publishers",
-    side: "rights-holder",
-    title: "Turn your catalog into licensable inventory.",
-    metaTitle: "Sync licensing platform for labels and publishers",
-    metaDescription: "Make every track in your catalog searchable and licensable. Approve sync requests, sign licenses and receive split payouts in one platform.",
-    intro: "Most sync income comes from a few well-known tracks because buyers can't find the rest. Synkro makes your whole catalog searchable by sound, and handles requests, contracts and payouts.",
-    pains: [
-      { title: "A buried catalog", body: "Keyword search surfaces the hits. Deep catalog rarely gets heard." },
-      { title: "Inbox licensing", body: "Requests, counters and approvals are scattered across email threads." },
-      { title: "Manual payouts", body: "Splitting fees between co-owners is spreadsheets and reminders." },
-    ],
-    gains: [
-      { title: "Every track discoverable", body: "AI listens to your catalog, so tracks surface on sound and mood, not just metadata." },
-      { title: "Requests in one place", body: "See the use, term, territory and fee on every request. Approve or counter on the deal." },
-      { title: "Automatic split payouts", body: "Fees are divided by ownership and paid out with a full record." },
-    ],
-    faq: [
-      { q: "Do we keep control over what gets licensed?", a: "Yes. Nothing is licensed without your approval, and you can approve, counter or decline each request." },
-      { q: "How do we get our catalog onto Synkro?", a: "We ingest catalogs in bulk, including CSV exports from DISCO, and enrich them with audio analysis and rights data." },
-    ],
-  },
-];
-
-export const howItWorksFaq: Faq[] = [
-  { q: "What does a sync deal on Synkro look like?", a: "A licensee finds a track, checks its owners, sends one request with the media, term, territory and fee range, negotiates with each owner on the same deal, signs a license drafted from the agreed terms, and receives the files. The fee is split between owners automatically." },
-  { q: "Is Synkro a music library?", a: "No. Synkro does not own the music. Labels, publishers and libraries list their catalogs on Synkro and keep full control over what they license." },
-];

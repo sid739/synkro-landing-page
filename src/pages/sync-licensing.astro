@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import Faq from "../components/Faq.astro";
-import Waitlist from "../components/Waitlist.astro";
+import Cta from "../components/Cta.astro";
 import { site, type Faq as FaqItem } from "../data/site";
 import { breadcrumbLd, faqLd } from "../data/schema";
 
@@ -89,8 +89,8 @@ const articleLd = {
 
       <section id="time">
         <h2>How long does sync licensing take?</h2>
-        <p>Clearing a track over email typically takes six to eight weeks. Most of that time goes on finding every owner, waiting for replies and reconciling terms across threads before a lawyer sees a contract.</p>
-        <p>On {site.name}, pilot deals have gone from first search to final payment in one to two weeks, because ownership is visible up front and every owner negotiates on the same deal.</p>
+        <p>Clearing a track the traditional way, over email, can take weeks or months. Most of that time goes on finding every owner, waiting for replies and reconciling terms across threads before a contract is drafted.</p>
+        <p>On {site.name}, a sync license can be cleared anywhere from instantly up to a week, depending on the rights holder, because discovery, early rights visibility and multi-party negotiation happen in one workspace.</p>
       </section>
 
       <section id="steps">
@@ -109,7 +109,7 @@ const articleLd = {
   </div>
 
   <Faq items={faq} title="Sync licensing questions" />
-  <Waitlist />
+  <Cta />
 </Base>
 
 <style>
