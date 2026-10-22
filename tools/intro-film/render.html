@@ -56,7 +56,8 @@ function word(text, size, alpha, scale, dotColor = V2, y = H / 2) {
   ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
   const body = text.replace(/\.$/, ""), dot = text.endsWith(".") ? "." : "";
   const wb = ctx.measureText(body).width, wd = ctx.measureText(dot).width, x0 = -(wb + wd) / 2;
-  ctx.textAlign = "left"; ctx.fillStyle = "#fff"; 
+  ctx.textAlign = "left"; ctx.fillStyle = "#fff";
+  ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = size * .25; ctx.shadowOffsetY = size * .03;
   ctx.fillText(body, x0, 0); ctx.fillStyle = dotColor; ctx.fillText(dot, x0 + wb, 0);
   ctx.restore();
 }
@@ -72,7 +73,7 @@ function sceneLine(t, k) {                       // a waveform wakes up on the b
 // far it is darkened under the word (already-dark shots need less); a category without footage
 // gets its drawn backdrop.
 const CATS = [
-  { word: "Film", clip: "film", dim: .2 }, { word: "TV", clip: "tv", dim: .2 }, { word: "Ads" },
+  { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: .08 }, { word: "Ads" },
   { word: "Trailers" }, { word: "Games" }, { word: "Streaming" },
 ];
 function backdrop(i, u, t) {                      // u: 0..1 through this word

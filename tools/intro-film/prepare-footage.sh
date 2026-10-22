@@ -8,6 +8,8 @@ cd "$(dirname "$0")"
 DARK="eq=brightness=-0.05:saturation=0.85:contrast=1.05,colorbalance=bs=0.06:rs=0.02,"
 # Already dark (night shots): violet in the shadows only.
 NIGHT="eq=saturation=0.9,colorbalance=bs=0.05:rs=0.02,"
+# Dim interiors that should read bright: exposure lifted, colour kept.
+BRIGHT="eq=brightness=0.05:gamma=1.35:contrast=1.04:saturation=1.08,colorbalance=bs=0.03,"
 # Shot on a white table: lightness inverted (hues kept) so the table goes dark.
 INVERT="negate,hue=h=180,eq=brightness=-0.03:saturation=0.9,colorbalance=bs=0.06:rs=0.02,"
 
@@ -28,6 +30,6 @@ clip() {
 clip flatlay pexels-3944271.mp4 0 5.24 "" "$INVERT" "transpose=2,"
 # Film: a cinema audience in 3D glasses as the projector flares. Shot upright; the 16:9 version
 # is a band with the audience in its lower half, so the word sits above their faces.
-clip film pexels-7984182.mp4 3.4 1.3 "" "$NIGHT" "crop=2160:1215:0:1500,"
+clip film pexels-7984182.mp4 3.4 1.3 "" "$BRIGHT" "crop=2160:1215:0:1500,"
 # TV: New York skyline at dusk, someone watching from a pier.
 clip tv pexels-15370550.mp4 3.0 1.3 "" "$NIGHT" ""
