@@ -51,14 +51,11 @@ function wave(t, amp, alpha, y = H / 2) {
   }
   ctx.globalAlpha = 1;
 }
-function word(text, size, alpha, scale, dotColor = V2, y = H / 2) {
+function word(text, size, alpha, scale, y = H / 2) {
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(W / 2, y); ctx.scale(scale, scale);
-  ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
-  const body = text.replace(/\.$/, ""), dot = text.endsWith(".") ? "." : "";
-  const wb = ctx.measureText(body).width, wd = ctx.measureText(dot).width, x0 = -(wb + wd) / 2;
-  ctx.textAlign = "left"; ctx.fillStyle = "#fff";
+  ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle"; ctx.textAlign = "center"; ctx.fillStyle = "#fff";
   ctx.shadowColor = "rgba(0,0,0,.55)"; ctx.shadowBlur = size * .25; ctx.shadowOffsetY = size * .03;
-  ctx.fillText(body, x0, 0); ctx.fillStyle = dotColor; ctx.fillText(dot, x0 + wb, 0);
+  ctx.fillText(text, 0, 0);
   ctx.restore();
 }
 function fitSize(text, max) { ctx.font = `900 100px Archivo`; return Math.min(max, 100 * (W * .82) / ctx.measureText(text).width); }
@@ -73,8 +70,8 @@ function sceneLine(t, k) {                       // a waveform wakes up on the b
 // far it is darkened under the word (already-dark shots need less); a category without footage
 // gets its drawn backdrop.
 const CATS = [
-  { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: .08 }, { word: "Ads" },
-  { word: "Trailers" }, { word: "Games" }, { word: "Streaming" },
+  { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: 0 }, { word: "Ads", clip: "ads", dim: .12 },
+  { word: "Trailers", clip: "trailers", dim: .1 }, { word: "Games", clip: "games", dim: 0 }, { word: "Streaming", clip: "streaming", dim: 0 },
 ];
 function backdrop(i, u, t) {                      // u: 0..1 through this word
   const cx = W / 2, cy = H / 2;
@@ -162,6 +159,7 @@ function statement(lines, t, maxSize, hl = [], y = H / 2, out = 0) {
       ctx.beginPath(); ctx.rect(x - size * .1, yy - lh * .62, ww + size * .2, lh * 1.2); ctx.clip();
       ctx.globalAlpha = p * (1 - out);
       ctx.fillStyle = hl.includes(n) ? V2 : "#fff";
+      ctx.shadowColor = "rgba(0,0,0,.6)"; ctx.shadowBlur = size * .25; ctx.shadowOffsetY = size * .03;
       ctx.fillText(w, x, yy + (1 - p) * lh * .8);
       ctx.restore();
       x += ww + space; n++;
@@ -187,13 +185,13 @@ function footage(name, t, dim, push) {            // t: seconds into the clip; p
   ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(0, 0, W, H);
 }
 
-function sceneCommon(t, d) {                      // "All of them have one thing in common."
-  footage("flatlay", t, .62, .02 * t);
-  statement(H > W ? ["All of them", "have one thing", "in common."] : ["All of them have", "one thing in common."], t - .1, M * .17, [], H / 2, clamp((t - (d - .3)) / .3));
+function sceneCommon(t, d) {                      // "All of them have one thing in common"
+  footage("flatlay", t, .3, .02 * t);
+  statement(H > W ? ["All of them", "have one thing", "in common"] : ["All of them have", "one thing in common"], t - .1, M * .17, [], H / 2, clamp((t - (d - .3)) / .3));
 }
 
 function sceneMusic(t, d) {                       // the answer, over the same footage
-  footage("flatlay", t + 1.6, .38, .02 * (t + 1.6));
+  footage("flatlay", t + 1.6, .12, .02 * (t + 1.6));
   glow(W / 2, H / 2, M * .6, .3 + .2 * kick(t));
   const size = fitSize("Music", M * .42), p = ease((t - .08) / .4);
   word("Music", size, p * (1 - clamp((t - (d - .2)) / .2)), 1.25 - .25 * p);
@@ -236,7 +234,7 @@ function sceneWorld(t, d) {
     ctx.stroke();
   }
   glow(W / 2, H / 2, M * .5, .5, "5,5,8");
-  statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world."] : ["We help you license any music,", "from anywhere in the world."], t - .15, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
+  statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world"] : ["We help you license any music,", "from anywhere in the world"], t - .15, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
 }
 
 function sceneEnd(t, d) {                         // Sync Anything over the bars, which melt back into the line
@@ -246,12 +244,13 @@ function sceneEnd(t, d) {                         // Sync Anything over the bars
   wave(t, M * .02, clamp((t - (d - .8)) / .3) * (1 - out));
   glow(W / 2, H / 2, M * .7, .38 * out);              // matches the first frame of the loop
   const a = ease((t - .1) / .4) * (1 - clamp((t - (d - .7)) / .3));
-  const size = fitSize("Sync Anything.", M * .2), ty = H * .42;
+  const size = fitSize("Sync Anything", M * .2), ty = H * .42;
   ctx.save(); ctx.globalAlpha = a; ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
-  const w1 = ctx.measureText("Sync ").width, w2 = ctx.measureText("Anything.").width, x0 = W / 2 - (w1 + w2) / 2;
+  const w1 = ctx.measureText("Sync ").width, w2 = ctx.measureText("Anything").width, x0 = W / 2 - (w1 + w2) / 2;
   const lift = (1 - ease((t - .1) / .5)) * M * .03;
+  ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = size * .2;
   ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Sync ", x0, ty + lift);
-  ctx.fillStyle = V2; ctx.fillText("Anything.", x0 + w1, ty + lift);
+  ctx.fillStyle = V2; ctx.fillText("Anything", x0 + w1, ty + lift);
   ctx.restore();
 }
 
