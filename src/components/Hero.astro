@@ -20,7 +20,7 @@ const ring = (n: number) => {
 ---
 <section class="stage" aria-labelledby="hero-title" data-stage>
   <div class="viewport" data-viewport>
-    <canvas data-disc role="img" aria-label="A vinyl record turning on a turntable. Its grooves run from 1956 at the label to this week at the edge, and the needle rests on one glowing groove: an example track from 1974."></canvas>
+    <canvas data-disc role="img" aria-label="A vinyl record turning on a turntable, with the needle resting on one glowing groove."></canvas>
     <div class="layer">
       <div class="wrap inner">
         <div class="copy" data-copy>
@@ -39,12 +39,6 @@ const ring = (n: number) => {
         </div>
 
         <div class="disc-slot" data-slot></div>
-
-        <div class="legend" data-legend>
-          <p><span class="sw dim"></span>Bands are decades: 1956 at the label, this week at the edge</p>
-          <p class="ex-row"><span class="sw ex"></span>Glowing groove: an example track from 1974</p>
-          <small>Illustrative. Scroll to see it found in search.</small>
-        </div>
 
         <div class="results" data-results>
           <div class="top"><p class="eyebrow">01 Search · 02 See rights</p><span class="tag">Example results</span></div>
@@ -91,13 +85,6 @@ const ring = (n: number) => {
   .hint i::after { content: ""; position: absolute; left: 50%; top: 5px; width: 3px; height: 6px; margin-left: -1.5px; border-radius: 2px; background: var(--faint); animation: wheel 1.6s ease-in-out infinite; }
   @keyframes wheel { 50% { transform: translateY(6px); opacity: .3; } }
 
-  .legend { position: absolute; z-index: 1; right: max(var(--gutter-r), calc((100% - var(--max)) / 2 + 16px)); bottom: 22px; max-width: 420px; display: grid; gap: 4px; font-size: 13px; line-height: 1.45; color: var(--muted); text-align: right; }
-  .legend p { display: flex; gap: 10px; justify-content: flex-end; align-items: center; }
-  .legend small { color: var(--faint); font-size: 12px; }
-  .sw { order: 2; width: 9px; height: 9px; border-radius: 50%; flex: none; }
-  .sw.dim { background: var(--faint); }
-  .sw.ex { background: #fff; box-shadow: 0 0 0 3px var(--accent); }
-  :global(.hero-wide) .legend .ex-row { display: none; }
 
   .results { position: absolute; z-index: 1; left: max(var(--gutter), calc((100% - var(--max)) / 2 + 16px)); top: 50%; transform: translateY(-50%); width: min(600px, 50%); display: grid; gap: 14px; opacity: 0; pointer-events: none; }
   .results h2 { font-size: clamp(32px, 3.4vw, 50px); }
@@ -130,9 +117,6 @@ const ring = (n: number) => {
   :global(.hero-static) .inner { display: grid; gap: 28px; }
   :global(.hero-static) canvas { position: relative; height: min(66vw, 440px); }
   :global(.hero-static) .copy { opacity: 1 !important; transform: none !important; visibility: visible !important; }
-  :global(.hero-static) .legend { position: static; text-align: left; max-width: none; }
-  :global(.hero-static) .legend p { justify-content: flex-start; }
-  :global(.hero-static) .sw { order: 0; }
   :global(.hero-static) .results { position: static; transform: none !important; width: 100%; max-width: 640px; opacity: 1 !important; pointer-events: auto !important; margin-top: 20px; }
   :global(.hero-static) .ring :global(.arc) { opacity: 1; }
   :global(.hero-static) .hint { display: none; }

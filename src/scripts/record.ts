@@ -23,17 +23,17 @@ const hero = () => {
   const q = <T extends Element>(sel: string) => document.querySelector<T>(sel);
   const stage = q<HTMLElement>("[data-stage]"), viewport = q<HTMLElement>("[data-viewport]");
   const canvas = q<HTMLCanvasElement>("[data-disc]"), slot = q<HTMLElement>("[data-slot]");
-  const copy = q<HTMLElement>("[data-copy]"), results = q<HTMLElement>("[data-results]"), legend = q<HTMLElement>("[data-legend]");
+  const copy = q<HTMLElement>("[data-copy]"), results = q<HTMLElement>("[data-results]");
   const ctx = canvas?.getContext("2d");
-  if (!stage || !viewport || !canvas || !slot || !copy || !results || !legend || !ctx) return null;
-  return { stage, viewport, canvas, slot, copy, results, legend, ctx };
+  if (!stage || !viewport || !canvas || !slot || !copy || !results || !ctx) return null;
+  return { stage, viewport, canvas, slot, copy, results, ctx };
 };
 
 export function initRecord(): void {
   const root = document.documentElement;
   const els = hero();
   if (!els) return;
-  const { stage, viewport, canvas, slot, copy, results, legend, ctx } = els;
+  const { stage, viewport, canvas, slot, copy, results, ctx } = els;
   const rows = [...document.querySelectorAll<HTMLElement>("[data-row]")];
   const rings = rows.map((r) => r.querySelector<SVGElement>(".ring"));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
@@ -82,9 +82,6 @@ export function initRecord(): void {
     // Lead-in edge and rim.
     d.strokeStyle = "#0b0b0c"; d.lineWidth = RR * 0.02; d.beginPath(); d.arc(C, C, RR * 0.988, 0, Math.PI * 2); d.stroke();
     d.strokeStyle = "rgba(255,255,255,.22)"; d.lineWidth = 2; d.beginPath(); d.arc(C, C, RR - 1, 0, Math.PI * 2); d.stroke();
-    // Dust, very faint.
-    d.fillStyle = "rgba(255,255,255,.05)";
-    for (let k = 0; k < 2500; k++) { const a = rand() * Math.PI * 2, r = r0 + rand() * (r1 - r0); d.fillRect(C + Math.cos(a) * r, C + Math.sin(a) * r, 1, 1); }
 
     // Printed centre label.
     const L = LABEL * RR;
@@ -93,15 +90,6 @@ export function initRecord(): void {
     d.fillStyle = paper; d.beginPath(); d.arc(C, C, L, 0, Math.PI * 2); d.fill();
     d.strokeStyle = "rgba(0,0,0,.35)"; d.lineWidth = 3; d.beginPath(); d.arc(C, C, L, 0, Math.PI * 2); d.stroke();
     d.strokeStyle = "rgba(255,255,255,.28)"; d.lineWidth = 1.5; d.beginPath(); d.arc(C, C, L * 0.9, 0, Math.PI * 2); d.stroke();
-    d.fillStyle = "#fff"; d.textAlign = "center"; d.textBaseline = "middle";
-    d.font = `900 ${L * 0.36}px "Archivo Variable", "Arial Black", sans-serif`; d.fillText("Synkro", C, C - L * 0.42);
-    d.font = `700 ${L * 0.085}px "Manrope Variable", sans-serif`; d.globalAlpha = 0.85;
-    d.fillText("SYNC ANYTHING", C, C - L * 0.16);
-    d.fillText("SIDE A  ·  1956 — THIS WEEK", C, C + L * 0.3);
-    d.font = `600 ${L * 0.075}px "Manrope Variable", sans-serif`; d.globalAlpha = 0.65;
-    d.fillText("33⅓ RPM", C, C + L * 0.48);
-    d.fillText("MASTER  ·  PUBLISHING  ·  SPLITS", C, C + L * 0.64);
-    d.globalAlpha = 1;
     // Spindle hole.
     const hole = d.createRadialGradient(C, C, 0, C, C, L * 0.07);
     hole.addColorStop(0, "#d9d9e0"); hole.addColorStop(0.55, "#8a8a95"); hole.addColorStop(1, "#2a2a30");
@@ -139,7 +127,7 @@ export function initRecord(): void {
   let tilt = TILT, tiltTarget = TILT, skew = 0, skewTarget = 0;
   let isStatic = false, visible = true, raf = 0;
   let g: Geom = { R: 0, cx: 0, cy: 0 };
-  let theme = { fg: "", muted: "", dark: false };
+  let dark = false;
 
   // Light particles that lift off the record into the search results.
   const STREAM = 420, sYear = new Float32Array(STREAM), sAng = new Float32Array(STREAM), sRow = new Uint8Array(STREAM), sDelay = new Float32Array(STREAM), sBend = new Float32Array(STREAM);
@@ -148,7 +136,7 @@ export function initRecord(): void {
     sAng[k] = rand() * Math.PI * 2; sRow[k] = k % Math.max(1, rows.length); sDelay[k] = rand() * 0.35; sBend[k] = (rand() - 0.5) * 80;
   }
 
-  // Place the record in the space the copy and the legend leave free, so nothing overlaps at any width.
+  // Place the record in the space the copy leaves free, so nothing overlaps at any width.
   // The tonearm reaches about 0.25R right of the disc, so the disc's right edge keeps that clear.
   const layout = (): Geom => {
     if (isStatic) {
@@ -158,12 +146,10 @@ export function initRecord(): void {
     const cr = canvas.getBoundingClientRect();
     let copyRight = 0;
     for (const el of copy.children) copyRight = Math.max(copyRight, el.getBoundingClientRect().right - cr.left);
-    const legendTop = legend.getBoundingClientRect().top - cr.top;
     const free = W - 48 - copyRight;                    // 24px either side of the record and arm
     const R = Math.max(80, Math.min(free / 2.3, H * 0.44));
     const cx = W - 24 - R * 1.3;
-    // The example label sits 30px below the disc and must clear the legend.
-    const cy = Math.max(R * TILT + 24, Math.min(H * 0.47, legendTop - 24 - R * TILT - 30));
+    const cy = H * 0.5;
     return { R, cx, cy };
   };
 
@@ -173,8 +159,7 @@ export function initRecord(): void {
   };
 
   const readTheme = () => {
-    const cs = getComputedStyle(root);
-    theme = { fg: cs.getPropertyValue("--fg").trim(), muted: cs.getPropertyValue("--muted").trim(), dark: cs.colorScheme.includes("dark") };
+    dark = getComputedStyle(root).colorScheme.includes("dark");
   };
 
   const resize = () => {
@@ -239,7 +224,6 @@ export function initRecord(): void {
       copy.style.opacity = String(1 - out);
       copy.style.transform = `translateY(${-50 * out}px)`;
       copy.style.visibility = out > 0.99 ? "hidden" : "visible";
-      legend.style.opacity = String(1 - out);
       const inn = smooth(0.24, 0.44, p);
       results.style.opacity = String(inn);
       results.style.transform = `translateY(calc(-50% + ${24 * (1 - inn)}px))`;
@@ -257,12 +241,12 @@ export function initRecord(): void {
     // On phones the canvas is a box in the page, so the glow fades out before its edges.
     const glowR = isStatic ? Math.min(g.R * 1.5, g.cx, W - g.cx, g.cy, H - g.cy) : g.R * 1.5;
     const glow = ctx.createRadialGradient(g.cx, g.cy, Math.min(g.R * 0.3, glowR * 0.5), g.cx, g.cy, glowR);
-    glow.addColorStop(0, `rgba(84,67,216,${theme.dark ? 0.22 : 0.12})`); glow.addColorStop(1, "rgba(84,67,216,0)");
+    glow.addColorStop(0, `rgba(84,67,216,${dark ? 0.22 : 0.12})`); glow.addColorStop(1, "rgba(84,67,216,0)");
     ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
     ctx.save();
     ctx.translate(g.cx + 8, g.cy + g.R * tilt * 0.1); ctx.scale(1, tilt);
     const sh = ctx.createRadialGradient(0, 0, g.R * 0.85, 0, 0, g.R * 1.12);
-    sh.addColorStop(0, `rgba(0,0,0,${theme.dark ? 0.8 : 0.35})`); sh.addColorStop(1, "rgba(0,0,0,0)");
+    sh.addColorStop(0, `rgba(0,0,0,${dark ? 0.8 : 0.35})`); sh.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(0, 0, g.R * 1.12, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
 
@@ -310,17 +294,6 @@ export function initRecord(): void {
       ctx.beginPath(); ctx.arc(pos.x, pos.y, 4.5, 0, Math.PI * 2);
       ctx.fillStyle = "#fff"; ctx.shadowColor = GLOW; ctx.shadowBlur = 18; ctx.fill(); ctx.shadowBlur = 0;
       ctx.strokeStyle = "#5443d8"; ctx.lineWidth = 2; ctx.stroke();
-      if (!isStatic && s < 0.05) {
-        // Leader line down past the record's edge, so the label sits on the page background.
-        const ly = g.cy + g.R * tilt + 30;
-        ctx.globalAlpha = 1 - smooth(0.02, 0.1, p);
-        ctx.strokeStyle = theme.muted; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(stylus.x, stylus.y + 8); ctx.lineTo(stylus.x, ly - 10); ctx.stroke();
-        ctx.font = `700 13px "Manrope Variable", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillStyle = theme.fg;
-        ctx.fillText("Example track · 1974", Math.min(stylus.x, W - 90), ly);
-        ctx.globalAlpha = 1;
-      }
     }
   }
 
@@ -337,7 +310,7 @@ export function initRecord(): void {
     root.classList.toggle("hero-wide", !isStatic);
     if (isStatic && canvas.parentElement !== slot) slot.appendChild(canvas);
     if (!isStatic && canvas.parentElement !== viewport) viewport.insertBefore(canvas, viewport.firstChild);
-    if (isStatic) for (const el of [copy, results, legend]) el.removeAttribute("style");
+    if (isStatic) for (const el of [copy, results]) el.removeAttribute("style");
     readTheme();
     resize();
     sync();
@@ -361,5 +334,5 @@ export function initRecord(): void {
 
   buildDisc();
   applyMode();
-  document.fonts?.ready.then(() => { buildDisc(); g = layout(); draw(0); });
+  document.fonts?.ready.then(() => { g = layout(); draw(0); });
 }
