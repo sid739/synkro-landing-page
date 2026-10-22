@@ -18,7 +18,7 @@ const ring = (n: number) => {
     `<circle class="arc" cx="15" cy="15" r="${r}" stroke-dasharray="${len} ${c - len}" stroke-dashoffset="${-(i * c) / n + c / 4}"/>`).join("");
 };
 ---
-<section class="stage" aria-labelledby="hero-title" data-stage>
+<section class="stage" id="hero" aria-labelledby="hero-title" data-stage>
   <div class="viewport" data-viewport>
     <canvas data-disc role="img" aria-label="A vinyl record turning on a turntable, with the needle resting on one glowing groove."></canvas>
     <div class="layer">

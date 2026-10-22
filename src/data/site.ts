@@ -46,6 +46,20 @@ export const artists = [
 
 export const phases = ["Discover & Search", "Clearance & Drafting", "Deliver"] as const;
 
+// Famous ads where the music carried the spot. Public facts only; Synkro had no part in them.
+export type SyncMoment = { brand: string; ad: string; year: number; song: string; artist: string; after: string };
+
+export const syncMoments: SyncMoment[] = [
+  { brand: "Coca-Cola", ad: "Hilltop", year: 1971, song: "I'd Like to Buy the World a Coke", artist: "Written for the ad", after: "Rewritten as “I'd Like to Teach the World to Sing”, it became a UK No. 1 for The New Seekers." },
+  { brand: "Levi's", ad: "Launderette", year: 1985, song: "I Heard It Through the Grapevine", artist: "Marvin Gaye", after: "The 1960s single went back into the UK charts." },
+  { brand: "Nike", ad: "Revolution", year: 1987, song: "Revolution", artist: "The Beatles", after: "The first time an original Beatles recording was used in a TV ad." },
+  { brand: "Guinness", ad: "Surfer", year: 1999, song: "Phat Planet", artist: "Leftfield", after: "Regularly voted one of the greatest ads ever made." },
+  { brand: "Volkswagen", ad: "Milky Way", year: 1999, song: "Pink Moon", artist: "Nick Drake", after: "Brought a 1972 album to a new generation of listeners." },
+  { brand: "Sony Bravia", ad: "Balls", year: 2005, song: "Heartbeats", artist: "José González", after: "Took a cover of a Swedish electronic song into the UK Top 10." },
+  { brand: "Apple", ad: "iPod nano", year: 2007, song: "1234", artist: "Feist", after: "Reached the US Top 10 after the ad aired." },
+  { brand: "John Lewis", ad: "The Bear & the Hare", year: 2013, song: "Somewhere Only We Know", artist: "Lily Allen", after: "Her cover of the Keane song went to UK No. 1." },
+];
+
 export type Step = {
   n: string;
   phase: 0 | 1 | 2;
