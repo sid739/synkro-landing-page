@@ -15,7 +15,7 @@ npm run preview   # serve the built site
 
 | Path | What it holds |
 |------|---------------|
-| `src/data/site.ts` | All copy: the opening intro reel (`syncMoments`), hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
+| `src/data/site.ts` | All copy: hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
 | `src/data/roles.ts` | Who it's for: the eight user types (homepage switcher and `/for/*` pages) and the AI principles. |
 | `src/data/schema.ts` | Helpers that build schema.org structured data (FAQPage, BreadcrumbList, SoftwareApplication). |
 | `src/styles/global.css` | Design tokens (light and dark), type scale, buttons, dot-grid motif, motion. |
@@ -24,9 +24,28 @@ npm run preview   # serve the built site
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
 | `src/scripts/record.ts` | The homepage hero: the turning vinyl record, its tonearm, and the scroll from the record into the example results. |
+| `tools/intro-film/` | Source of the homepage intro film (`public/intro/`). See "Intro film" below. |
 | `public/` | Static files: `og.png` share image, favicon, `robots.txt`, artist photos, label logos. |
 
 Adding a glossary term or a user type is a data change only: add an entry to `glossary` in `src/data/site.ts` or `roles` in `src/data/roles.ts`. The page, sitemap entry, structured data and `llms.txt` line are generated from it.
+
+## Intro film
+
+The homepage opens on a 12-second muted film (`public/intro/`). It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
+
+```bash
+cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
+cp ../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2 manrope.woff2
+npx http-server -p 8765 -s . &
+CRF=28 node render.js 1920 1080 ../../public/intro/synkro-intro.mp4
+CRF=28 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.mp4
+CRF=33 node render.js 1920 1080 ../../public/intro/synkro-intro.webm
+CRF=33 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.webm
+ffmpeg -y -ss 11 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
+ffmpeg -y -ss 11 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
+```
+
+To use real footage instead, replace the MP4 and WebM files and the posters; nothing else changes.
 
 ## SEO and AEO built in
 
