@@ -23,6 +23,7 @@ npm run preview   # serve the built site
 | `src/pages/` | Routes. `for/[slug]` and `glossary/[slug]` generate one page per entry in the data files. |
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
+| `src/scripts/record.ts` | The homepage hero: the turning vinyl record, its tonearm, and the scroll from the record into the example results. |
 | `public/` | Static files: `og.png` share image, favicon, `robots.txt`, artist photos, label logos. |
 
 Adding a glossary term or a user type is a data change only: add an entry to `glossary` in `src/data/site.ts` or `roles` in `src/data/roles.ts`. The page, sitemap entry, structured data and `llms.txt` line are generated from it.
