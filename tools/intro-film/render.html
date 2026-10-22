@@ -8,7 +8,7 @@ html, body { margin: 0; background: #000; }
 <body><canvas id="c"></canvas>
 <script>
 // Synkro intro film. renderFrame(t) draws the frame at t seconds; the film is LEN seconds and loops.
-const LEN = 11.6, BEAT = 0.5;
+const LEN = 10.2;
 const V1 = "#5443d8", V2 = "#8b7dff", BG = "#050508";
 const canvas = document.getElementById("c");
 let ctx = canvas.getContext("2d");               // swapped while a layer is drawn offscreen
@@ -17,26 +17,12 @@ let W, H, M;                                   // M: the shorter side, for layou
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const ease = (t) => 1 - Math.pow(1 - clamp(t), 3);
 const easeIO = (t) => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
-const kick = (t) => Math.exp(-((t % BEAT) / BEAT) * 6);  // 1 on each beat, decaying
 
 // ---- Shared pieces ----
 function glow(x, y, r, a, color = "84,67,216") {
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
   g.addColorStop(0, `rgba(${color},${a})`); g.addColorStop(1, `rgba(${color},0)`);
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-}
-function wave(t, amp, alpha, y = H / 2) {
-  for (const [w, a, col] of [[10, .12, V1], [3, .5, V2], [1.4, 1, "#fff"]]) {
-    ctx.strokeStyle = col; ctx.globalAlpha = alpha * a; ctx.lineWidth = w * (M / 1080);
-    ctx.beginPath();
-    for (let x = 0; x <= W; x += 4) {
-      const u = x / W, env = Math.sin(Math.PI * u);
-      const y2 = y + amp * env * (Math.sin(u * 22 + t * 6) * .55 + Math.sin(u * 51 - t * 9) * .3 + Math.sin(u * 7 + t * 2) * .15);
-      x === 0 ? ctx.moveTo(x, y2) : ctx.lineTo(x, y2);
-    }
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
 }
 function word(text, size, alpha, scale, y = H / 2) {
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(W / 2, y); ctx.scale(scale, scale);
@@ -48,16 +34,11 @@ function word(text, size, alpha, scale, y = H / 2) {
 function fitSize(text, max) { ctx.font = `900 100px Archivo`; return Math.min(max, 100 * (W * .82) / ctx.measureText(text).width); }
 
 // ---- Scenes ----
-function sceneLine(t, k) {                       // a waveform wakes up on the beat
-  glow(W / 2, H / 2, M * .7, .18 + .2 * k);
-  wave(t, M * .14 * ease(t / 1.6) * (.6 + .4 * k), clamp(t / .4));
-}
-
 // The categories, one second each. `clip` names graded footage in footage/frames/ and `dim` how
 // far it is darkened under the word.
 const CATS = [
-  { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: 0 }, { word: "Ads", clip: "ads", dim: .12 },
-  { word: "Trailers", clip: "trailers", dim: .1 }, { word: "Games", clip: "games", dim: 0 }, { word: "Streaming", clip: "streaming", dim: 0 },
+  { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: 0 }, { word: "Ads", clip: "ads", dim: 0 },
+  { word: "Trailers", clip: "trailers", dim: 0 }, { word: "Games", clip: "games", dim: 0 }, { word: "Streaming", clip: "streaming", dim: 0 },
 ];
 const CAT_LEN = 1, TR = .25;                    // seconds per category, and per transition
 const layerA = document.createElement("canvas"), layerB = document.createElement("canvas");
@@ -140,19 +121,16 @@ function footage(name, t, dim, push) {            // t: seconds into the clip; p
 // The closing lines play over one continuous music shot (the overhead guitar, headphones,
 // cassettes and record player), which runs from the first line into Sync Anything.
 const MUSIC_LEN = 5;                              // seconds of the music shot the two lines use
-function music(t) { footage("flatlay", t, .2, .04 * t / MUSIC_LEN); }
+function music(t) { footage("flatlay", t, .08, .04 * t / MUSIC_LEN); }
 
 function sceneWorld(t, d) {                       // "We help you license any music, from anywhere in the world"
   music(t);
   statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world"] : ["We help you license any music,", "from anywhere in the world"], t - .1, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
 }
 
-function sceneEnd(t, d, from) {                   // Sync Anything; then the shot fades back to the line
-  const out = clamp((t - (d - .45)) / .45);
-  ctx.save(); ctx.globalAlpha = 1 - clamp((t - (d - .8)) / .6); music(from + t); ctx.restore();
-  wave(t, M * .02, clamp((t - (d - .8)) / .3) * (1 - out));
-  glow(W / 2, H / 2, M * .7, .38 * out);              // matches the first frame of the loop
-  const a = ease((t - .1) / .4) * (1 - clamp((t - (d - .7)) / .3));
+function sceneEnd(t, from) {                      // Sync Anything over the music shot, to the last frame
+  music(from + t);
+  const a = ease((t - .1) / .4);
   const size = fitSize("Sync Anything", M * .22), ty = H / 2;
   ctx.save(); ctx.globalAlpha = a; ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
   const w1 = ctx.measureText("Sync ").width, w2 = ctx.measureText("Anything").width, x0 = W / 2 - (w1 + w2) / 2;
@@ -164,20 +142,19 @@ function sceneEnd(t, d, from) {                   // Sync Anything; then the sho
 }
 
 // ---- Timeline ----
-// 0 line · 0.6 Film…Streaming · 6.6 license from anywhere · 8.6 Sync Anything (same shot continues)
-const CUTS = [.6, 6.6];
+// 0 Film…Streaming · 6 license from anywhere · 8 Sync Anything (same shot continues), then loop
+const CUTS = [0, 6];
 function renderFrame(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.letterSpacing = "0px";
   ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
-  if (t < .6) sceneLine(t + .8, kick(t));
-  else if (t < 6.6) sceneCategories(t - .6);
-  else if (t < 8.6) sceneWorld(t - 6.6, 2);
-  else sceneEnd(t - 8.6, LEN - 8.6, 2);
+  if (t < 6) sceneCategories(t);
+  else if (t < 8) sceneWorld(t - 6, 2);
+  else sceneEnd(t - 8, 2);
   // Flash on the cuts.
   for (const cut of CUTS) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.5 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
   // Vignette.
   const v = ctx.createRadialGradient(W / 2, H / 2, M * .35, W / 2, H / 2, Math.hypot(W, H) * .6);
-  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.45)");
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.25)");
   ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
 }
 

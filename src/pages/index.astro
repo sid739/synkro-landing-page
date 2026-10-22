@@ -14,7 +14,7 @@ import { homeFaq, site } from "../data/site";
 import { faqLd, softwareLd } from "../data/schema";
 ---
 <Base title="Music Licensing, in One Place" description={site.description} jsonLd={[softwareLd(), faqLd(homeFaq)]}>
-  <IntroFilm />
+  <IntroFilm slot="intro" />
   <Hero />
   <Workflow />
   <Discovery />
