@@ -31,26 +31,22 @@ Adding a glossary term or a user type is a data change only: add an entry to `gl
 
 ## Intro film
 
-The homepage opens on a 12-second muted film (`public/intro/`). It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
+The homepage opens on a 14-second muted film (`public/intro/`). It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
 
 ```bash
 cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
 cp ../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2 manrope.woff2
-# Grade the footage (a Pexels clip, free for commercial use): lightness inverted, hues kept.
-G="negate,hue=h=180,eq=brightness=-0.03:saturation=0.9,colorbalance=bs=0.06:rs=0.02"
-mkdir -p footage/landscape footage/portrait
-ffmpeg -y -i footage/pexels-3944271.mp4 -vf "fps=30,transpose=2,$G,scale=-2:1080,crop=1920:1080" -q:v 3 footage/landscape/%03d.jpg
-ffmpeg -y -i footage/pexels-3944271.mp4 -vf "fps=30,$G,scale=720:-2,crop=720:1280" -q:v 3 footage/portrait/%03d.jpg
+./prepare-footage.sh   # grades the clips in footage/ into frames
 npx http-server -p 8765 -s . &
 CRF=28 node render.cjs 1920 1080 ../../public/intro/synkro-intro.mp4
 CRF=28 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.mp4
 CRF=33 node render.cjs 1920 1080 ../../public/intro/synkro-intro.webm
 CRF=33 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.webm
-ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
-ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
+ffmpeg -y -ss 12.6 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
+ffmpeg -y -ss 12.6 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
 ```
 
-The footage plays behind "All of them have one thing in common" and "Music". To use other footage, replace `footage/pexels-3944271.mp4`, re-run the grading and render steps, or replace the MP4 and WebM files and posters in `public/intro/` directly.
+Each category (Film, TV, Ads, Trailers, Games, Streaming) can have its own clip: put it in `footage/`, add a `clip` line for it in `prepare-footage.sh` (start time, length, grade) and set `clip` on that category in `CATS` in `render.html`. Categories without a clip use a drawn background. The overhead guitar-and-records clip plays behind "All of them have one thing in common" and "Music". The clips are from Pexels, which allows commercial use without credit.
 
 ## SEO and AEO built in
 
