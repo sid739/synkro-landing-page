@@ -36,16 +36,21 @@ The homepage opens on a 12-second muted film (`public/intro/`). It is drawn fram
 ```bash
 cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
 cp ../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2 manrope.woff2
+# Grade the footage (a Pexels clip, free for commercial use): lightness inverted, hues kept.
+G="negate,hue=h=180,eq=brightness=-0.03:saturation=0.9,colorbalance=bs=0.06:rs=0.02"
+mkdir -p footage/landscape footage/portrait
+ffmpeg -y -i footage/pexels-3944271.mp4 -vf "fps=30,transpose=2,$G,scale=-2:1080,crop=1920:1080" -q:v 3 footage/landscape/%03d.jpg
+ffmpeg -y -i footage/pexels-3944271.mp4 -vf "fps=30,$G,scale=720:-2,crop=720:1280" -q:v 3 footage/portrait/%03d.jpg
 npx http-server -p 8765 -s . &
-CRF=28 node render.js 1920 1080 ../../public/intro/synkro-intro.mp4
-CRF=28 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.mp4
-CRF=33 node render.js 1920 1080 ../../public/intro/synkro-intro.webm
-CRF=33 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.webm
+CRF=28 node render.cjs 1920 1080 ../../public/intro/synkro-intro.mp4
+CRF=28 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.mp4
+CRF=33 node render.cjs 1920 1080 ../../public/intro/synkro-intro.webm
+CRF=33 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.webm
 ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
 ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
 ```
 
-To use real footage instead, replace the MP4 and WebM files and the posters; nothing else changes.
+The footage plays behind "All of them have one thing in common" and "Music". To use other footage, replace `footage/pexels-3944271.mp4`, re-run the grading and render steps, or replace the MP4 and WebM files and posters in `public/intro/` directly.
 
 ## SEO and AEO built in
 

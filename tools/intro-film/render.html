@@ -22,7 +22,6 @@ let seed = 11; const rand = () => ((seed = (seed * 16807) % 2147483647) / 214748
 
 // ---- Prebuilt textures ----
 const grains = [];
-const disc = document.createElement("canvas");
 function buildTextures() {
   for (let g = 0; g < 6; g++) {
     const c = document.createElement("canvas"); c.width = c.height = 256;
@@ -30,23 +29,6 @@ function buildTextures() {
     for (let i = 0; i < img.data.length; i += 4) { const v = rand() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 10; }
     d.putImageData(img, 0, 0); grains.push(c);
   }
-  const S = 1800, C = S / 2, R = C - 4, L = R * 0.3;
-  disc.width = disc.height = S;
-  const d = disc.getContext("2d");
-  const base = d.createRadialGradient(C, C, R * .3, C, C, R);
-  base.addColorStop(0, "#141418"); base.addColorStop(1, "#060608");
-  d.fillStyle = base; d.beginPath(); d.arc(C, C, R, 0, 7); d.fill();
-  for (let r = L * 1.1; r < R * .97; r += 1.3) {
-    d.strokeStyle = rand() > .5 ? `rgba(255,255,255,${.02 + rand() * .05})` : `rgba(0,0,0,${.3 + rand() * .3})`;
-    d.lineWidth = .8; d.beginPath(); d.arc(C, C, r, 0, 7); d.stroke();
-  }
-  for (const f of [.45, .58, .7, .82]) { d.strokeStyle = "#09090b"; d.lineWidth = 9; d.beginPath(); d.arc(C, C, R * f, 0, 7); d.stroke(); }
-  d.strokeStyle = "rgba(255,255,255,.2)"; d.lineWidth = 2; d.beginPath(); d.arc(C, C, R - 1, 0, 7); d.stroke();
-  const paper = d.createRadialGradient(C - L * .2, C - L * .3, L * .1, C, C, L);
-  paper.addColorStop(0, "#7062f2"); paper.addColorStop(1, "#4232c2");
-  d.fillStyle = paper; d.beginPath(); d.arc(C, C, L, 0, 7); d.fill();
-  d.strokeStyle = "rgba(255,255,255,.25)"; d.lineWidth = 2; d.beginPath(); d.arc(C, C, L * .9, 0, 7); d.stroke();
-  d.fillStyle = "#c9c9d2"; d.beginPath(); d.arc(C, C, L * .06, 0, 7); d.fill();
 }
 
 // ---- Shared pieces ----
@@ -85,7 +67,7 @@ function sceneLine(t, k) {                       // a waveform wakes up on the b
   wave(t, M * .14 * ease(t / 1.6) * (.6 + .4 * k), clamp(t / .4));
 }
 
-const WORDS = ["Film.", "TV.", "Ads.", "Trailers.", "Games.", "Streaming."];
+const WORDS = ["Film", "TV", "Ads", "Trailers", "Games", "Streaming"];
 function backdrop(i, u, t) {                      // u: 0..1 through this word
   const cx = W / 2, cy = H / 2;
   ctx.save();
@@ -114,26 +96,6 @@ function sceneWords(t) {
   backdrop(i, u, t);
   const size = fitSize(WORDS[i], M * .34);
   word(WORDS[i], size, 1, 1.12 - .12 * ease(u * 2));
-}
-
-function sceneVinyl(t, d) {                       // macro of a spinning record, pushing in
-  const z = 1 + .35 * easeIO(t / d);
-  const R = Math.max(W, H) * .62 * z;
-  const cx = W * .5 + R * .38, cy = H * .5 + R * .12;
-  glow(cx - R * .4, cy - R * .2, M, .25);
-  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .62); ctx.rotate(t * 2.4);
-  ctx.drawImage(disc, -R, -R, R * 2, R * 2); ctx.restore();
-  // Light travelling along one groove.
-  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, .62);
-  const a0 = -2.2 + t * 1.6, gr = R * .64;
-  for (let k = 0; k < 18; k++) { ctx.strokeStyle = `rgba(160,150,255,${.06 * (18 - k) / 18})`; ctx.lineWidth = 2 + k * 2.5; ctx.beginPath(); ctx.arc(0, 0, gr, a0 - .5, a0); ctx.stroke(); }
-  ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, gr, a0 - .35, a0); ctx.stroke();
-  // Sheen.
-  const sh = ctx.createConicGradient(-.9, 0, 0);
-  sh.addColorStop(0, "rgba(255,255,255,0)"); sh.addColorStop(.06, "rgba(255,255,255,.14)"); sh.addColorStop(.12, "rgba(255,255,255,0)");
-  sh.addColorStop(.5, "rgba(255,255,255,0)"); sh.addColorStop(.56, "rgba(255,255,255,.1)"); sh.addColorStop(.62, "rgba(255,255,255,0)"); sh.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(0, 0, R, 0, 7); ctx.arc(0, 0, R * .3, 0, 7, true); ctx.fill("evenodd");
-  ctx.restore();
 }
 
 function bars(t, collapse) {                      // a wall of sound bars on the beat
@@ -177,18 +139,34 @@ function statement(lines, t, maxSize, hl = [], y = H / 2, out = 0) {
   });
 }
 
+// Real footage: a top-down shot of a guitar, headphones, cassettes and a record player, its
+// lightness inverted so the white table goes dark. Graded frames come from footage/ (see README).
+const FOOT = [], FOOT_FPS = 30;
+async function loadFootage(dir) {
+  for (let i = 1; ; i++) {
+    const img = new Image();
+    img.src = `footage/${dir}/${String(i).padStart(3, "0")}.jpg`;
+    try { await img.decode(); FOOT.push(img); } catch { break; }
+  }
+}
+function footage(t, dim, push) {                  // t: seconds into the clip; push: slow zoom from 1
+  const f = FOOT[Math.min(FOOT.length - 1, Math.floor(t * FOOT_FPS))];
+  if (!f) return;
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(1 + push, 1 + push);
+  ctx.drawImage(f, -W / 2, -H / 2, W, H); ctx.restore();
+  ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(0, 0, W, H);
+}
+
 function sceneCommon(t, d) {                      // "All of them have one thing in common."
-  glow(W / 2, H / 2, M * .7, .22);
-  wave(t + 3, M * .02, .35, H / 2 + M * .3);
+  footage(t, .62, .06 * t / 3.2);
   statement(H > W ? ["All of them", "have one thing", "in common."] : ["All of them have", "one thing in common."], t - .1, M * .17, [], H / 2, clamp((t - (d - .3)) / .3));
 }
 
-function sceneMusic(t, d) {                       // the record, and the answer: music
-  sceneVinyl(t + 1, d + 1);
-  ctx.fillStyle = "rgba(5,5,8,.45)"; ctx.fillRect(0, 0, W, H);
-  glow(W / 2, H / 2, M * .6, .35 + .2 * kick(t));
-  const size = fitSize("Music.", M * .42), p = ease((t - .08) / .4);
-  word("Music.", size, p * (1 - clamp((t - (d - .2)) / .2)), 1.25 - .25 * p);
+function sceneMusic(t, d) {                       // the answer, over the same footage
+  footage(t + 1.8, .38, .06 * (t + 1.8) / 3.2);
+  glow(W / 2, H / 2, M * .6, .3 + .2 * kick(t));
+  const size = fitSize("Music", M * .42), p = ease((t - .08) / .4);
+  word("Music", size, p * (1 - clamp((t - (d - .2)) / .2)), 1.25 - .25 * p);
 }
 
 // A turning globe of dots, with light arcing between places on it.
@@ -273,6 +251,7 @@ window.setup = async (w, h) => {
   await document.fonts.load("900 100px Archivo"); await document.fonts.ready;
   buildTextures();
   buildGlobe();
+  await loadFootage(W > H ? "landscape" : "portrait");
 };
 window.LEN = LEN;
 window.frame = (t, n) => { renderFrame(t, n); return canvas.toDataURL("image/jpeg", 0.93); };

@@ -1,4 +1,4 @@
-// node render.js <width> <height> <out.mp4|out.webm>  (serve this folder on :8765 first)
+// node render.cjs <width> <height> <out.mp4|out.webm>  (serve this folder on :8765 first)
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const [w, h, out] = [Number(process.argv[2]), Number(process.argv[3]), process.argv[4]];
