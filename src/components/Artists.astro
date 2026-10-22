@@ -1,0 +1,84 @@
+---
+import { artists } from "../data/site";
+---
+  <div class="flow" data-coverflow aria-roledescription="carousel" aria-label="Artists in the catalog">
+    <ul class="cards">
+      {artists.map((a, i) => (
+        <li class="card" data-i={i} aria-label={`${a.name}, ${a.genre}`}>
+          <img src={a.photo} alt={a.name} width="360" height="460" loading="lazy" decoding="async" />
+          <div class="meta"><h3>{a.name}</h3><p>{a.genre}</p></div>
+        </li>
+      ))}
+    </ul>
+    <button class="nav prev" type="button" aria-label="Previous artist" data-prev><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="nav next" type="button" aria-label="Next artist" data-next><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+
+<style>
+  /* Without JS: a horizontal, swipeable row. With JS: a 3D cover flow. */
+  .flow { position: relative; z-index: 1; margin-top: clamp(48px, 6vw, 80px); }
+  .cards { list-style: none; padding: 0 max(16px, env(safe-area-inset-left, 0px)); display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .card { position: relative; flex: none; width: min(300px, 70vw); aspect-ratio: 3 / 4; border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-2); scroll-snap-align: center; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+  .card img { width: 100%; height: 100%; object-fit: cover; }
+  .card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,.82)); }
+  .meta { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; padding: 22px; text-align: center; color: #fff; }
+  .meta h3 { font-size: clamp(22px, 2.2vw, 30px); letter-spacing: -.04em; line-height: 1; }
+  .meta p { margin-top: 8px; font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #c9c2ff; }
+  .nav { display: none; }
+  :global(.js) .flow { height: clamp(360px, 40vw, 520px); perspective: 1400px; }
+  :global(.js) .cards { position: absolute; inset: 0; overflow: visible; padding: 0; display: block; transform-style: preserve-3d; }
+  :global(.js) .card { position: absolute; left: 50%; top: 50%; width: clamp(210px, 24vw, 340px); margin: 0; transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s, filter .7s; cursor: pointer; }
+  :global(.js) .card:not(.center) { filter: saturate(.6) brightness(.75); }
+  :global(.js) .card:not(.center) .meta { opacity: .75; }
+  :global(.js) .nav { display: grid; place-items: center; position: absolute; top: 50%; translate: 0 -50%; z-index: 5; width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--line); background: color-mix(in srgb, var(--bg) 70%, transparent); backdrop-filter: blur(10px); color: var(--fg); cursor: pointer; }
+  :global(.js) .nav:hover { border-color: var(--fg); }
+  :global(.js) .nav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  :global(.js) .prev { left: max(16px, calc(50% - 560px)); }
+  :global(.js) .next { right: max(16px, calc(50% - 560px)); }
+</style>
+
+<script>
+  const flow = document.querySelector<HTMLElement>("[data-coverflow]");
+  if (flow) {
+    const cards = [...flow.querySelectorAll<HTMLElement>(".card")];
+    const n = cards.length;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let current = 0;
+    let timer = 0;
+
+    const layout = () => {
+      const w = cards[0]!.offsetWidth;
+      const step = Math.min(w * 0.82, window.innerWidth * 0.2);
+      cards.forEach((c, i) => {
+        let o = i - current;
+        if (o > n / 2) o -= n;
+        if (o < -n / 2) o += n;
+        const a = Math.abs(o);
+        c.style.transform = `translate(-50%, -50%) translateX(${o * step}px) translateZ(${-a * 140}px) rotateY(${o * -22}deg) scale(${a === 0 ? 1.06 : 1})`;
+        c.style.opacity = a > 2 ? "0" : "1";
+        c.style.zIndex = String(10 - a);
+        c.classList.toggle("center", a === 0);
+        c.setAttribute("aria-hidden", a > 2 ? "true" : "false");
+      });
+    };
+    const go = (d: number) => { current = (current + d + n) % n; layout(); };
+    const start = () => { if (!reduce) { stop(); timer = window.setInterval(() => go(1), 3200); } };
+    const stop = () => window.clearInterval(timer);
+
+    flow.querySelector("[data-prev]")?.addEventListener("click", () => { go(-1); start(); });
+    flow.querySelector("[data-next]")?.addEventListener("click", () => { go(1); start(); });
+    cards.forEach((c, i) => c.addEventListener("click", () => { current = i; layout(); start(); }));
+    flow.addEventListener("mouseenter", stop);
+    flow.addEventListener("mouseleave", start);
+    flow.addEventListener("focusin", stop);
+    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+    let x0 = 0;
+    flow.addEventListener("touchstart", (e) => { x0 = e.touches[0]!.clientX; stop(); }, { passive: true });
+    flow.addEventListener("touchend", (e) => { const dx = e.changedTouches[0]!.clientX - x0; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); start(); });
+    addEventListener("resize", layout);
+
+    current = Math.floor(n / 2);
+    layout();
+    start();
+  }
+</script>

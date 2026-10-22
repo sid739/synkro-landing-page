@@ -1,6 +1,7 @@
 ---
 import { catalogStats, labels } from "../data/site";
 import Constellation from "./Constellation.astro";
+import Artists from "./Artists.astro";
 ---
 <section class="section" id="catalog" aria-labelledby="catalog-title">
   <div class="dots dots-tr"></div>
@@ -10,6 +11,8 @@ import Constellation from "./Constellation.astro";
       <h2 id="catalog-title">A catalog you can search like you talk. <span class="hl">Recorded between 1956 and this Tuesday.</span></h2>
     </div>
   </div>
+
+  <Artists />
 
   <div class="marquee" aria-label="Labels and publishers in the catalog" data-reveal>
     <ul class="track">
