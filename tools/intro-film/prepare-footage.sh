@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 
 # Real scenes: darker, a little less saturated, violet in the shadows.
 DARK="eq=brightness=-0.05:saturation=0.85:contrast=1.05,colorbalance=bs=0.06:rs=0.02,"
+# Already dark (night shots): violet in the shadows only.
+NIGHT="eq=saturation=0.9,colorbalance=bs=0.05:rs=0.02,"
 # Shot on a white table: lightness inverted (hues kept) so the table goes dark.
 INVERT="negate,hue=h=180,eq=brightness=-0.03:saturation=0.9,colorbalance=bs=0.06:rs=0.02,"
 
@@ -24,3 +26,5 @@ clip() {
 clip flatlay pexels-3944271.mp4 0 5.24 "" "$INVERT" "transpose=2,"
 # Film: aerial of the Schilthorn summit, with the 007 marks on the building softened.
 clip film pexels-4395386.mp4 2.0 1.3 "delogo=x=735:y=635:w=275:h=120,delogo=x=1185:y=625:w=170:h=120,delogo=x=515:y=625:w=90:h=110," "$DARK" ""
+# TV: New York skyline at dusk, someone watching from a pier.
+clip tv pexels-15370550.mp4 3.0 1.3 "" "$NIGHT" ""

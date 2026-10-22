@@ -68,10 +68,11 @@ function sceneLine(t, k) {                       // a waveform wakes up on the b
   wave(t, M * .14 * ease(t / 1.6) * (.6 + .4 * k), clamp(t / .4));
 }
 
-// The categories, one second each. `clip` names graded footage in footage/frames/; a category
-// without footage gets its drawn backdrop.
+// The categories, one second each. `clip` names graded footage in footage/frames/ and `dim` how
+// far it is darkened under the word (already-dark shots need less); a category without footage
+// gets its drawn backdrop.
 const CATS = [
-  { word: "Film", clip: "film" }, { word: "TV" }, { word: "Ads" },
+  { word: "Film", clip: "film" }, { word: "TV", clip: "tv", dim: .2 }, { word: "Ads" },
   { word: "Trailers" }, { word: "Games" }, { word: "Streaming" },
 ];
 function backdrop(i, u, t) {                      // u: 0..1 through this word
@@ -107,7 +108,7 @@ function drawTo(layer, fn) {
 }
 function catBackground(i, t) {                    // t: seconds into this category
   const c = CATS[i];
-  if (c.clip && CLIPS[c.clip]?.length) { footage(c.clip, t, .45, .05 * t); glow(W / 2, H / 2, M * .6, .2); }
+  if (c.clip && CLIPS[c.clip]?.length) { footage(c.clip, t, c.dim ?? .45, .05 * t); glow(W / 2, H / 2, M * .6, .2); }
   else backdrop(i, t / CAT_LEN, t);
 }
 function sceneCategories(t) {
