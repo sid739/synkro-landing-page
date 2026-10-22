@@ -31,22 +31,30 @@ Adding a glossary term or a user type is a data change only: add an entry to `gl
 
 ## Intro film
 
-The homepage opens on a 14-second muted film (`public/intro/`). It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
+The homepage opens on an 11.6-second muted film (`public/intro/`), in 4K on large or high-resolution screens. It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
 
 ```bash
 cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
 cp ../../node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2 manrope.woff2
 ./prepare-footage.sh   # grades the clips in footage/ into frames
 npx http-server -p 8765 -s . &
-CRF=28 node render.cjs 1920 1080 ../../public/intro/synkro-intro.mp4
-CRF=28 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.mp4
-CRF=33 node render.cjs 1920 1080 ../../public/intro/synkro-intro.webm
-CRF=33 node render.cjs 720 1280 ../../public/intro/synkro-intro-portrait.webm
-ffmpeg -y -ss 12.6 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
-ffmpeg -y -ss 12.6 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
+# Near-lossless masters, one per shape (large; keep them out of the repo).
+CRF=12 LEVEL=5.1 node render.cjs 3840 2160 /tmp/master-4k.mp4
+CRF=12 node render.cjs 1080 1920 /tmp/master-portrait.mp4
+# What the page serves.
+X="-an -c:v libx264 -preset slow -profile:v high -pix_fmt yuv420p -movflags +faststart"
+V="-an -c:v libvpx-vp9 -b:v 0 -row-mt 1 -deadline good -cpu-used 2 -pix_fmt yuv420p"
+I=../../public/intro
+ffmpeg -y -i /tmp/master-4k.mp4 $X -level:v 5.1 -crf 22 $I/synkro-intro-4k.mp4
+ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $X -level:v 4.0 -crf 21 $I/synkro-intro.mp4
+ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $V -crf 30 $I/synkro-intro.webm
+ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 22 $I/synkro-intro-portrait.mp4
+ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
+ffmpeg -y -ss 10 -i /tmp/master-4k.mp4 -frames:v 1 -vf scale=1920:-2:flags=lanczos -q:v 3 $I/poster.jpg
+ffmpeg -y -ss 10 -i /tmp/master-portrait.mp4 -frames:v 1 -q:v 3 $I/poster-portrait.jpg
 ```
 
-Each category (Film, TV, Ads, Trailers, Games, Streaming) can have its own clip: put it in `footage/`, add a `clip` line for it in `prepare-footage.sh` (start time, length, grade) and set `clip` on that category in `CATS` in `render.html`. Categories without a clip use a drawn background. The overhead guitar-and-records clip plays behind "All of them have one thing in common" and "Music". The clips are from Pexels, which allows commercial use without credit.
+Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the two closing lines. The clips are from Pexels, which allows commercial use without credit.
 
 ## SEO and AEO built in
 

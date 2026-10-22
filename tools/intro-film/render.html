@@ -8,7 +8,7 @@ html, body { margin: 0; background: #000; }
 <body><canvas id="c"></canvas>
 <script>
 // Synkro intro film. renderFrame(t) draws the frame at t seconds; the film is LEN seconds and loops.
-const LEN = 14.4, BEAT = 0.5;
+const LEN = 11.6, BEAT = 0.5;
 const V1 = "#5443d8", V2 = "#8b7dff", BG = "#050508";
 const canvas = document.getElementById("c");
 let ctx = canvas.getContext("2d");               // swapped while a layer is drawn offscreen
@@ -18,19 +18,6 @@ const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const ease = (t) => 1 - Math.pow(1 - clamp(t), 3);
 const easeIO = (t) => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 const kick = (t) => Math.exp(-((t % BEAT) / BEAT) * 6);  // 1 on each beat, decaying
-
-let seed = 11; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-
-// ---- Prebuilt textures ----
-const grains = [];
-function buildTextures() {
-  for (let g = 0; g < 6; g++) {
-    const c = document.createElement("canvas"); c.width = c.height = 256;
-    const d = c.getContext("2d"), img = d.createImageData(256, 256);
-    for (let i = 0; i < img.data.length; i += 4) { const v = rand() * 255; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 10; }
-    d.putImageData(img, 0, 0); grains.push(c);
-  }
-}
 
 // ---- Shared pieces ----
 function glow(x, y, r, a, color = "84,67,216") {
@@ -67,34 +54,11 @@ function sceneLine(t, k) {                       // a waveform wakes up on the b
 }
 
 // The categories, one second each. `clip` names graded footage in footage/frames/ and `dim` how
-// far it is darkened under the word (already-dark shots need less); a category without footage
-// gets its drawn backdrop.
+// far it is darkened under the word.
 const CATS = [
   { word: "Film", clip: "film", dim: 0 }, { word: "TV", clip: "tv", dim: 0 }, { word: "Ads", clip: "ads", dim: .12 },
   { word: "Trailers", clip: "trailers", dim: .1 }, { word: "Games", clip: "games", dim: 0 }, { word: "Streaming", clip: "streaming", dim: 0 },
 ];
-function backdrop(i, u, t) {                      // u: 0..1 through this word
-  const cx = W / 2, cy = H / 2;
-  ctx.save();
-  if (i === 0) {                                  // rings rushing out
-    for (let n = 0; n < 9; n++) { const r = ((n / 9 + u * .5) % 1) * M * 1.1; ctx.strokeStyle = `rgba(139,125,255,${.5 * (1 - r / (M * 1.1))})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke(); }
-  } else if (i === 1) {                           // diagonal light streaks
-    ctx.translate(cx, cy); ctx.rotate(-.5);
-    for (let n = 0; n < 14; n++) { const x = ((n * 173) % 1000 / 1000 - .5) * W * 2 + u * W * .6; const g = ctx.createLinearGradient(x - 300, 0, x + 300, 0); g.addColorStop(0, "rgba(84,67,216,0)"); g.addColorStop(.5, `rgba(139,125,255,${.15 + (n % 3) * .08})`); g.addColorStop(1, "rgba(84,67,216,0)"); ctx.fillStyle = g; ctx.fillRect(x - 300, -H * 1.5, 600, H * 3); }
-  } else if (i === 2) {                           // dot grid breathing
-    const s = M / 18;
-    for (let x = s / 2; x < W; x += s) for (let y = s / 2; y < H; y += s) { const d = Math.hypot(x - cx, y - cy) / M; const p = Math.sin(d * 9 - u * 9) * .5 + .5; ctx.fillStyle = `rgba(139,125,255,${.08 + .5 * p * (1 - d * .8)})`; ctx.beginPath(); ctx.arc(x, y, 1.5 + 2.5 * p, 0, 7); ctx.fill(); }
-  } else if (i === 3) {                           // vertical bars sweeping
-    const n = 40; for (let k = 0; k < n; k++) { const h = (Math.sin(k * .7 + u * 10) * .5 + .5) * H * .9; ctx.fillStyle = `rgba(84,67,216,${.18 + .2 * (k % 2)})`; ctx.fillRect(k * W / n + 2, (H - h) / 2, W / n - 4, h); }
-  } else if (i === 4) {                           // rotating sunburst
-    ctx.translate(cx, cy); ctx.rotate(u * .6);
-    for (let k = 0; k < 24; k++) { ctx.rotate(Math.PI / 12); ctx.fillStyle = k % 2 ? "rgba(84,67,216,.22)" : "rgba(139,125,255,.08)"; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(M * 1.6, -M * .13); ctx.lineTo(M * 1.6, M * .13); ctx.fill(); }
-  } else {                                        // scanlines scrolling
-    for (let y = -40; y < H + 40; y += 14) { const yy = y + (u * 140) % 14; ctx.fillStyle = `rgba(139,125,255,${.06 + .1 * Math.sin(yy / H * Math.PI)})`; ctx.fillRect(0, yy, W, 3); }
-  }
-  ctx.restore();
-  glow(cx, cy, M * .65, .35);
-}
 const CAT_LEN = 1, TR = .25;                    // seconds per category, and per transition
 const layerA = document.createElement("canvas"), layerB = document.createElement("canvas");
 function drawTo(layer, fn) {
@@ -106,8 +70,8 @@ function drawTo(layer, fn) {
 }
 function catBackground(i, t) {                    // t: seconds into this category
   const c = CATS[i];
-  if (c.clip && CLIPS[c.clip]?.length) { footage(c.clip, t, c.dim ?? .45, .05 * t); glow(W / 2, H / 2, M * .6, .2); }
-  else backdrop(i, t / CAT_LEN, t);
+  footage(c.clip, t, c.dim ?? .45, .05 * t);
+  glow(W / 2, H / 2, M * .6, .2);
 }
 function sceneCategories(t) {
   const i = Math.min(CATS.length - 1, Math.floor(t / CAT_LEN)), local = t - i * CAT_LEN;
@@ -125,21 +89,6 @@ function sceneCategories(t) {
   word(CATS[i].word, size, ease(local / .12), 1.12 - .12 * ease(local / .35));
 }
 
-function bars(t, collapse) {                      // a wall of sound bars on the beat
-  const n = W > H ? 56 : 28, gap = W / n, k = kick(t);
-  const floor = H * .72;
-  for (let i = 0; i < n; i++) {
-    const u = i / n;
-    let h = (Math.sin(u * 13 + t * 5) * .5 + .5) * .5 + (Math.sin(u * 31 - t * 8) * .5 + .5) * .3 + .2 * k * (1 - Math.abs(u - .5) * 2);
-    h *= H * .55 * (1 - collapse);
-    const x = i * gap + gap * .18, w = gap * .64;
-    const g = ctx.createLinearGradient(0, floor - h, 0, floor);
-    g.addColorStop(0, V2); g.addColorStop(1, V1);
-    ctx.fillStyle = g; ctx.fillRect(x, floor - h, w, Math.max(2, h));
-    ctx.globalAlpha = .18; ctx.fillRect(x, floor + 6, w, h * .35); ctx.globalAlpha = 1;  // reflection
-  }
-  glow(W / 2, floor, M * .8, .25 + .25 * k);
-}
 // Lines of text whose words rise in one after another; `hl` holds the indexes of violet words.
 // `out` (0..1) fades the whole statement away.
 function statement(lines, t, maxSize, hl = [], y = H / 2, out = 0) {
@@ -172,9 +121,12 @@ const CLIPS = {}, FOOT_FPS = 30;
 async function loadClip(name, shape) {
   const frames = CLIPS[name] = [];
   for (let i = 1; ; i++) {
+    // Wait for the file, not for decode(): decode() is refused once many frames are held decoded,
+    // while a loaded image is decoded when drawn and can be dropped again.
     const img = new Image();
-    img.src = `footage/frames/${name}/${shape}/${String(i).padStart(3, "0")}.jpg`;
-    try { await img.decode(); frames.push(img); } catch { break; }
+    const ok = await new Promise((done) => { img.onload = () => done(true); img.onerror = () => done(false); img.src = `footage/frames/${name}/${shape}/${String(i).padStart(3, "0")}.jpg`; });
+    if (!ok) break;                                // past the last frame
+    frames.push(img);
   }
 }
 function footage(name, t, dim, push) {            // t: seconds into the clip; push: zoom beyond 1
@@ -185,106 +137,58 @@ function footage(name, t, dim, push) {            // t: seconds into the clip; p
   ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(0, 0, W, H);
 }
 
-function sceneCommon(t, d) {                      // "All of them have one thing in common"
-  footage("flatlay", t, .3, .02 * t);
-  statement(H > W ? ["All of them", "have one thing", "in common"] : ["All of them have", "one thing in common"], t - .1, M * .17, [], H / 2, clamp((t - (d - .3)) / .3));
+// The closing lines play over one continuous music shot (the overhead guitar, headphones,
+// cassettes and record player), which runs from the first line into Sync Anything.
+const MUSIC_LEN = 5;                              // seconds of the music shot the two lines use
+function music(t) { footage("flatlay", t, .2, .04 * t / MUSIC_LEN); }
+
+function sceneWorld(t, d) {                       // "We help you license any music, from anywhere in the world"
+  music(t);
+  statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world"] : ["We help you license any music,", "from anywhere in the world"], t - .1, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
 }
 
-function sceneMusic(t, d) {                       // the answer, over the same footage
-  footage("flatlay", t + 1.6, .12, .02 * (t + 1.6));
-  glow(W / 2, H / 2, M * .6, .3 + .2 * kick(t));
-  const size = fitSize("Music", M * .42), p = ease((t - .08) / .4);
-  word("Music", size, p * (1 - clamp((t - (d - .2)) / .2)), 1.25 - .25 * p);
-}
-
-// A turning globe of dots, with light arcing between places on it.
-const GLOBE = [], ARCS = [];
-function buildGlobe() {
-  const N = 1100;
-  for (let i = 0; i < N; i++) { const y = 1 - 2 * (i + .5) / N, r = Math.sqrt(1 - y * y), a = i * 2.399963; GLOBE.push([Math.cos(a) * r, y, Math.sin(a) * r]); }
-  for (let k = 0; k < 16; k++) ARCS.push({ a: Math.floor(rand() * N), b: Math.floor(rand() * N), at: rand() * 1 });
-}
-function sceneWorld(t, d) {
-  const R = M * .46, cx = W / 2, cy = H / 2 + M * .04, rot = 1.2 + t * .45, tl = .38;
-  const proj = ([x0, y0, z0]) => {
-    const x = x0 * Math.cos(rot) - z0 * Math.sin(rot), z1 = x0 * Math.sin(rot) + z0 * Math.cos(rot);
-    const y = y0 * Math.cos(tl) - z1 * Math.sin(tl), z = y0 * Math.sin(tl) + z1 * Math.cos(tl);
-    return { x: cx + x * R, y: cy - y * R, z };
-  };
-  glow(cx, cy, R * 1.4, .3);
-  const appear = ease(t / .5);
-  for (const p of GLOBE) {
-    const q = proj(p), f = Math.max(0, q.z);
-    ctx.fillStyle = `rgba(150,138,255,${(.12 + .8 * f) * appear})`;
-    ctx.beginPath(); ctx.arc(q.x, q.y, (1.6 + 2.6 * f) * (M / 1080), 0, 7); ctx.fill();
-  }
-  for (const arc of ARCS) {
-    const pr = clamp((t - .3 - arc.at) / .7);
-    if (pr <= 0) continue;
-    const A = proj(GLOBE[arc.a]), B = proj(GLOBE[arc.b]);
-    if (A.z < .05 || B.z < .05) continue;
-    const mid = GLOBE[arc.a].map((v, i) => (v + GLOBE[arc.b][i]) / 2), len = Math.hypot(...mid);
-    const C = proj(mid.map((v) => (v / (len || 1)) * 1.35));
-    ctx.strokeStyle = `rgba(200,192,255,${.85 * Math.min(A.z, B.z) * appear})`; ctx.lineWidth = 3 * (M / 1080);
-    ctx.beginPath();
-    for (let s = 0; s <= 24 * pr; s++) {
-      const u = s / 24, x = (1 - u) ** 2 * A.x + 2 * (1 - u) * u * C.x + u * u * B.x, y = (1 - u) ** 2 * A.y + 2 * (1 - u) * u * C.y + u * u * B.y;
-      s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-  glow(W / 2, H / 2, M * .5, .5, "5,5,8");
-  statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world"] : ["We help you license any music,", "from anywhere in the world"], t - .15, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
-}
-
-function sceneEnd(t, d) {                         // Sync Anything over the bars, which melt back into the line
-  const level = .38 * ease(t / .6) * (1 - easeIO((t - (d - .7)) / .5));
-  bars(t, 1 - level);
+function sceneEnd(t, d, from) {                   // Sync Anything; then the shot fades back to the line
   const out = clamp((t - (d - .45)) / .45);
+  ctx.save(); ctx.globalAlpha = 1 - clamp((t - (d - .8)) / .6); music(from + t); ctx.restore();
   wave(t, M * .02, clamp((t - (d - .8)) / .3) * (1 - out));
   glow(W / 2, H / 2, M * .7, .38 * out);              // matches the first frame of the loop
   const a = ease((t - .1) / .4) * (1 - clamp((t - (d - .7)) / .3));
-  const size = fitSize("Sync Anything", M * .2), ty = H * .42;
+  const size = fitSize("Sync Anything", M * .22), ty = H / 2;
   ctx.save(); ctx.globalAlpha = a; ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
   const w1 = ctx.measureText("Sync ").width, w2 = ctx.measureText("Anything").width, x0 = W / 2 - (w1 + w2) / 2;
   const lift = (1 - ease((t - .1) / .5)) * M * .03;
-  ctx.shadowColor = "rgba(0,0,0,.5)"; ctx.shadowBlur = size * .2;
+  ctx.shadowColor = "rgba(0,0,0,.7)"; ctx.shadowBlur = size * .3; ctx.shadowOffsetY = size * .03;
   ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Sync ", x0, ty + lift);
   ctx.fillStyle = V2; ctx.fillText("Anything", x0 + w1, ty + lift);
   ctx.restore();
 }
 
 // ---- Timeline ----
-// 0 line · 0.6 Film…Streaming · 6.6 one thing in common · 8.2 Music · 9.4 license from anywhere · 11.4 Sync Anything
-const CUTS = [.6, 6.6, 8.2, 9.4, 11.4];
-function renderFrame(t, frame) {
+// 0 line · 0.6 Film…Streaming · 6.6 license from anywhere · 8.6 Sync Anything (same shot continues)
+const CUTS = [.6, 6.6];
+function renderFrame(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.letterSpacing = "0px";
   ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
   if (t < .6) sceneLine(t + .8, kick(t));
   else if (t < 6.6) sceneCategories(t - .6);
-  else if (t < 8.2) sceneCommon(t - 6.6, 1.6);
-  else if (t < 9.4) sceneMusic(t - 8.2, 1.2);
-  else if (t < 11.4) sceneWorld(t - 9.4, 2);
-  else sceneEnd(t - 11.4, LEN - 11.4);
+  else if (t < 8.6) sceneWorld(t - 6.6, 2);
+  else sceneEnd(t - 8.6, LEN - 8.6, 2);
   // Flash on the cuts.
   for (const cut of CUTS) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.5 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
-  // Vignette and grain.
+  // Vignette.
   const v = ctx.createRadialGradient(W / 2, H / 2, M * .35, W / 2, H / 2, Math.hypot(W, H) * .6);
-  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.65)");
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.45)");
   ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = ctx.createPattern(grains[Math.floor(frame / 4) % grains.length], "repeat"); ctx.fillRect(0, 0, W, H);
 }
 
 window.setup = async (w, h) => {
   W = canvas.width = w; H = canvas.height = h; M = Math.min(w, h);
   await document.fonts.load("900 100px Archivo"); await document.fonts.ready;
-  buildTextures();
-  buildGlobe();
   layerA.width = layerB.width = w; layerA.height = layerB.height = h;
   const shape = W > H ? "landscape" : "portrait";
-  for (const name of ["flatlay", ...CATS.map((c) => c.clip).filter(Boolean)]) await loadClip(name, shape);
+  for (const name of ["flatlay", ...CATS.map((c) => c.clip)]) await loadClip(name, shape);
 };
 window.LEN = LEN;
-window.frame = (t, n) => { renderFrame(t, n); return canvas.toDataURL("image/jpeg", 0.93); };
+window.frame = (t) => { renderFrame(t); return canvas.toDataURL("image/jpeg", 0.95); };
 </script>
 </body></html>

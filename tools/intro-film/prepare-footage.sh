@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Grades the clips in footage/ into the JPEG frames render.html reads:
-# footage/frames/<name>/landscape/NNN.jpg (1920x1080) and footage/frames/<name>/portrait/NNN.jpg (720x1280).
+# footage/frames/<name>/landscape/NNN.jpg (3840x2160) and footage/frames/<name>/portrait/NNN.jpg (1080x1920).
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -24,9 +24,9 @@ clip() {
   local name=$1 src=$2 ss=$3 len=$4 clean=$5 grade=$6 wide=$7 tall=${8:-} out=footage/frames/$1
   rm -rf "$out"; mkdir -p "$out/landscape" "$out/portrait"
   ffmpeg -loglevel error -y -ss "$ss" -t "$len" -i "footage/$src" \
-    -vf "fps=30,${clean}${wide}${grade}scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080" -q:v 3 "$out/landscape/%03d.jpg"
+    -vf "fps=30,${clean}${wide}${grade}scale=3840:2160:force_original_aspect_ratio=increase:flags=lanczos,crop=3840:2160" -q:v 2 "$out/landscape/%03d.jpg"
   ffmpeg -loglevel error -y -ss "$ss" -t "$len" -i "footage/$src" \
-    -vf "fps=30,${clean}${tall}${grade}scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280" -q:v 3 "$out/portrait/%03d.jpg"
+    -vf "fps=30,${clean}${tall}${grade}scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920" -q:v 2 "$out/portrait/%03d.jpg"
   echo "$name: $(ls "$out/landscape" | wc -l) frames"
 }
 
