@@ -1,7 +1,6 @@
 // Homepage hero: a vinyl record on a turntable, drawn on a canvas.
-// Grooves run from 1956 at the label to this week at the edge, and the needle rests on an example
-// track from 1974. Scrolling the sticky stage fades the copy out, the example results in, and streams
-// light from the grooves to each result's ownership ring.
+// The record turns; nothing else on it moves. Scrolling the sticky stage fades the copy out and the
+// example results in.
 // Phones and reduced motion get a still record placed between the copy and the results.
 
 const Y0 = 1956, Y1 = 2026, EX_YEAR = 1974;
@@ -10,13 +9,11 @@ const radiusOf = (year: number) => LABEL + 0.05 + ((year - Y0) / (Y1 - Y0)) * (1
 const STYLUS_ANGLE = 0.42;                              // where the needle sits, in screen space
 const TILT = 0.58;
 const WIDE_MIN = 900;                                   // narrower than this, the hero stacks
-const GLOW = "#8b7dff";
 
 type Geom = { R: number; cx: number; cy: number };
 type Pt = { x: number; y: number };
 
 const smooth = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 // Every element the hero needs, or null when the page has no hero.
 const hero = () => {
@@ -34,8 +31,6 @@ export function initRecord(): void {
   const els = hero();
   if (!els) return;
   const { stage, viewport, canvas, slot, copy, results, ctx } = els;
-  const rows = [...document.querySelectorAll<HTMLElement>("[data-row]")];
-  const rings = rows.map((r) => r.querySelector<SVGElement>(".ring"));
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
 
   let seed = 7;
@@ -96,12 +91,10 @@ export function initRecord(): void {
     d.fillStyle = hole; d.beginPath(); d.arc(C, C, L * 0.065, 0, Math.PI * 2); d.fill();
   };
 
-  // The fixed part: light reflecting off the grooves. Rebuilt only when the light angle moves.
+  // The fixed part: light reflecting off the grooves, from a light that does not move.
   const SH = 800, sheen = document.createElement("canvas");
   sheen.width = sheen.height = SH;
-  let sheenAngle: number | null = null;
   const buildSheen = (a: number) => {
-    sheenAngle = a;
     const d = sheen.getContext("2d"), c = SH / 2;
     if (!d) return;
     d.clearRect(0, 0, SH, SH);
@@ -124,17 +117,9 @@ export function initRecord(): void {
 
   // ---- Frame state ----
   let W = 0, H = 0, dpr = 1, angle = 0, last = performance.now();
-  let tilt = TILT, tiltTarget = TILT, skew = 0, skewTarget = 0;
   let isStatic = false, visible = true, raf = 0;
   let g: Geom = { R: 0, cx: 0, cy: 0 };
   let dark = false;
-
-  // Light particles that lift off the record into the search results.
-  const STREAM = 420, sYear = new Float32Array(STREAM), sAng = new Float32Array(STREAM), sRow = new Uint8Array(STREAM), sDelay = new Float32Array(STREAM), sBend = new Float32Array(STREAM);
-  for (let k = 0; k < STREAM; k++) {
-    sYear[k] = k % 3 === 0 ? EX_YEAR + (rand() - 0.5) * 0.8 : Y0 + rand() * (Y1 - Y0);
-    sAng[k] = rand() * Math.PI * 2; sRow[k] = k % Math.max(1, rows.length); sDelay[k] = rand() * 0.35; sBend[k] = (rand() - 0.5) * 80;
-  }
 
   // Place the record in the space the copy leaves free, so nothing overlaps at any width.
   // The tonearm reaches about 0.25R right of the disc, so the disc's right edge keeps that clear.
@@ -154,8 +139,7 @@ export function initRecord(): void {
   };
 
   const onDisc = (r: number, a: number): Pt => {        // r as a share of the radius, a in screen space
-    const x = Math.cos(a) * r * g.R, y = Math.sin(a) * r * g.R * tilt;
-    return { x: g.cx + x + y * skew, y: g.cy + y };
+    return { x: g.cx + Math.cos(a) * r * g.R, y: g.cy + Math.sin(a) * r * g.R * TILT };
   };
 
   const readTheme = () => {
@@ -167,6 +151,11 @@ export function initRecord(): void {
     W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     g = layout();
+    if (!isStatic) {
+      // The results panel ends before the record's left edge.
+      const left = results.getBoundingClientRect().left - canvas.getBoundingClientRect().left;
+      results.style.width = `${Math.max(420, Math.min(600, g.cx - g.R - 32 - left))}px`;
+    }
     draw(0);
   };
 
@@ -178,7 +167,7 @@ export function initRecord(): void {
   };
 
   const drawArm = (stylus: Pt) => {
-    const pivot = { x: g.cx + g.R * 1.06, y: g.cy - g.R * tilt * 0.95 };
+    const pivot = { x: g.cx + g.R * 1.06, y: g.cy - g.R * TILT * 0.95 };
     const dx = stylus.x - pivot.x, dy = stylus.y - pivot.y, len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len;
     const nx = -uy, ny = ux;
     const t = Math.max(5, g.R * 0.024);
@@ -212,7 +201,7 @@ export function initRecord(): void {
     // Pivot base.
     const base = ctx.createRadialGradient(pivot.x - 4, pivot.y - 4, 2, pivot.x, pivot.y, t * 3.2);
     base.addColorStop(0, "#f3f3f7"); base.addColorStop(0.6, "#8d8d97"); base.addColorStop(1, "#3c3c44");
-    ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.beginPath(); ctx.ellipse(pivot.x + 6, pivot.y + 10, t * 3.4, t * 3.4 * tilt, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.beginPath(); ctx.ellipse(pivot.x + 6, pivot.y + 10, t * 3.4, t * 3.4 * TILT, 0, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = base; ctx.beginPath(); ctx.arc(pivot.x, pivot.y, t * 3.2, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#2a2a31"; ctx.beginPath(); ctx.arc(pivot.x, pivot.y, t * 1.2, 0, Math.PI * 2); ctx.fill();
   };
@@ -229,10 +218,7 @@ export function initRecord(): void {
       results.style.transform = `translateY(calc(-50% + ${24 * (1 - inn)}px))`;
       results.style.pointerEvents = inn > 0.5 ? "auto" : "none";
     }
-    const s = isStatic ? 0 : smooth(0.3, 0.86, p);
     angle += dt * 0.0011;                               // an easy turn, slower than a real 33 rpm
-    tilt += (tiltTarget - tilt) * 0.06;
-    skew += (skewTarget - skew) * 0.06;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
@@ -244,7 +230,7 @@ export function initRecord(): void {
     glow.addColorStop(0, `rgba(84,67,216,${dark ? 0.22 : 0.12})`); glow.addColorStop(1, "rgba(84,67,216,0)");
     ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
     ctx.save();
-    ctx.translate(g.cx + 8, g.cy + g.R * tilt * 0.1); ctx.scale(1, tilt);
+    ctx.translate(g.cx + 8, g.cy + g.R * TILT * 0.1); ctx.scale(1, TILT);
     const sh = ctx.createRadialGradient(0, 0, g.R * 0.85, 0, 0, g.R * 1.12);
     sh.addColorStop(0, `rgba(0,0,0,${dark ? 0.8 : 0.35})`); sh.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(0, 0, g.R * 1.12, 0, Math.PI * 2); ctx.fill();
@@ -252,49 +238,13 @@ export function initRecord(): void {
 
     // The record.
     ctx.save();
-    ctx.translate(g.cx, g.cy); ctx.transform(1, 0, skew, 1, 0, 0); ctx.scale(1, tilt);
+    ctx.translate(g.cx, g.cy); ctx.scale(1, TILT);
     ctx.save(); ctx.rotate(angle); ctx.drawImage(disc, -g.R, -g.R, g.R * 2, g.R * 2); ctx.restore();
-    const la = -0.95 + skew * 4 + (tilt - TILT) * 3;
-    if (sheenAngle === null || Math.abs(la - sheenAngle) > 0.02) buildSheen(la);
     ctx.drawImage(sheen, -g.R, -g.R, g.R * 2, g.R * 2);
     ctx.restore();
 
-    // Needle on the example groove.
-    const stylus = onDisc(radiusOf(EX_YEAR), STYLUS_ANGLE);
-    drawArm(stylus);
-
-    // Stream into the results.
-    const cr = canvas.getBoundingClientRect();
-    const target = (i: number): Pt => {
-      const b = rings[i]?.getBoundingClientRect();
-      return b ? { x: b.left - cr.left + b.width / 2, y: b.top - cr.top + b.height / 2 } : stylus;
-    };
-    if (s > 0 && s < 1) {
-      const targets = rows.map((_, i) => target(i));
-      ctx.fillStyle = GLOW;
-      for (let k = 0; k < STREAM; k++) {
-        const u = Math.min(1, Math.max(0, (s - sDelay[k]) / 0.6));
-        if (u <= 0 || u >= 1) continue;
-        const from = onDisc(radiusOf(sYear[k]), sAng[k]), to = targets[sRow[k]], e = ease(u);
-        const x = from.x + (to.x - from.x) * e, y = from.y + (to.y - from.y) * e + Math.sin(e * Math.PI) * sBend[k];
-        ctx.globalAlpha = 0.3 + 0.7 * Math.sin(e * Math.PI);
-        ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-    rows.forEach((r, i) => r.classList.toggle("lit", isStatic || s > 0.55 + i * 0.06));
-
-    // The example track's light: it starts under the needle and travels to its result row.
-    if (s < 0.98 || isStatic) {
-      const eu = isStatic ? 0 : ease(Math.min(1, Math.max(0, (s - 0.1) / 0.8)));
-      const to = target(1), pos = { x: stylus.x + (to.x - stylus.x) * eu, y: stylus.y + (to.y - stylus.y) * eu };
-      const pulse = reduce.matches ? 0.6 : (Math.sin(performance.now() / 420) + 1) / 2;
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, 7 + pulse * 8, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(139,125,255,${0.6 - pulse * 0.45})`; ctx.lineWidth = 2; ctx.stroke();
-      ctx.beginPath(); ctx.arc(pos.x, pos.y, 4.5, 0, Math.PI * 2);
-      ctx.fillStyle = "#fff"; ctx.shadowColor = GLOW; ctx.shadowBlur = 18; ctx.fill(); ctx.shadowBlur = 0;
-      ctx.strokeStyle = "#5443d8"; ctx.lineWidth = 2; ctx.stroke();
-    }
+    // Needle on the glowing groove.
+    drawArm(onDisc(radiusOf(EX_YEAR), STYLUS_ANGLE));
   }
 
   const animating = () => visible && !document.hidden && !reduce.matches;
@@ -316,11 +266,6 @@ export function initRecord(): void {
     sync();
   };
 
-  addEventListener("pointermove", (e) => {
-    if (reduce.matches) return;
-    tiltTarget = TILT - (e.clientY / innerHeight - 0.5) * 0.14;
-    skewTarget = (e.clientX / innerWidth - 0.5) * 0.14;
-  }, { passive: true });
   addEventListener("scroll", () => { if (!animating()) draw(0); }, { passive: true });
   let resizeTimer = 0;
   addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = window.setTimeout(applyMode, 100); });
@@ -333,6 +278,7 @@ export function initRecord(): void {
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(stage);
 
   buildDisc();
+  buildSheen(-0.95);
   applyMode();
   document.fonts?.ready.then(() => { g = layout(); draw(0); });
 }
