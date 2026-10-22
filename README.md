@@ -15,7 +15,7 @@ npm run preview   # serve the built site
 
 | Path | What it holds |
 |------|---------------|
-| `src/data/site.ts` | All copy: the opening ad reel (`syncMoments`), hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
+| `src/data/site.ts` | All copy: the opening intro reel (`syncMoments`), hero, workflow steps, catalog stats, labels, artists, FAQ and glossary terms. Edit content here first. |
 | `src/data/roles.ts` | Who it's for: the eight user types (homepage switcher and `/for/*` pages) and the AI principles. |
 | `src/data/schema.ts` | Helpers that build schema.org structured data (FAQPage, BreadcrumbList, SoftwareApplication). |
 | `src/styles/global.css` | Design tokens (light and dark), type scale, buttons, dot-grid motif, motion. |

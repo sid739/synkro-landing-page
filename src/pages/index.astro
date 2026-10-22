@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import AdReel from "../components/AdReel.astro";
+import IntroReel from "../components/IntroReel.astro";
 import Hero from "../components/Hero.astro";
 import Workflow from "../components/Workflow.astro";
 import Discovery from "../components/Discovery.astro";
@@ -14,7 +14,7 @@ import { homeFaq, site } from "../data/site";
 import { faqLd, softwareLd } from "../data/schema";
 ---
 <Base title="Music Licensing, in One Place" description={site.description} jsonLd={[softwareLd(), faqLd(homeFaq)]}>
-  <AdReel />
+  <IntroReel />
   <Hero />
   <Workflow />
   <Discovery />
