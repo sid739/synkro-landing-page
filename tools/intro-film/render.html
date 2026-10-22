@@ -108,8 +108,9 @@ function backdrop(i, u, t) {                      // u: 0..1 through this word
   ctx.restore();
   glow(cx, cy, M * .65, .35);
 }
+const WORD_LEN = 0.4;                             // each word holds for 0.4 s
 function sceneWords(t) {
-  const i = Math.min(WORDS.length - 1, Math.floor(t / BEAT)), u = (t % BEAT) / BEAT;
+  const i = Math.min(WORDS.length - 1, Math.floor(t / WORD_LEN)), u = (t % WORD_LEN) / WORD_LEN;
   backdrop(i, u, t);
   const size = fitSize(WORDS[i], M * .34);
   word(WORDS[i], size, 1, 1.12 - .12 * ease(u * 2));
@@ -150,36 +151,116 @@ function bars(t, collapse) {                      // a wall of sound bars on the
   }
   glow(W / 2, floor, M * .8, .25 + .25 * k);
 }
-function sceneBars(t) { bars(t, 0); }
+// Lines of text whose words rise in one after another; `hl` holds the indexes of violet words.
+// `out` (0..1) fades the whole statement away.
+function statement(lines, t, maxSize, hl = [], y = H / 2, out = 0) {
+  ctx.font = "900 100px Archivo";
+  const widest = Math.max(...lines.map((l) => ctx.measureText(l).width));
+  const size = Math.min(maxSize, 100 * (W * .84) / widest), lh = size * 1.04;
+  const top = y - ((lines.length - 1) * lh) / 2 - out * M * .03;
+  ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+  const space = ctx.measureText(" ").width;
+  let n = 0;
+  lines.forEach((line, li) => {
+    let x = W / 2 - ctx.measureText(line).width / 2;
+    const yy = top + li * lh;
+    for (const w of line.split(" ")) {
+      const ww = ctx.measureText(w).width, p = ease((t - n * .07) / .45);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(x - size * .1, yy - lh * .62, ww + size * .2, lh * 1.2); ctx.clip();
+      ctx.globalAlpha = p * (1 - out);
+      ctx.fillStyle = hl.includes(n) ? V2 : "#fff";
+      ctx.fillText(w, x, yy + (1 - p) * lh * .8);
+      ctx.restore();
+      x += ww + space; n++;
+    }
+  });
+}
 
-function sceneEnd(t) {                            // bars melt into the line; the line ends the loop
-  const c = easeIO(t / .7);
-  bars(t + 8.5, c);
-  const ty = H / 2;
-  const out = clamp((t - 1.1) / .4);
-  wave(t, M * .03 * (1 - c), clamp(c * 1.5) * (1 - out), ty + M * .2);
-  glow(W / 2, H / 2, M * .7, .38 * out);              // the first frame of the loop
-  const a = clamp((t - .35) / .35) * (1 - clamp((t - 1.15) / .3));
-  const size = fitSize("Sync Anything.", M * .2);
-  ctx.save(); ctx.globalAlpha = a; ctx.font = `900 ${size}px Archivo`;  ctx.textBaseline = "middle";
+function sceneCommon(t, d) {                      // "All of them have one thing in common."
+  glow(W / 2, H / 2, M * .7, .22);
+  wave(t + 3, M * .02, .35, H / 2 + M * .3);
+  statement(H > W ? ["All of them", "have one thing", "in common."] : ["All of them have", "one thing in common."], t - .1, M * .17, [], H / 2, clamp((t - (d - .3)) / .3));
+}
+
+function sceneMusic(t, d) {                       // the record, and the answer: music
+  sceneVinyl(t + 1, d + 1);
+  ctx.fillStyle = "rgba(5,5,8,.45)"; ctx.fillRect(0, 0, W, H);
+  glow(W / 2, H / 2, M * .6, .35 + .2 * kick(t));
+  const size = fitSize("Music.", M * .42), p = ease((t - .08) / .4);
+  word("Music.", size, p * (1 - clamp((t - (d - .2)) / .2)), 1.25 - .25 * p);
+}
+
+// A turning globe of dots, with light arcing between places on it.
+const GLOBE = [], ARCS = [];
+function buildGlobe() {
+  const N = 1100;
+  for (let i = 0; i < N; i++) { const y = 1 - 2 * (i + .5) / N, r = Math.sqrt(1 - y * y), a = i * 2.399963; GLOBE.push([Math.cos(a) * r, y, Math.sin(a) * r]); }
+  for (let k = 0; k < 16; k++) ARCS.push({ a: Math.floor(rand() * N), b: Math.floor(rand() * N), at: rand() * 1.6 });
+}
+function sceneWorld(t, d) {
+  const R = M * .46, cx = W / 2, cy = H / 2 + M * .04, rot = 1.2 + t * .45, tl = .38;
+  const proj = ([x0, y0, z0]) => {
+    const x = x0 * Math.cos(rot) - z0 * Math.sin(rot), z1 = x0 * Math.sin(rot) + z0 * Math.cos(rot);
+    const y = y0 * Math.cos(tl) - z1 * Math.sin(tl), z = y0 * Math.sin(tl) + z1 * Math.cos(tl);
+    return { x: cx + x * R, y: cy - y * R, z };
+  };
+  glow(cx, cy, R * 1.4, .3);
+  const appear = ease(t / .5);
+  for (const p of GLOBE) {
+    const q = proj(p), f = Math.max(0, q.z);
+    ctx.fillStyle = `rgba(150,138,255,${(.12 + .8 * f) * appear})`;
+    ctx.beginPath(); ctx.arc(q.x, q.y, (1.6 + 2.6 * f) * (M / 1080), 0, 7); ctx.fill();
+  }
+  for (const arc of ARCS) {
+    const pr = clamp((t - .3 - arc.at) / .7);
+    if (pr <= 0) continue;
+    const A = proj(GLOBE[arc.a]), B = proj(GLOBE[arc.b]);
+    if (A.z < .05 || B.z < .05) continue;
+    const mid = GLOBE[arc.a].map((v, i) => (v + GLOBE[arc.b][i]) / 2), len = Math.hypot(...mid);
+    const C = proj(mid.map((v) => (v / (len || 1)) * 1.35));
+    ctx.strokeStyle = `rgba(200,192,255,${.85 * Math.min(A.z, B.z) * appear})`; ctx.lineWidth = 3 * (M / 1080);
+    ctx.beginPath();
+    for (let s = 0; s <= 24 * pr; s++) {
+      const u = s / 24, x = (1 - u) ** 2 * A.x + 2 * (1 - u) * u * C.x + u * u * B.x, y = (1 - u) ** 2 * A.y + 2 * (1 - u) * u * C.y + u * u * B.y;
+      s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  glow(W / 2, H / 2, M * .5, .5, "5,5,8");
+  statement(H > W ? ["We help you", "license any music,", "from anywhere", "in the world."] : ["We help you license any music,", "from anywhere in the world."], t - .15, M * .14, [7, 8, 9, 10], H / 2, clamp((t - (d - .3)) / .3));
+}
+
+function sceneEnd(t, d) {                         // Sync Anything over the bars, which melt back into the line
+  const level = .38 * ease(t / .6) * (1 - easeIO((t - (d - .7)) / .5));
+  bars(t, 1 - level);
+  const out = clamp((t - (d - .45)) / .45);
+  wave(t, M * .02, clamp((t - (d - .8)) / .3) * (1 - out));
+  glow(W / 2, H / 2, M * .7, .38 * out);              // matches the first frame of the loop
+  const a = ease((t - .1) / .4) * (1 - clamp((t - (d - .7)) / .3));
+  const size = fitSize("Sync Anything.", M * .2), ty = H * .42;
+  ctx.save(); ctx.globalAlpha = a; ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle";
   const w1 = ctx.measureText("Sync ").width, w2 = ctx.measureText("Anything.").width, x0 = W / 2 - (w1 + w2) / 2;
-  const lift = (1 - ease((t - .35) / .5)) * M * .03;
-  ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Sync ", x0, ty - M * .02 + lift);
-  ctx.fillStyle = V2; ctx.fillText("Anything.", x0 + w1, ty - M * .02 + lift);
+  const lift = (1 - ease((t - .1) / .5)) * M * .03;
+  ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Sync ", x0, ty + lift);
+  ctx.fillStyle = V2; ctx.fillText("Anything.", x0 + w1, ty + lift);
   ctx.restore();
 }
 
 // ---- Timeline ----
+// 0 line · 0.8 Film…Streaming · 3.2 one thing in common · 5.0 Music · 6.4 license from anywhere · 8.6 Sync Anything
+const CUTS = [.8, 3.2, 5, 6.4, 8.6];
 function renderFrame(t, frame) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.letterSpacing = "0px";
   ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
-  if (t < 2) sceneLine(t, kick(t));
-  else if (t < 5) sceneWords(t - 2);
-  else if (t < 8.5) sceneVinyl(t - 5, 3.5);
-  else if (t < 10.5) sceneBars(t - 8.5);
-  else sceneEnd(t - 10.5);
+  if (t < .8) sceneLine(t + .6, kick(t));
+  else if (t < 3.2) sceneWords(t - .8);
+  else if (t < 5) sceneCommon(t - 3.2, 1.8);
+  else if (t < 6.4) sceneMusic(t - 5, 1.4);
+  else if (t < 8.6) sceneWorld(t - 6.4, 2.2);
+  else sceneEnd(t - 8.6, LEN - 8.6);
   // Flash on the cuts.
-  for (const cut of [2, 5, 8.5]) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.55 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
+  for (const cut of CUTS) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.5 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
   // Vignette and grain.
   const v = ctx.createRadialGradient(W / 2, H / 2, M * .35, W / 2, H / 2, Math.hypot(W, H) * .6);
   v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.65)");
@@ -191,7 +272,9 @@ window.setup = async (w, h) => {
   W = canvas.width = w; H = canvas.height = h; M = Math.min(w, h);
   await document.fonts.load("900 100px Archivo"); await document.fonts.ready;
   buildTextures();
+  buildGlobe();
 };
+window.LEN = LEN;
 window.frame = (t, n) => { renderFrame(t, n); return canvas.toDataURL("image/jpeg", 0.93); };
 </script>
 </body></html>

@@ -2,13 +2,14 @@
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const [w, h, out] = [Number(process.argv[2]), Number(process.argv[3]), process.argv[4]];
-const FPS = 30, LEN = 12;
+const FPS = 30;
 (async () => {
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 400, height: 300 } });
   p.on('pageerror', e => console.error('page', e.message));
   await p.goto('http://localhost:8765/render.html');
   await p.evaluate(([w, h]) => window.setup(w, h), [w, h]);
+  const LEN = await p.evaluate(() => window.LEN);
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-',
     '-an', ...(out.endsWith('.webm')
       ? ['-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', process.env.CRF || '36', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', '-pix_fmt', 'yuv420p']

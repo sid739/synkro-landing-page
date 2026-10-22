@@ -41,8 +41,8 @@ CRF=28 node render.js 1920 1080 ../../public/intro/synkro-intro.mp4
 CRF=28 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.mp4
 CRF=33 node render.js 1920 1080 ../../public/intro/synkro-intro.webm
 CRF=33 node render.js 720 1280 ../../public/intro/synkro-intro-portrait.webm
-ffmpeg -y -ss 11 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
-ffmpeg -y -ss 11 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
+ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster.jpg
+ffmpeg -y -ss 10 -i ../../public/intro/synkro-intro-portrait.mp4 -frames:v 1 -q:v 4 ../../public/intro/poster-portrait.jpg
 ```
 
 To use real footage instead, replace the MP4 and WebM files and the posters; nothing else changes.
