@@ -4,10 +4,10 @@
 <section class="film" aria-labelledby="film-title" data-film>
   <h2 id="film-title" class="sr-only">Introduction</h2>
   <video muted loop playsinline preload="auto" poster="/intro/poster.jpg" aria-describedby="film-desc" data-video>
-    <source src="/intro/synkro-intro.webm" type="video/webm" media="(min-aspect-ratio: 4/5)" />
     <source src="/intro/synkro-intro.mp4" type="video/mp4" media="(min-aspect-ratio: 4/5)" />
-    <source src="/intro/synkro-intro-portrait.webm" type="video/webm" />
     <source src="/intro/synkro-intro-portrait.mp4" type="video/mp4" />
+    <source src="/intro/synkro-intro.webm" type="video/webm" media="(min-aspect-ratio: 4/5)" />
+    <source src="/intro/synkro-intro-portrait.webm" type="video/webm" />
   </video>
   <p id="film-desc" class="sr-only">A 14-second film with no sound. Film, over a cinema audience in 3D glasses. TV, over the New York skyline at dusk. Ads, over cheerleaders in a white studio. Trailers, over an aerial of a mountain-top building above the clouds. Games, over a first-person view down a gun sight. Streaming, over a camera monitor on set. “All of them have one thing in common.” “Music”, over an overhead shot of a hand on a guitar beside headphones, cassettes and a record player. “We help you license any music, from anywhere in the world,” over a turning globe. Then “Sync Anything.”</p>
   <a class="skip-intro" href="#hero">Skip intro <span aria-hidden="true">↓</span></a>
@@ -30,6 +30,7 @@
     const portrait = matchMedia("(max-aspect-ratio: 4/5)");
     const setPoster = () => { video.poster = portrait.matches ? "/intro/poster-portrait.jpg" : "/intro/poster.jpg"; };
     let visible = true;
+    video.muted = true;                                // some browsers only autoplay when the property is set
     const sync = () => {
       if (visible && !reduce.matches && !document.hidden) video.play().catch(() => {});
       else video.pause();
