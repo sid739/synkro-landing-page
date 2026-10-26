@@ -1,0 +1,40 @@
+---
+// The page as a track: a thin scrub bar along the bottom of the header fills as you scroll, with a
+// playhead and a running timecode. The page is treated as a 3:30 track.
+---
+<div class="scrub" aria-hidden="true" data-scrub>
+  <span class="fill" data-fill></span>
+  <span class="head" data-head></span>
+  <span class="tc"><b data-tc>00:00</b> / 03:30</span>
+</div>
+
+<style>
+  .scrub { --p: 0; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: transparent; pointer-events: none; }
+  .fill { position: absolute; inset: 0 auto 0 0; width: calc(var(--p) * 100%); background: var(--accent); }
+  .head { position: absolute; top: 50%; left: calc(var(--p) * 100%); width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); opacity: 0; transition: opacity .3s; }
+  .tc { position: absolute; top: 8px; right: max(var(--gutter-r), calc((100% - var(--max)) / 2 + 16px)); font: 600 11px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; font-variant-numeric: tabular-nums;
+    color: var(--muted); background: color-mix(in srgb, var(--bg) 88%, transparent); padding: 4px 7px; border-radius: 6px; opacity: 0; transition: opacity .3s; }
+  .tc b { color: var(--fg); font-weight: 700; }
+  .scrub.on .head, .scrub.on .tc { opacity: 1; }
+  @media (max-width: 640px) { .tc { display: none; } }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>("[data-scrub]");
+  const tc = bar?.querySelector<HTMLElement>("[data-tc]");
+  if (bar && tc) {
+    const LEN = 210, pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
+    let frame = 0;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+      bar.style.setProperty("--p", String(p));
+      bar.classList.toggle("on", p > 0.002);
+      const t = p * LEN;
+      tc.textContent = `${pad(t / 60)}:${pad(t % 60)}`;
+    };
+    addEventListener("scroll", () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }, { passive: true });
+    addEventListener("resize", update);
+    update();
+  }
+</script>

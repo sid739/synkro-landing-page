@@ -1,13 +1,16 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import "../styles/cards.css";
 const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg>`;
 ---
 <section class="section" id="discovery" aria-labelledby="discovery-title">
   <div class="wrap">
     <div class="part-head" data-reveal>
-      <p class="eyebrow">Part 01</p>
+      <TrackLabel n={3} label="Discovery" />
       <h2 id="discovery-title">The Discovery <span class="hl">Engine</span></h2>
       <p class="lede">A complete search and catalog management infrastructure. Ingest your music, run brief-based searches, resolve ownership shares, and trigger requests for any song in the world: all within your private project dashboards.</p>
+      <Waveform seed={3} />
     </div>
 
     <div class="cards-grid">

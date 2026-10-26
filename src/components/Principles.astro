@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import { principles } from "../data/roles";
 const icons: Record<string, string> = {
   voice: `<path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>`,
@@ -11,9 +13,10 @@ const icons: Record<string, string> = {
   <div class="dots dots-bl"></div>
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <p class="eyebrow">Our AI principles</p>
+      <TrackLabel n={7} label="AI principles" />
       <h2 id="principles-title">AI in the search. <span class="hl">Humans in the music</span></h2>
       <p class="lede">AI powers how you find, check and clear music on Synkro. It never makes the music, and it never learns from yours.</p>
+      <Waveform seed={7} />
     </div>
     <ol class="list">
       {principles.map((p, i) => (

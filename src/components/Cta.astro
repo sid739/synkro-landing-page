@@ -1,11 +1,12 @@
 ---
+import TrackLabel from "./TrackLabel.astro";
 import { demoHref, earlyAccessHref } from "../data/site";
 ---
 <section class="section band cta" id="early-access" aria-labelledby="cta-title">
   <div class="dots dots-tr"></div>
   <div class="dots dots-bl"></div>
   <div class="wrap inner" data-reveal>
-    <p class="eyebrow">Infrastructure for modern licensing</p>
+    <TrackLabel n={8} label="Early access" />
     <h2 id="cta-title">We aren't just building a bigger catalog. <span class="hl">We're building the infrastructure sync always needed</span></h2>
     <div class="ctas">
       <a class="btn btn-primary" href={earlyAccessHref}>Request Early Access <span aria-hidden="true">→</span></a>

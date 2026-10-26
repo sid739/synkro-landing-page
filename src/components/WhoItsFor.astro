@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import { roles } from "../data/roles";
 const groups = [
   { label: "For licensees", side: "licensee" },
@@ -9,8 +11,9 @@ const groups = [
   <div class="dots dots-tr"></div>
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <p class="eyebrow">Built for both sides</p>
+      <TrackLabel n={6} label="Who it's for" />
       <h2 id="roles-title">A unified workspace built for both <span class="hl">licensees and rights holders</span></h2>
+      <Waveform seed={6} />
     </div>
 
     <div class="layout" data-roles>

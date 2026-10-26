@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import "../styles/cards.css";
 const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg>`;
 const holders = ["Master Approval (Believe)", "Publisher 1 (Sony Publishing)", "Publisher 2 (Universal Publishing)"];
@@ -8,9 +10,10 @@ const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web
   <div class="dots dots-bl"></div>
   <div class="wrap">
     <div class="part-head" data-reveal>
-      <p class="eyebrow">Part 02</p>
+      <TrackLabel n={4} label="Clearance" />
       <h2 id="clearance-title">The Clearance <span class="hl">Workspace</span></h2>
       <p class="lede">The commercial project management layer for deals. Bring master rights holders and publishers into secure Deal Rooms to align splits, counter terms, redline contracts, and execute binding licenses instantly.</p>
+      <Waveform seed={4} />
     </div>
 
     <div class="cards-grid">

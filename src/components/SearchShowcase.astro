@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import { ownershipRing } from "../lib/ring";
 import { searchExamples } from "../data/search";
 
@@ -7,9 +9,10 @@ const searchIcon = `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><pat
 <section class="section" id="search" aria-labelledby="search-title">
   <div class="wrap">
     <div class="head" data-reveal>
-      <p class="eyebrow">01 Search · 02 See rights</p>
+      <TrackLabel n={1} label="Search" />
       <h2 id="search-title">Describe <span class="hl">your scene</span></h2>
       <p class="lede">Search by brief, reference track or video. Every result shows who owns it.</p>
+      <Waveform seed={1} />
     </div>
 
     <div class="box" data-search data-reveal>

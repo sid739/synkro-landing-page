@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import { phases, steps } from "../data/site";
 
 // A deterministic little waveform per clip, drawn as SVG bars.
@@ -15,8 +17,9 @@ const wave = (seed: number) => {
   <div class="dots dots-tr"></div>
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <p class="eyebrow">How it works</p>
+      <TrackLabel n={2} label="How it works" />
       <h2 id="how-title">Licensing at the speed of <span class="hl">modern production</span></h2>
+      <Waveform seed={2} />
     </div>
 
     <div class="daw-scroll" data-reveal>

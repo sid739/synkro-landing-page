@@ -1,0 +1,25 @@
+---
+// A section label styled as a track on a tracklist: a three-bar equaliser, the track number, the name.
+interface Props { n: number; label: string; class?: string }
+const { n, label, class: cls } = Astro.props;
+---
+<p class:list={["eyebrow", "track", cls]}>
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="no">Track {String(n).padStart(2, "0")}</span><span class="sep" aria-hidden="true">·</span>{label}
+</p>
+
+<style>
+  .track { display: inline-flex; align-items: center; gap: .7em; }
+  .no { color: var(--accent-text); }
+  :global(.band) .no { color: var(--on-band); }
+  .sep { opacity: .5; }
+  .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+  .eq i { width: 3px; height: 100%; border-radius: 1px; background: var(--accent-text); transform-origin: bottom; transform: scaleY(.45); }
+  :global(.band) .eq i { background: var(--on-band); }
+  @media (prefers-reduced-motion: no-preference) {
+    .eq i { animation: eq .9s ease-in-out infinite alternate; }
+    .eq i:nth-child(2) { animation-duration: .65s; animation-delay: -.3s; }
+    .eq i:nth-child(3) { animation-duration: 1.1s; animation-delay: -.6s; }
+  }
+  @keyframes eq { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+</style>

@@ -1,4 +1,6 @@
 ---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
 import { catalogStats, labels } from "../data/site";
 import Constellation from "./Constellation.astro";
 import Artists from "./Artists.astro";
@@ -7,8 +9,9 @@ import Artists from "./Artists.astro";
   <div class="dots dots-tr"></div>
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <p class="eyebrow">What's in here</p>
+      <TrackLabel n={5} label="The catalog" />
       <h2 id="catalog-title">A catalog you can search like you talk. <span class="hl">Recorded between 1956 and this Tuesday</span></h2>
+      <Waveform seed={5} />
     </div>
   </div>
 

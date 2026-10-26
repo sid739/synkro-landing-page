@@ -1,8 +1,10 @@
 ---
 import { earlyAccessHref, nav, site } from "../data/site";
+import ScrollPlayhead from "./ScrollPlayhead.astro";
 const current = Astro.url.pathname;
 ---
 <header class="header">
+  <ScrollPlayhead />
   <div class="wrap bar">
     <a class="brand" href="/" aria-label={`${site.name} home`}>{site.name}</a>
 

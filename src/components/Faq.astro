@@ -1,12 +1,13 @@
 ---
+import TrackLabel from "./TrackLabel.astro";
 import type { Faq } from "../data/site";
-interface Props { items: Faq[]; title?: string; eyebrow?: string; lede?: string }
-const { items, title = "Questions, answered.", eyebrow = "FAQ", lede } = Astro.props;
+interface Props { items: Faq[]; title?: string; eyebrow?: string; lede?: string; track?: number }
+const { items, title = "Questions, answered.", eyebrow = "FAQ", lede, track } = Astro.props;
 ---
 <section class="section" id="faq" aria-labelledby="faq-title">
   <div class="wrap grid">
     <div class="section-head" data-reveal>
-      <p class="eyebrow">{eyebrow}</p>
+      {track ? <TrackLabel n={track} label={eyebrow} /> : <p class="eyebrow">{eyebrow}</p>}
       <h2 id="faq-title" set:html={title} />
       {lede && <p class="lede">{lede}</p>}
     </div>
