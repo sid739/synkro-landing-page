@@ -4,12 +4,15 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# The film stays bright. Daylight and studio shots: colour kept, a touch of violet in the shadows.
-LIGHT="eq=brightness=0.04:gamma=1.12:contrast=1.03:saturation=1.08,colorbalance=bs=0.03,"
-# Dim interiors and night shots: exposure lifted, colour kept.
-BRIGHT="eq=brightness=0.07:gamma=1.55:contrast=1.04:saturation=1.1,colorbalance=bs=0.03,"
+# The film stays bright and clear: mid-tones lifted while blacks stay black (lifting everything reads
+# as faded), then contrast, colour and a little sharpening.
+CLEAR="eq=contrast=1.12:saturation=1.22,unsharp=5:5:0.45,"
+# Daylight and studio shots.
+LIGHT="curves=all='0/0 0.5/0.54 1/1',$CLEAR"
+# Dim interiors and night shots: a stronger mid-tone lift.
+BRIGHT="curves=all='0/0 0.1/0.17 0.3/0.48 0.6/0.79 1/1',$CLEAR"
 # Shot on a white table: lightness inverted (hues kept) so the table goes dark.
-INVERT="negate,hue=h=180,eq=brightness=0.03:gamma=1.15:saturation=0.95,colorbalance=bs=0.06:rs=0.02,"
+INVERT="negate,hue=h=180,eq=brightness=0.02:contrast=1.1:saturation=1.05,unsharp=5:5:0.45,"
 
 # soften <n> <x> <y> <w> <h> <dy> [sigma]: blurs an oval in the w*h box at x,y in the source frame, fading
 # out towards its edge so it blends in, moving dy pixels per second (to follow a logo as the camera

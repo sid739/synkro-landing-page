@@ -19,11 +19,6 @@ const ease = (t) => 1 - Math.pow(1 - clamp(t), 3);
 const easeIO = (t) => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 
 // ---- Shared pieces ----
-function glow(x, y, r, a, color = "84,67,216") {
-  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, `rgba(${color},${a})`); g.addColorStop(1, `rgba(${color},0)`);
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-}
 function word(text, size, alpha, scale, y = H / 2) {
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(W / 2, y); ctx.scale(scale, scale);
   ctx.font = `900 ${size}px Archivo`; ctx.textBaseline = "middle"; ctx.textAlign = "center"; ctx.fillStyle = "#fff";
@@ -52,7 +47,6 @@ function drawTo(layer, fn) {
 function catBackground(i, t) {                    // t: seconds into this category
   const c = CATS[i];
   footage(c.clip, t, c.dim ?? .45, .05 * t);
-  glow(W / 2, H / 2, M * .6, .2);
 }
 function sceneCategories(t) {
   const i = Math.min(CATS.length - 1, Math.floor(t / CAT_LEN)), local = t - i * CAT_LEN;
@@ -154,7 +148,7 @@ function renderFrame(t) {
   for (const cut of CUTS) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.5 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
   // Vignette.
   const v = ctx.createRadialGradient(W / 2, H / 2, M * .35, W / 2, H / 2, Math.hypot(W, H) * .6);
-  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.25)");
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.15)");
   ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
 }
 
