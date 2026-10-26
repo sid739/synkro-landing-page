@@ -26,7 +26,7 @@ npm run preview   # serve the built site
 | `src/scripts/cards.ts` | The light that follows the pointer across feature cards. |
 | `src/scripts/hero.ts` | The homepage hero: sizes the sync timeline beside the headline and swaps the headline's word on each cut. |
 | `src/components/SearchShowcase.astro` | "Describe your scene": example briefs type themselves and their results drop in (`src/data/search.ts`). |
-| `src/components/TrackLabel.astro`, `Waveform.astro`, `ScrollPlayhead.astro` | Music details: section labels as numbered tracks with an equaliser, a waveform under each section title that sweeps into colour, and a playhead with timecode along the header that follows the scroll. |
+| `src/components/TrackLabel.astro`, `Waveform.astro` | Music details: section labels as numbered tracks with an equaliser, and a waveform under each section title that sweeps into colour. |
 | `src/components/BigMarquee.astro` | Oversized words drifting across the page, nudged along by scrolling. |
 | `src/components/SyncPanel.astro` | The hero's sync timeline: the category reel on V1, a waveform on A1, a playhead that lands on a cue at every cut, and the matched track with its rights holders. |
 | `tools/intro-film/` | Source of the homepage intro film (`public/intro/`). See "Intro film" below. |

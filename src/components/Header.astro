@@ -1,10 +1,8 @@
 ---
 import { earlyAccessHref, nav, site } from "../data/site";
-import ScrollPlayhead from "./ScrollPlayhead.astro";
 const current = Astro.url.pathname;
 ---
 <header class="header">
-  <ScrollPlayhead />
   <div class="wrap bar">
     <a class="brand" href="/" aria-label={`${site.name} home`}>{site.name}</a>
 
@@ -32,7 +30,7 @@ const current = Astro.url.pathname;
 </header>
 
 <style>
-  .header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: saturate(1.4) blur(16px); -webkit-backdrop-filter: saturate(1.4) blur(16px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+  .header { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; }
   .brand { font-family: var(--font-display); font-weight: 900; font-size: 26px; letter-spacing: -.06em; text-decoration: none; }
   .links { display: flex; gap: 30px; list-style: none; padding: 0; }
