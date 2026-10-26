@@ -65,7 +65,6 @@ Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To c
 - schema.org JSON-LD on every page: Organization and WebSite everywhere, plus SoftwareApplication, FAQPage, HowTo, Article, BreadcrumbList and DefinedTerm/DefinedTermSet where they apply.
 - Answer-first copy: question headings answered directly in the first sentences, so answer engines can quote them.
 - `sitemap-index.xml` (generated), `robots.txt` and `llms.txt`.
-- Light and dark themes that follow the visitor's system setting, with a toggle that remembers their choice.
 - Self-hosted fonts, compressed images and a few kilobytes of JavaScript, for fast Core Web Vitals.
 
 ## Content

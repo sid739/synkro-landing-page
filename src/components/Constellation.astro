@@ -192,8 +192,6 @@ const families = [
     }, 2600);
 
     new IntersectionObserver(([e]) => (e?.isIntersecting ? start() : stop())).observe(canvas);
-    new MutationObserver(() => { readColors(); draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { readColors(); draw(performance.now()); });
     addEventListener("resize", resize);
     readColors();
     resize();

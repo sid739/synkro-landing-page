@@ -202,6 +202,5 @@ import { SEG, syncSegments as segments } from "../data/sync";
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; sync(); }).observe(panel);
     document.addEventListener("visibilitychange", sync);
     reduce.addEventListener("change", sync);
-    new MutationObserver(() => render(video.currentTime)).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
   }
 </script>

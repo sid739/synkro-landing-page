@@ -41,8 +41,6 @@ import Artists from "./Artists.astro";
   .track { list-style: none; padding: 0; display: flex; align-items: center; gap: 72px; width: max-content; animation: scroll 55s linear infinite; }
   .marquee:hover .track { animation-play-state: paused; }
   .track img { height: 44px; width: auto; max-width: none; filter: brightness(0); opacity: .75; }
-  :global(:root[data-theme="dark"]) .track img { filter: none; }
-  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme="light"])) .track img { filter: none; } }
   @keyframes scroll { to { transform: translateX(calc(-50% - 36px)); } }
 
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: clamp(40px, 5vw, 64px); }

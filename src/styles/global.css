@@ -2,8 +2,7 @@
 @import "@fontsource-variable/manrope/index.css";
 
 /* Brand system, taken from the investor deck.
-   Light is the default token set; dark redefines it for the system setting and the toggle.
-   Violet bands are brand surfaces and stay violet in both themes. */
+   The site has one, light theme; black .ink sections and violet bands give it its dark moments. */
 :root {
   --bg: #f3f3f6;
   --surface: #ffffff;
@@ -32,21 +31,6 @@
   --gutter: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #000000; --surface: #0d0d11; --surface-2: #17171d; --fg: #ffffff; --muted: #a8a8b4; --faint: #6e6e7c;
-    --line: #26262e; --accent-text: #8b7dff; --accent-soft: rgba(125, 110, 247, .14); --ink-card: #000000;
-    --dot: rgba(125, 110, 247, .55); --shadow: none;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #000000; --surface: #0d0d11; --surface-2: #17171d; --fg: #ffffff; --muted: #a8a8b4; --faint: #6e6e7c;
-  --line: #26262e; --accent-text: #8b7dff; --accent-soft: rgba(125, 110, 247, .14); --ink-card: #000000;
-  --dot: rgba(125, 110, 247, .55); --shadow: none;
-  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -84,13 +68,8 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 /* Sections */
 .section { padding-block: clamp(64px, 8vw, 104px); position: relative; overflow: clip; }
 /* Two sections on the same background read as one stretch of page, so the second doesn't add its own
-   full top padding on top of the first's bottom padding. (~ rather than +: component scripts sit
-   between sections.) The black .ink band matches the page in dark mode. */
+   full top padding on top of the first's bottom padding. (Component scripts can sit between sections.) */
 .section:not(.band, .ink):is(.section:not(.band, .ink) + script + *, .section:not(.band, .ink) + *) { padding-top: clamp(16px, 3vw, 40px); }
-:root[data-theme="dark"] .section:not(.band):is(.section:not(.band) + script + *, .section:not(.band) + *) { padding-top: clamp(16px, 3vw, 40px); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .section:not(.band):is(.section:not(.band) + script + *, .section:not(.band) + *) { padding-top: clamp(16px, 3vw, 40px); }
-}
 .section-head { display: grid; gap: 20px; max-width: 900px; margin-bottom: clamp(40px, 5vw, 64px); }
 .band { background: var(--band); color: var(--on-band); }
 .band .eyebrow, .band .lede, .band .prose p { color: var(--on-band-muted); }
