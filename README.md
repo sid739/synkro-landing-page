@@ -31,7 +31,7 @@ Adding a glossary term or a user type is a data change only: add an entry to `gl
 
 ## Intro film
 
-The homepage opens on a 10-second muted film (`public/intro/`), in 4K on large or high-resolution screens. It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
+The homepage opens on a 10-second muted film (`public/intro/`) that plays once per browser session, full screen over the site, in 4K on large or high-resolution screens. It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
 
 ```bash
 cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
@@ -50,8 +50,6 @@ ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $X -level:v 4.
 ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $V -crf 30 $I/synkro-intro.webm
 ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 22 $I/synkro-intro-portrait.mp4
 ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
-ffmpeg -y -ss 9 -i /tmp/master-4k.mp4 -frames:v 1 -vf scale=1920:-2:flags=lanczos -q:v 3 $I/poster.jpg
-ffmpeg -y -ss 9 -i /tmp/master-portrait.mp4 -frames:v 1 -q:v 3 $I/poster-portrait.jpg
 ```
 
 Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the two closing lines. The clips are from Pexels, which allows commercial use without credit.
