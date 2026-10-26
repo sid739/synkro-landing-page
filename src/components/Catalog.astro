@@ -28,7 +28,7 @@ import Artists from "./Artists.astro";
       {catalogStats.map((s, i) => (
         <div class:list={["a", { wide: s.wide }]} style={`--i: ${i}`}>
           <dt>{s.label}</dt>
-          <dd class="num">{s.text ?? <><span data-count={s.value}>{s.value!.toLocaleString("en-US")}</span>{s.suffix && <span class="suffix">{s.suffix}</span>}</>}</dd>
+          <dd class="num">{s.text ? s.text.split("–").map((part, j) => <>{j > 0 && <span class="dash">–</span>}{part}</>) : <><span data-count={s.value}>{s.value!.toLocaleString("en-US")}</span>{s.suffix && <span class="suffix">{s.suffix}</span>}</>}</dd>
           <dd class="body">{s.body}</dd>
         </div>
       ))}
@@ -49,10 +49,12 @@ import Artists from "./Artists.astro";
   .stats > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 28px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); }
   .stats .wide { grid-column: span 2; }
   .stats dt { order: 1; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
-  /* Bold numbers at normal width in the text colour; the "+" picks up the accent. */
+  /* Bold numbers at normal width in the text colour. The tight tracking would let the dash in a
+     range touch its years, so it gets room of its own. */
   .stats .num { order: 2; font-size: clamp(44px, 4.6vw, 72px); line-height: 1; color: var(--fg); font-weight: 800; font-stretch: 100%; letter-spacing: -.045em; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .stats > div:not(.wide) .num { font-size: clamp(36px, 3.2vw, 50px); }
-  .stats .suffix { color: var(--accent-text); margin-left: .04em; }
+  .stats .suffix { margin-left: .04em; }
+  .stats .dash { margin-inline: .14em; }
   .stats .body { order: 3; color: var(--muted); font-size: 15px; max-width: 46ch; }
 
   @media (max-width: 960px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
