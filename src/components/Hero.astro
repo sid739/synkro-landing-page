@@ -63,7 +63,8 @@ const results = [
 
   .visual { position: absolute; z-index: 1; top: 50%; transform: translateY(-50%); }
   .copy { max-width: 540px; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2.4vh, 22px); justify-items: start; will-change: opacity, transform; }
-  .copy h1 { font-size: clamp(56px, min(8vw, 15vh), 132px); line-height: .88; }
+  /* Enough room under "Sync" for its descender to clear the tall letters of every word below it. */
+  .copy h1 { font-size: clamp(56px, min(8vw, 15vh), 132px); line-height: 1.04; }
   /* The word changes (Sync Film, Sync TV...); it may run past the column, which keeps its width. */
   .copy h1 .hl { display: block; white-space: nowrap; will-change: transform, opacity; }
   .sub { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; color: var(--muted); max-width: 30em; }
