@@ -82,7 +82,15 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .num { font-family: var(--font-display); font-weight: 850; font-stretch: 125%; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 
 /* Sections */
-.section { padding-block: clamp(80px, 11vw, 140px); position: relative; overflow: clip; }
+.section { padding-block: clamp(64px, 8vw, 104px); position: relative; overflow: clip; }
+/* Two sections on the same background read as one stretch of page, so the second doesn't add its own
+   full top padding on top of the first's bottom padding. (~ rather than +: component scripts sit
+   between sections.) The black .ink band matches the page in dark mode. */
+.section:not(.band, .ink):is(.section:not(.band, .ink) + script + *, .section:not(.band, .ink) + *) { padding-top: clamp(16px, 3vw, 40px); }
+:root[data-theme="dark"] .section:not(.band):is(.section:not(.band) + script + *, .section:not(.band) + *) { padding-top: clamp(16px, 3vw, 40px); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .section:not(.band):is(.section:not(.band) + script + *, .section:not(.band) + *) { padding-top: clamp(16px, 3vw, 40px); }
+}
 .section-head { display: grid; gap: 20px; max-width: 900px; margin-bottom: clamp(40px, 5vw, 64px); }
 .band { background: var(--band); color: var(--on-band); }
 .band .eyebrow, .band .lede, .band .prose p { color: var(--on-band-muted); }
