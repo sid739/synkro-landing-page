@@ -30,7 +30,7 @@ import SyncPanel from "./SyncPanel.astro";
 
 <style>
   .stage { --nav: calc(72px + env(safe-area-inset-top, 0px)); position: relative; }
-  .viewport { position: relative; height: calc(100vh - var(--nav)); min-height: 600px; overflow: hidden; }
+  .viewport { position: relative; height: min(calc(100vh - var(--nav)), 820px); min-height: 600px; overflow: hidden; }
   .layer { position: relative; z-index: 1; height: 100%; display: flex; align-items: center; }
   .inner { position: static; width: 100%; }
 

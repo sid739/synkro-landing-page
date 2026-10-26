@@ -26,7 +26,6 @@ npm run preview   # serve the built site
 | `src/scripts/cards.ts` | The light that follows the pointer across feature cards. |
 | `src/scripts/hero.ts` | The homepage hero: sizes the sync timeline beside the headline and swaps the headline's word on each cut. |
 | `src/components/SearchShowcase.astro` | "Describe your scene": example briefs type themselves and their results drop in (`src/data/search.ts`). |
-| `src/components/MoodTiles.astro` | "Browse by mood" tiles whose stills turn into footage on hover (`src/data/moods.ts`, videos built by `tools/intro-film/make-mood-tiles.sh`). |
 | `src/components/BigMarquee.astro` | Oversized words drifting across the page, nudged along by scrolling. |
 | `src/components/SyncPanel.astro` | The hero's sync timeline: the category reel on V1, a waveform on A1, a playhead that lands on a cue at every cut, and the matched track with its rights holders. |
 | `tools/intro-film/` | Source of the homepage intro film (`public/intro/`). See "Intro film" below. |

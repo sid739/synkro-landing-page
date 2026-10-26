@@ -19,7 +19,9 @@ const { rows } = Astro.props;
 </div>
 
 <style>
-  .marquee-big { overflow: hidden; padding-block: clamp(28px, 5vw, 64px); display: grid; gap: clamp(4px, 1vw, 12px); user-select: none; }
+  .marquee-big { overflow: hidden; padding-block: clamp(8px, 2vw, 24px); display: grid; gap: clamp(4px, 1vw, 12px); user-select: none; }
+  /* The section after the words doesn't need its full top padding; the words already separate them. */
+  :global(.marquee-big + script + .section), :global(.marquee-big + .section) { padding-top: clamp(32px, 4vw, 56px); }
   .row { --shift: 0px; transform: translateX(var(--shift)); will-change: transform; }
   .track { display: flex; width: max-content; }
   .set { display: flex; align-items: center; flex: none; }
