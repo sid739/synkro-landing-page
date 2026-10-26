@@ -49,7 +49,8 @@ import Artists from "./Artists.astro";
   .stats > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 28px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); }
   .stats .wide { grid-column: span 2; }
   .stats dt { order: 1; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
-  .stats .num { order: 2; font-size: clamp(40px, 4.4vw, 68px); line-height: 1; color: var(--accent-text); font-stretch: 110%; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  /* The heaviest weight, thickened a touch further by an outline in the same colour. */
+  .stats .num { order: 2; font-size: clamp(40px, 4.4vw, 68px); line-height: 1; color: var(--accent-text); font-weight: 900; font-stretch: 110%; -webkit-text-stroke: .025em currentColor; paint-order: stroke fill; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .stats > div:not(.wide) .num { font-size: clamp(34px, 3vw, 46px); }
   .stats .body { order: 3; color: var(--muted); font-size: 15px; max-width: 46ch; }
 
