@@ -23,7 +23,8 @@ npm run preview   # serve the built site
 | `src/pages/` | Routes. `for/[slug]` and `glossary/[slug]` generate one page per entry in the data files. |
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
-| `src/scripts/record.ts` | The homepage hero: the turning vinyl record, its tonearm, and the scroll from the record into the example results. |
+| `src/scripts/hero.ts` | The homepage hero: sizes the sync timeline beside the headline and fades the headline into the example results on scroll. |
+| `src/components/SyncPanel.astro` | The hero's sync timeline: the category reel on V1, a waveform on A1, a playhead that lands on a cue at every cut, and the matched track with its rights holders. |
 | `tools/intro-film/` | Source of the homepage intro film (`public/intro/`). See "Intro film" below. |
 | `public/` | Static files: `og.png` share image, favicon, `robots.txt`, artist photos, label logos. |
 
@@ -52,7 +53,7 @@ ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 22 $I/synkro-intro-po
 ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
 ```
 
-Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the two closing lines. The clips are from Pexels, which allows commercial use without credit.
+Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the two closing lines. The hero's sync timeline uses the same graded category clips: after `prepare-footage.sh`, run `./make-hero-reel.sh` to rebuild `public/hero/`. The clips are from Pexels, which allows commercial use without credit.
 
 ## SEO and AEO built in
 
