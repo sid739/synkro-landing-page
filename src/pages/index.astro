@@ -2,6 +2,9 @@
 import Base from "../layouts/Base.astro";
 import IntroFilm from "../components/IntroFilm.astro";
 import Hero from "../components/Hero.astro";
+import BigMarquee from "../components/BigMarquee.astro";
+import SearchShowcase from "../components/SearchShowcase.astro";
+import MoodTiles from "../components/MoodTiles.astro";
 import Workflow from "../components/Workflow.astro";
 import Discovery from "../components/Discovery.astro";
 import Clearance from "../components/Clearance.astro";
@@ -16,6 +19,9 @@ import { faqLd, softwareLd } from "../data/schema";
 <Base title="Music Licensing, in One Place" description={site.description} jsonLd={[softwareLd(), faqLd(homeFaq)]}>
   <IntroFilm slot="intro" />
   <Hero />
+  <BigMarquee rows={[["Film", "TV", "Ads", "Trailers", "Games", "Streaming"], ["Search", "Clear", "Sign", "Deliver", "Get paid"]]} />
+  <SearchShowcase />
+  <MoodTiles />
   <Workflow />
   <Discovery />
   <Clearance />

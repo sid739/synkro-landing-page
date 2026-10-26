@@ -1,38 +1,31 @@
 // Homepage hero: the headline on the left and the sync timeline on the right. The headline's second
 // word follows the timeline's cuts (Sync Film, Sync TV, ...) through one pass, then settles on
-// Anything. Scrolling the sticky stage fades the headline out and the example results in, while the
-// timeline stays put.
-// Phones, narrow windows and reduced motion get the copy, the timeline and the results stacked.
+// Anything. Phones and narrow windows get the copy and the timeline stacked.
 
 const WIDE_MIN = 900;                                   // narrower than this, the hero stacks
 const PANEL_MIN = 380, PANEL_MAX = 640;                 // the timeline's width range beside the copy
 
-const smooth = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-
 // Every element the hero needs, or null when the page has no hero.
 const hero = () => {
   const q = <T extends Element>(sel: string) => document.querySelector<T>(sel);
-  const stage = q<HTMLElement>("[data-stage]"), viewport = q<HTMLElement>("[data-viewport]");
-  const copy = q<HTMLElement>("[data-copy]"), results = q<HTMLElement>("[data-results]"), visual = q<HTMLElement>("[data-visual]");
-  const word = q<HTMLElement>("[data-word]");
-  if (!stage || !viewport || !copy || !results || !visual || !word) return null;
-  return { stage, viewport, copy, results, visual, word };
+  const viewport = q<HTMLElement>("[data-viewport]"), copy = q<HTMLElement>("[data-copy]");
+  const visual = q<HTMLElement>("[data-visual]"), word = q<HTMLElement>("[data-word]");
+  if (!viewport || !copy || !visual || !word) return null;
+  return { viewport, copy, visual, word };
 };
 
 export function initHero(): void {
   const els = hero();
   if (!els) return;
-  const { stage, viewport, copy, results, visual, word } = els;
+  const { viewport, copy, visual, word } = els;
   const final = word.textContent ?? "";
   const words: string[] = JSON.parse(word.dataset.words ?? "[]");
   const root = document.documentElement;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-  let isStatic = false;
 
-  // Size the timeline to the space right of the copy, up to the content edge, and keep the results
-  // panel (which takes the copy's place on scroll) clear of it.
+  // Size the timeline to the space right of the copy, up to the content edge.
   const layout = () => {
-    for (const el of [visual, results]) el.style.removeProperty("width");
+    visual.style.removeProperty("width");
     const vr = viewport.getBoundingClientRect();
     const edge = vr.width - Math.max(16, (vr.width - 1200) / 2 + 16);
     // The copy is as wide as its widest moment, so measure the headline with each word it will show.
@@ -45,31 +38,11 @@ export function initHero(): void {
     word.textContent = shown;
     const byHeight = (vr.height - 48 - 230) / 0.5625;  // the panel is about 0.56 of its width plus 230 px tall
     const width = Math.min(PANEL_MAX, edge - copyRight - 56, byHeight);
-    isStatic = reduce.matches || innerWidth < WIDE_MIN || width < PANEL_MIN;
-    root.classList.toggle("hero-static", isStatic);
-    if (isStatic) { for (const el of [copy, results]) el.removeAttribute("style"); return; }
+    const stacked = innerWidth < WIDE_MIN || width < PANEL_MIN;
+    root.classList.toggle("hero-static", stacked);
+    if (stacked) return;
     visual.style.width = `${width}px`;
     visual.style.right = `${vr.width - edge}px`;
-    const resultsLeft = results.getBoundingClientRect().left - vr.left;
-    results.style.width = `${Math.min(600, edge - width - 40 - resultsLeft)}px`;
-  };
-
-  // Share of the sticky stage scrolled, measured below the fixed header.
-  const progress = () => {
-    const r = stage.getBoundingClientRect(), nav = innerHeight - viewport.offsetHeight;
-    return Math.min(1, Math.max(0, (nav - r.top) / (r.height - viewport.offsetHeight)));
-  };
-  const update = () => {
-    if (isStatic) return;
-    const p = progress();
-    const out = smooth(0.06, 0.3, p);
-    copy.style.opacity = String(1 - out);
-    copy.style.transform = `translateY(${-50 * out}px)`;
-    copy.style.visibility = out > 0.99 ? "hidden" : "visible";
-    const inn = smooth(0.24, 0.44, p);
-    results.style.opacity = String(inn);
-    results.style.transform = `translateY(calc(-50% + ${24 * (1 - inn)}px))`;
-    results.style.pointerEvents = inn > 0.5 ? "auto" : "none";
   };
 
   // The headline's word: one pass through the categories as the timeline cuts, then Anything for good.
@@ -89,12 +62,8 @@ export function initHero(): void {
     show(label);
   });
 
-  let frame = 0;
-  addEventListener("scroll", () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }, { passive: true });
   let resizeTimer = 0;
-  const relayout = () => { layout(); update(); };
-  addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = window.setTimeout(relayout, 100); });
-  reduce.addEventListener("change", relayout);
-  relayout();
-  document.fonts?.ready.then(relayout);
+  addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = window.setTimeout(layout, 100); });
+  layout();
+  document.fonts?.ready.then(layout);
 }

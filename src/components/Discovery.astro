@@ -11,7 +11,7 @@ const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></s
     </div>
 
     <div class="cards-grid">
-      <article class="fcard wide" data-reveal data-play>
+      <article class="fcard wide" data-reveal data-play data-loop="8000">
         <div class="text">
           <h3>Instant catalog ingestion &amp; <span class="hl">AI enrichment</span></h3>
           <p>Import catalogs via CSV, DDEX Feed, Drive, or Manual Upload. Automatically extract over 20 acoustic &amp; AI parameters while finding master &amp; publishing splits instantly.</p>
@@ -30,7 +30,7 @@ const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></s
         </div>
       </article>
 
-      <article class="fcard" data-reveal data-play style="--rd: 120ms">
+      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
         <div class="text">
           <h3>Direct rights <span class="hl">lookups</span></h3>
           <p>Surface splits and send license requests instantly for any song.</p>
@@ -43,7 +43,21 @@ const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></s
         </div>
       </article>
 
-      <article class="fcard wide" data-reveal data-play>
+
+      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
+        <div class="text">
+          <h3>Custom terms <span class="hl">license requests</span></h3>
+          <p>Create custom terms for license requests by packaging media scope, paid options, territories, and much more.</p>
+        </div>
+        <div class="ui">
+          <div class="row a" style="--i: 0"><span>Media Scope</span><span>Paid &amp; Unpaid Social</span></div>
+          <div class="row a" style="--i: 1"><span>Territory</span><span>Worldwide</span></div>
+          <div class="row a" style="--i: 2"><span>Options</span><span>+1 Year Option (10% lift)</span></div>
+          <span class="chip on a" style="--i: 3">+ 5 more terms</span>
+        </div>
+      </article>
+
+      <article class="fcard wide" data-reveal data-play data-loop="8000">
         <div class="text">
           <h3>Search as a <span class="hl">workspace</span></h3>
           <p>Upload briefs, drag in audio &amp; video reference files, and have real-time back and forths with your search agent to continuously refine results.</p>
@@ -59,19 +73,10 @@ const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></s
           <p class="bubble ai a" style="--d: 2600ms">Adjusted energy curve to match the climax drop at 0:24. Filtered 3 matching electronic tracks.</p>
         </div>
       </article>
-
-      <article class="fcard" data-reveal data-play style="--rd: 120ms">
-        <div class="text">
-          <h3>Custom terms <span class="hl">license requests</span></h3>
-          <p>Create custom terms for license requests by packaging media scope, paid options, territories, and much more.</p>
-        </div>
-        <div class="ui">
-          <div class="row a" style="--i: 0"><span>Media Scope</span><span>Paid &amp; Unpaid Social</span></div>
-          <div class="row a" style="--i: 1"><span>Territory</span><span>Worldwide</span></div>
-          <div class="row a" style="--i: 2"><span>Options</span><span>+1 Year Option (10% lift)</span></div>
-          <span class="chip on a" style="--i: 3">+ 5 more terms</span>
-        </div>
-      </article>
     </div>
   </div>
 </section>
+
+<script>
+  import "../scripts/cards";
+</script>

@@ -1,0 +1,53 @@
+---
+// Two rows of oversized words drifting in opposite directions, nudged further as the page scrolls.
+// Decorative: the same words appear in the page's text, so screen readers skip it.
+interface Props { rows: string[][] }
+const { rows } = Astro.props;
+---
+<div class="marquee-big" aria-hidden="true" data-big-marquee>
+  {rows.map((words, r) => (
+    <div class:list={["row", { rev: r % 2 === 1 }]} data-row>
+      <div class="track">
+        {[0, 1].map(() => (
+          <span class="set">
+            {words.map((w, i) => <><span class:list={["w", { outline: (i + r) % 2 === 1 }]}>{w}</span><i class="dot"></i></>)}
+          </span>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .marquee-big { overflow: hidden; padding-block: clamp(28px, 5vw, 64px); display: grid; gap: clamp(4px, 1vw, 12px); user-select: none; }
+  .row { --shift: 0px; transform: translateX(var(--shift)); will-change: transform; }
+  .track { display: flex; width: max-content; }
+  .set { display: flex; align-items: center; flex: none; }
+  .w { font-family: var(--font-display); font-weight: 850; font-stretch: 62%; text-transform: uppercase; letter-spacing: -.01em; line-height: .9; font-size: clamp(72px, 13vw, 210px); color: var(--fg); padding-inline: .12em; white-space: nowrap; }
+  .w.outline { color: transparent; -webkit-text-stroke: max(1.5px, .012em) var(--fg); }
+  .dot { width: clamp(12px, 1.6vw, 24px); height: clamp(12px, 1.6vw, 24px); border-radius: 50%; background: var(--accent-text); flex: none; margin-inline: .3em; }
+  @media (prefers-reduced-motion: no-preference) {
+    .track { animation: drift 48s linear infinite; }
+    .rev .track { animation-direction: reverse; }
+    @keyframes drift { to { transform: translateX(-50%); } }
+  }
+</style>
+
+<script>
+  // Scrolling pushes each row along a little further, in its own direction, on top of the drift.
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  for (const el of document.querySelectorAll<HTMLElement>("[data-big-marquee]")) {
+    const rows = [...el.querySelectorAll<HTMLElement>("[data-row]")];
+    let visible = false, frame = 0;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      const p = (innerHeight - r.top) / (innerHeight + r.height);   // 0 entering, 1 leaving
+      rows.forEach((row, i) => row.style.setProperty("--shift", `${(i % 2 ? 1 : -1) * (p - 0.5) * 240}px`));
+    };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) update(); }).observe(el);
+    addEventListener("scroll", () => {
+      if (!visible || reduce.matches) return;
+      cancelAnimationFrame(frame); frame = requestAnimationFrame(update);
+    }, { passive: true });
+  }
+</script>

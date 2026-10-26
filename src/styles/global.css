@@ -70,7 +70,8 @@ p, h1, h2, h3, h4, ul, ol, dl, dd, figure { margin: 0; }
 .display, h1, h2 { font-family: var(--font-display); font-weight: 850; letter-spacing: -.055em; line-height: .95; text-wrap: balance; }
 h3, h4 { font-family: var(--font-display); font-weight: 800; letter-spacing: -.04em; line-height: 1.08; text-wrap: balance; }
 h1 { font-size: clamp(52px, 8.4vw, 120px); }
-h2 { font-size: clamp(38px, 5.4vw, 72px); }
+/* Section titles: tall, condensed capitals, like a film poster. Long-form headings opt out. */
+h2 { font-size: clamp(44px, 6.6vw, 100px); font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em; line-height: .9; }
 h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .hl { color: var(--accent-text); }
 .band .hl { color: var(--on-band); opacity: .72; }
