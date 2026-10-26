@@ -1,18 +1,9 @@
 ---
 import { ownershipRing } from "../lib/ring";
+import { SEG, syncSegments as segments } from "../data/sync";
 
 // An editing timeline: footage on V1, the matched track on A1, and a playhead that lands on a cue at
-// every cut. The tracks are descriptions, not real titles, and the panel is labelled as an example.
-// Its reel is built by tools/intro-film/make-hero-reel.sh: six 2.6 s shots, in this order.
-const SEG = 2.6;
-const segments = [
-  { cat: "Film", clip: "film", track: "Slow-building strings, lifts in the last 20 seconds", bpm: 72, key: "D minor", holders: 1 },
-  { cat: "TV", clip: "tv", track: "Sparse piano over rain ambience", bpm: 84, key: "F major", holders: 2 },
-  { cat: "Ads", clip: "ads", track: "Hazy indie guitar, summer evening", bpm: 118, key: "A major", holders: 1 },
-  { cat: "Trailers", clip: "trailers", track: "Driving post-rock build, big drums", bpm: 128, key: "E minor", holders: 4 },
-  { cat: "Games", clip: "games", track: "Nocturnal synth pulse", bpm: 110, key: "C minor", holders: 1 },
-  { cat: "Streaming", clip: "streaming", track: "Warm analogue soul groove, brass stabs", bpm: 96, key: "G minor", holders: 3 },
-];
+// every cut. Each cut while playing is announced as a "sync:cut" event, which the hero headline follows.
 ---
 <figure class="sync" data-sync data-seg={SEG} aria-label="Example: footage for film, TV, ads, trailers, games and streaming, each cut to a matched track whose rights holders are shown">
   <div class="bar" aria-hidden="true">
@@ -164,7 +155,8 @@ const segments = [
 
     let seg = -1, raf = 0, cutTimer = 0;
     const pad = (n: number) => String(Math.floor(n)).padStart(2, "0");
-    const render = (t: number) => {
+    let announced = -1;
+    const render = (t: number, live = false) => {
       const p = (t % LEN) / LEN, s = Math.min(N - 1, Math.floor((t % LEN) / SEG));
       head.style.left = `${p * 100}%`;
       tc.textContent = `00:${pad(t % 60)}:${pad((t % 1) * 24)}`;
@@ -179,9 +171,13 @@ const segments = [
         }
         seg = s;
       }
+      if (live && s !== announced) {
+        announced = s;
+        panel.dispatchEvent(new CustomEvent("sync:cut", { bubbles: true, detail: { index: s, label: clips[s].textContent } }));
+      }
       drawWave(p);
     };
-    const loop = () => { render(video.currentTime); raf = requestAnimationFrame(loop); };
+    const loop = () => { render(video.currentTime, true); raf = requestAnimationFrame(loop); };
 
     let visible = false, ready = !root.classList.contains("intro");
     const sync = () => {
