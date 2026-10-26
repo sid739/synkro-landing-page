@@ -27,7 +27,7 @@ const others = roles.filter((o) => o.slug !== r.slug);
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">The problem</p>
-        <h2 id="pain-title">What slows {r.name.toLowerCase()} down today.</h2>
+        <h2 id="pain-title">What slows {r.name.toLowerCase()} down today</h2>
       </div>
       <ol class="cards">
         {r.pains.map((p, i) => (
@@ -42,7 +42,7 @@ const others = roles.filter((o) => o.slug !== r.slug);
     <div class="wrap">
       <div class="section-head" data-reveal>
         <p class="eyebrow">How Synkro helps</p>
-        <h2 id="gain-title">One workflow, from first search to final payment.</h2>
+        <h2 id="gain-title">One workflow, from first search to final payment</h2>
       </div>
       <ul class="gains">
         {r.gains.map((g, i) => (<li data-reveal style={`--rd: ${i * 90}ms`}><span class="tick">✓</span><h3>{g.title}</h3><p>{g.body}</p></li>))}
