@@ -95,7 +95,7 @@ export const catalogStats: Stat[] = [
   { value: 11000, suffix: "+", label: "Albums & Releases", body: "distinct releases spanning singles, EPs, and full-length records.", wide: true },
   { value: 60000, suffix: "+", label: "One-Stop", body: "tracks cleared for both master and publishing, ready for immediate sync licensing.", wide: true },
   { value: 20, suffix: "+", label: "Labels & Publishers", body: "labels, publishers and music companies, from Believe and Nuclear Blast to R&S Records and Bella Figura.", wide: true },
-  { text: "1956 — 2026", label: "Catalog Era", body: "seven decades of recordings, from early masters to this week's releases.", wide: true },
+  { text: "1956–2026", label: "Catalog Era", body: "seven decades of recordings, from early masters to this week's releases.", wide: true },
 ];
 
 export const labels = [
