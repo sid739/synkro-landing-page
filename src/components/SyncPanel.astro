@@ -95,8 +95,9 @@ const segments = [
 
   .now { list-style: none; padding: 0; margin: 0; display: grid; }
   .match { grid-area: 1 / 1; display: grid; grid-template-columns: 34px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px;
-    background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
-  .match.on { opacity: 1; transform: none; }
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); opacity: 0; transform: translateY(6px); transition: opacity .12s, transform .12s; }
+  /* The outgoing track clears before the next fades in, so two titles never overlap. */
+  .match.on { opacity: 1; transform: none; transition: opacity .3s .12s, transform .3s .12s; }
   .play { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); }
   .play svg { width: 12px; height: 12px; fill: #fff; }
   .d { min-width: 0; display: grid; line-height: 1.3; }
