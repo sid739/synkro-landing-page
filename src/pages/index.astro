@@ -4,7 +4,6 @@ import IntroFilm from "../components/IntroFilm.astro";
 import Hero from "../components/Hero.astro";
 import LogoStrip from "../components/LogoStrip.astro";
 import BigMarquee from "../components/BigMarquee.astro";
-import SearchShowcase from "../components/SearchShowcase.astro";
 import Workflow from "../components/Workflow.astro";
 import Discovery from "../components/Discovery.astro";
 import Clearance from "../components/Clearance.astro";
@@ -21,7 +20,6 @@ import { faqLd, softwareLd } from "../data/schema";
   <Hero />
   <LogoStrip />
   <BigMarquee rows={[["Film", "TV", "Ads", "Trailers", "Games", "Streaming"], ["Search", "Clear", "Sign", "Deliver", "Get paid"]]} />
-  <SearchShowcase />
   <Workflow />
   <Discovery />
   <Clearance />
@@ -32,7 +30,7 @@ import { faqLd, softwareLd } from "../data/schema";
   <Faq
     items={homeFaq}
     eyebrow="FAQ"
-    track={9}
+    track={8}
     title='Frequently Asked <span class="hl">Questions</span>'
     lede="Search, rights and clearance, answered."
   />

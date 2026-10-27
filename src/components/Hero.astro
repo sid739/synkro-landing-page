@@ -1,7 +1,7 @@
 ---
 import { builtFor, demoHref, earlyAccessHref } from "../data/site";
-import { syncSegments } from "../data/sync";
-import SyncPanel from "./SyncPanel.astro";
+import { searchExamples } from "../data/search";
+import SearchDemo from "./SearchDemo.astro";
 ---
 <section class="stage" id="hero" aria-labelledby="hero-title">
   <div class="viewport" data-viewport>
@@ -9,7 +9,7 @@ import SyncPanel from "./SyncPanel.astro";
       <div class="wrap inner">
         <div class="copy" data-copy>
           <p class="eyebrow">For film, TV, ads, trailers, games and streaming</p>
-          <h1 id="hero-title" aria-label="Sync Anything">Sync <span class="hl" data-word data-words={JSON.stringify(syncSegments.map((s) => s.cat))}>Anything</span></h1>
+          <h1 id="hero-title" aria-label="Sync Anything">Sync <span class="hl" data-word data-words={JSON.stringify(searchExamples.map((e) => e.cat))}>Anything</span></h1>
           <p class="sub">Search the catalog by <b>brief, reference track or video</b>. See who owns every master and publishing share, then clear it with all of them in one thread.</p>
           <div class="ctas">
             <a class="key" href={demoHref}>Book a demo <span aria-hidden="true">→</span></a>
@@ -19,10 +19,10 @@ import SyncPanel from "./SyncPanel.astro";
             <li class="eyebrow">Built for</li>
             {builtFor.map((b) => <li class="pill">{b}</li>)}
           </ul>
-          <p class="hint" aria-hidden="true"><i></i>Scroll to search the catalog</p>
+          <p class="hint" aria-hidden="true"><i></i>Scroll to see how it works</p>
         </div>
 
-        <div class="visual" data-visual><SyncPanel /></div>
+        <div class="visual" data-visual><SearchDemo /></div>
       </div>
     </div>
   </div>

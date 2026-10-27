@@ -1,68 +1,55 @@
 ---
-import Waveform from "./Waveform.astro";
-import TrackLabel from "./TrackLabel.astro";
 import { ownershipRing } from "../lib/ring";
 import { searchExamples } from "../data/search";
 
 const searchIcon = `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>`;
 ---
-<section class="section" id="search" aria-labelledby="search-title">
-  <div class="wrap">
-    <div class="head" data-reveal>
-      <TrackLabel n={1} label="Search" />
-      <h2 id="search-title" class="poster">Describe <span class="hl">your scene</span></h2>
-      <p class="lede">Search by brief, reference track or video. Every result shows who owns it.</p>
-      <Waveform seed={1} />
-    </div>
-
-    <div class="box" data-search data-reveal>
-      <div class="tabs" aria-hidden="true"><span class="on">Brief</span><span>Reference track</span><span>Video</span></div>
-      <div class="query">
-        <span class="icon" aria-hidden="true" set:html={searchIcon} />
-        <p class="typed"><span data-typed>{searchExamples[0].brief}</span><i class="caret" aria-hidden="true"></i></p>
-        <span class="go" aria-hidden="true" data-go>Search</span>
-      </div>
-      <div class="sets">
-        {searchExamples.map((ex, s) => (
-          <ol class:list={["set", { on: s === 0 }]} aria-label={`Example results for: ${ex.brief}`} data-set>
-            {ex.results.map((r, i) => (
-              <li class="r" style={`--i: ${i}`}>
-                <span class="play" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z" /></svg></span>
-                <span class="d"><b>{r.desc}</b><small>{r.meta}</small></span>
-                <span class:list={["badge", { one: r.holders === 1 }]}>{r.holders === 1 ? "One-stop" : `${r.holders} holders`}</span>
-                <svg class="ring" viewBox="0 0 30 30" role="img" aria-label={`${r.holders} rights ${r.holders === 1 ? "holder" : "holders"}`} set:html={ownershipRing(r.holders)} />
-              </li>
-            ))}
-          </ol>
-        ))}
-      </div>
-      <p class="foot"><span class="tag">Example results</span>AI ranks the results. It doesn't make music, and it never trains on your briefs or the catalog.</p>
-    </div>
+<div class="box" data-search>
+  <div class="tabs" aria-hidden="true"><span class="on">Brief</span><span>Reference track</span><span>Video</span></div>
+  <div class="query">
+    <span class="icon" aria-hidden="true" set:html={searchIcon} />
+    <p class="typed"><span data-typed>{searchExamples[0].brief}</span><i class="caret" aria-hidden="true"></i></p>
+    <span class="go" aria-hidden="true" data-go>Search</span>
   </div>
-</section>
+  <div class="sets">
+    {searchExamples.map((ex, s) => (
+      <ol class:list={["set", { on: s === 0 }]} aria-label={`Example results for: ${ex.brief}`} data-set data-cat={ex.cat} data-brief={ex.brief}>
+        {ex.results.map((r, i) => (
+          <li class="r" style={`--i: ${i}`}>
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z" /></svg></span>
+            <span class="d"><b>{r.desc}</b><small>{r.meta}</small></span>
+            <span class:list={["badge", { one: r.holders === 1 }]}>{r.holders === 1 ? "One-stop" : `${r.holders} holders`}</span>
+            <svg class="ring" viewBox="0 0 30 30" role="img" aria-label={`${r.holders} rights ${r.holders === 1 ? "holder" : "holders"}`} set:html={ownershipRing(r.holders)} />
+          </li>
+        ))}
+      </ol>
+    ))}
+  </div>
+  <p class="foot"><span class="tag">Example results</span>AI ranks the results. It never makes music or trains on your briefs.</p>
+</div>
 
 <style>
-  .head { display: grid; justify-items: center; text-align: center; gap: 16px; max-width: 760px; margin: 0 auto clamp(32px, 4vw, 48px); }
-  .box { max-width: 880px; margin-inline: auto; display: grid; gap: 14px; padding: clamp(14px, 2vw, 22px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line);
+  .box { display: grid; gap: 12px; padding: clamp(14px, 1.6vw, 20px); border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line);
     box-shadow: 0 30px 80px -40px rgba(40, 25, 140, .45); }
   .tabs { display: flex; gap: 6px; }
   .tabs span { font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; color: var(--muted); }
   .tabs .on { background: var(--surface-2); color: var(--fg); }
-  .query { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 10px 10px 20px; border-radius: 18px; background: var(--surface-2); border: 1.5px solid color-mix(in srgb, var(--accent) 45%, var(--line)); }
-  .icon :global(svg) { width: 22px; height: 22px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; display: block; }
-  .typed { font-size: clamp(17px, 2vw, 22px); font-weight: 600; min-height: 1.5em; line-height: 1.4; }
+  .query { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 10px 10px 18px; border-radius: 18px; background: var(--surface-2); border: 1.5px solid color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .icon :global(svg) { width: 20px; height: 20px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; display: block; }
+  /* Two lines reserved, so a brief that wraps doesn't push the results down while it types. */
+  .typed { font-size: clamp(16px, 1.3vw, 18px); font-weight: 600; line-height: 1.4; min-height: 2.8em; }
   .caret { display: inline-block; width: 2px; height: 1.1em; margin-left: 2px; vertical-align: -.15em; background: var(--accent-text); animation: blink 1s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .go { font-weight: 700; font-size: 15px; padding: 12px 20px; border-radius: 12px; background: var(--accent); color: #fff; transition: transform .15s, box-shadow .15s; }
+  .go { font-weight: 700; font-size: 15px; padding: 12px 18px; border-radius: 12px; background: var(--accent); color: #fff; transition: transform .15s, box-shadow .15s; }
   .go.press { transform: scale(.94); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent); }
 
   .sets { display: grid; }
   .set { grid-area: 1 / 1; list-style: none; padding: 0; display: grid; gap: 8px; align-content: start; visibility: hidden; }
   .set.on { visibility: visible; }
-  .r { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto auto; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); }
+  .r { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); }
   .r:first-child { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
   .d { min-width: 0; display: grid; line-height: 1.3; }
-  .d b { font-size: 15px; overflow-wrap: anywhere; }
+  .d b { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .d small { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
   .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
   .badge.one { color: var(--accent-text); }
@@ -87,34 +74,44 @@ const searchIcon = `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><pat
 </style>
 
 <script>
-  // Types each example brief, "presses" Search, then drops in its results; on to the next brief. It
-  // runs only while on screen; for reduced motion the first brief and its results simply stay.
+  // Types each example brief, "presses" Search, then drops in its results; on to the next brief. Each
+  // brief announces its category (search:brief) so the hero's headline can follow it. It starts once
+  // the intro film has finished and runs only while on screen; for reduced motion the first brief and
+  // its results simply stay.
   const box = document.querySelector<HTMLElement>("[data-search]");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   if (box && !reduce.matches) {
     const typed = box.querySelector<HTMLElement>("[data-typed]")!;
     const go = box.querySelector<HTMLElement>("[data-go]")!;
     const sets = [...box.querySelectorAll<HTMLElement>("[data-set]")];
-    const briefs = sets.map((s) => (s.getAttribute("aria-label") ?? "").replace(/^Example results for: /, ""));
+    const root = document.documentElement;
     let visible = false, wake: (() => void) | null = null;
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && wake) { wake(); wake = null; } }, { threshold: 0.35 }).observe(box);
     const wait = (ms: number) => new Promise<void>((done) => setTimeout(done, ms));
     const onScreen = () => (visible ? Promise.resolve() : new Promise<void>((done) => { wake = done; }));
+    const introDone = () => new Promise<void>((done) => {
+      if (!root.classList.contains("intro")) return done();
+      const mo = new MutationObserver(() => { if (!root.classList.contains("intro")) { mo.disconnect(); done(); } });
+      mo.observe(root, { attributes: true, attributeFilter: ["class"] });
+    });
     const show = (n: number, state: "waiting" | "shown") => sets.forEach((s, i) => {
       s.classList.toggle("on", i === n);
       s.classList.toggle("waiting", i === n && state === "waiting");
       s.classList.toggle("shown", i === n && state === "shown");
     });
     (async () => {
+      await introDone();
       for (let n = 0; ; n = (n + 1) % sets.length) {
         await onScreen();
+        const { cat = "", brief = "" } = sets[n].dataset;
         show(n, "waiting");
+        box.dispatchEvent(new CustomEvent("search:brief", { bubbles: true, detail: { index: n, label: cat } }));
         typed.textContent = "";
-        for (const ch of briefs[n]) { typed.textContent += ch; await wait(32); }
-        await wait(350);
+        for (const ch of brief) { typed.textContent += ch; await wait(30); }
+        await wait(300);
         go.classList.add("press"); await wait(160); go.classList.remove("press");
         show(n, "shown");
-        await wait(4200);
+        await wait(3600);
       }
     })();
   }

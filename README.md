@@ -24,12 +24,11 @@ npm run preview   # serve the built site
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
 | `src/scripts/cards.ts` | The light that follows the pointer across feature cards. |
-| `src/scripts/hero.ts` | The homepage hero: sizes the sync timeline beside the headline and swaps the headline's word on each cut. |
-| `src/components/SearchShowcase.astro` | "Describe your scene": example briefs type themselves and their results drop in (`src/data/search.ts`). |
+| `src/scripts/hero.ts` | The homepage hero: sizes the search demo beside the headline and swaps the headline's word with each brief's category. |
+| `src/components/SearchDemo.astro` | The hero's search demo: one example brief per category types itself, then its results drop in with their rights holders (`src/data/search.ts`). |
 | `src/components/TrackLabel.astro`, `Waveform.astro` | Music details: section labels as numbered tracks with an equaliser, and a waveform under each section title that sweeps into colour. |
 | `src/components/LogoStrip.astro` | The label and publisher logos under the hero (`labels` in `src/data/site.ts`). |
 | `src/components/BigMarquee.astro` | Oversized words drifting across the page, nudged along by scrolling. |
-| `src/components/SyncPanel.astro` | The hero's sync timeline: the category reel on V1, a waveform on A1, a playhead that lands on a cue at every cut, and the matched track with its rights holders. |
 | `tools/intro-film/` | Source of the homepage intro film (`public/intro/`). See "Intro film" below. |
 | `public/` | Static files: `og.png` share image, favicon, `robots.txt`, artist photos, label logos. |
 
@@ -58,7 +57,7 @@ ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 22 $I/synkro-intro-po
 ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
 ```
 
-Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the closing Sync Anything. The hero's sync timeline uses the same graded category clips: after `prepare-footage.sh`, run `./make-hero-reel.sh` to rebuild `public/hero/`. The clips are from Pexels, which allows commercial use without credit.
+Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the closing Sync Anything. The clips are from Pexels, which allows commercial use without credit.
 
 ## SEO and AEO built in
 
