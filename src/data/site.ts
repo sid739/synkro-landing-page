@@ -99,6 +99,7 @@ export const catalogStats: Stat[] = [
 ];
 
 export const labels = [
+  { name: "Believe", file: "logo-believe.png" },
   { name: "Versatile", file: "logo-versatile.png" },
   { name: "R&S Records", file: "logo-rs-records.png" },
   { name: "Communion", file: "logo-communion.png" },

@@ -2,20 +2,33 @@
 import { labels } from "../data/site";
 ---
 <section class="logos" aria-labelledby="logos-title">
-  <div class="wrap">
-    <p class="eyebrow" id="logos-title">Catalogs from labels and publishers including</p>
-    <ul>
-      {labels.map((l) => <li><img src={`/labels/${l.file}`} alt={l.name} height="30" loading="lazy" decoding="async" /></li>)}
+  <p class="eyebrow" id="logos-title">Catalogs from labels and publishers including</p>
+  <div class="loop">
+    <ul class="track">
+      {[...labels, ...labels].map((l, i) => (
+        <li aria-hidden={i >= labels.length ? "true" : undefined}>
+          <img src={`/labels/${l.file}`} alt={i < labels.length ? l.name : ""} height="34" loading="lazy" decoding="async" />
+        </li>
+      ))}
     </ul>
   </div>
 </section>
 
 <style>
-  .logos { padding-block: clamp(28px, 4vw, 48px); border-block: 1px solid var(--line); }
-  .wrap { display: grid; justify-items: center; gap: 24px; }
-  .eyebrow { text-align: center; }
-  ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 22px clamp(28px, 4vw, 52px); max-width: 1080px; }
-  img { height: 30px; width: auto; max-width: 140px; object-fit: contain; filter: brightness(0); opacity: .55; transition: opacity .2s; }
+  .logos { padding-block: clamp(28px, 4vw, 44px); border-block: 1px solid var(--line); display: grid; gap: 26px; }
+  .eyebrow { text-align: center; padding-inline: var(--gutter); }
+  /* Two copies of the list scroll left as one; the second takes the first's place, so it never jumps. */
+  .loop { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .track { list-style: none; padding: 0; display: flex; align-items: center; gap: clamp(40px, 5vw, 64px); width: max-content; animation: scroll 60s linear infinite; }
+  .loop:hover .track { animation-play-state: paused; }
+  img { height: 34px; width: auto; max-width: 150px; object-fit: contain; filter: brightness(0); opacity: .55; transition: opacity .2s; }
   li:hover img { opacity: .9; }
-  @media (max-width: 560px) { img { height: 24px; max-width: 110px; } }
+  @keyframes scroll { to { transform: translateX(calc(-50% - clamp(40px, 5vw, 64px) / 2)); } }
+  @media (max-width: 560px) { img { height: 26px; max-width: 110px; } }
+  /* Without motion, one still copy wraps onto as many rows as it needs. */
+  @media (prefers-reduced-motion: reduce) {
+    .loop { mask-image: none; -webkit-mask-image: none; }
+    .track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; row-gap: 22px; padding-inline: var(--gutter); }
+    .track li[aria-hidden] { display: none; }
+  }
 </style>
