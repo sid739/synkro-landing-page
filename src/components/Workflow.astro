@@ -61,7 +61,6 @@ const wave = (seed: number) => {
                 <div class="ch">
                   <span class="pct num" data-count={ch.value} data-suffix="%">{ch.value}%</span>
                   <div class="strip">
-                    <span class="meter" aria-hidden="true"><i style={`--h: ${ch.value * 1.6}%; --s: ${0.7 + i * 0.17}s`}></i><i style={`--h: ${ch.value * 1.5}%; --s: ${0.9 + i * 0.13}s`}></i></span>
                     <span class="track" aria-hidden="true"><span class="cap" style={`--v: ${ch.value}; --i: ${i}`}></span></span>
                   </div>
                   <span class="ch-label">{ch.label}</span>
@@ -138,9 +137,6 @@ const wave = (seed: number) => {
   .ch { display: grid; justify-items: center; gap: 8px; text-align: center; }
   .pct { font-size: 20px; color: #8b7dff; }
   .strip { display: flex; gap: 10px; align-items: stretch; height: 150px; }
-  .meter { display: flex; gap: 3px; align-items: flex-end; }
-  .meter i { width: 5px; height: var(--h); max-height: 100%; border-radius: 2px; background: linear-gradient(0deg, #5443d8, #8b7dff 70%, #e5e1ff); transform-origin: bottom; animation: level var(--s) ease-in-out infinite alternate; }
-  @keyframes level { from { transform: scaleY(.55); } to { transform: scaleY(1); } }
   .track { position: relative; width: 8px; border-radius: 4px; background: #17171d; box-shadow: inset 0 0 0 1px #26262e; }
   .cap { position: absolute; left: 50%; bottom: calc(var(--v) * 1% - 9px); width: 34px; height: 18px; margin-left: -17px; border-radius: 5px; background: linear-gradient(#f1f1f2, #b9b9c4); box-shadow: 0 2px 6px rgba(0,0,0,.5), inset 0 -2px 0 rgba(0,0,0,.2); }
   .cap::after { content: ""; position: absolute; left: 6px; right: 6px; top: 8px; height: 2px; background: #5443d8; }
@@ -150,7 +146,6 @@ const wave = (seed: number) => {
     :global(.js) [data-play]:not(.play) .cap { bottom: -9px; }
     :global(.js) [data-play].play .cap { transition: bottom 1.2s cubic-bezier(.3,.8,.2,1); transition-delay: calc(var(--i) * 180ms + 300ms); }
   }
-  @media (prefers-reduced-motion: reduce) { .meter i { animation: none; } }
 
   .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--on-band-muted); }
   .speed strong { color: #fff; }
