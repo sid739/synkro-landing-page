@@ -8,65 +8,65 @@ const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></s
   <div class="wrap">
     <div class="part-head" data-reveal>
       <TrackLabel n={3} label="Discovery" />
-      <h2 id="discovery-title">The Discovery <span class="hl">Engine</span></h2>
-      <p class="lede">A complete search and catalog management infrastructure. Ingest your music, run brief-based searches, resolve ownership shares, and trigger requests for any song in the world: all within your private project dashboards.</p>
+      <h2 id="discovery-title" class="poster">The Discovery <span class="hl">Engine</span></h2>
+      <p class="lede">Bring in your catalog, search it by brief and see who owns every share, in one private workspace.</p>
       <Waveform seed={3} />
     </div>
 
     <div class="cards-grid">
-      <article class="fcard wide" data-reveal data-play data-loop="8000">
+      <article class="fcard wide" data-reveal data-play>
         <div class="text">
           <h3>Instant catalog ingestion &amp; <span class="hl">AI enrichment</span></h3>
-          <p>Import catalogs via CSV, DDEX Feed, Drive, or Manual Upload. Automatically extract over 20 acoustic &amp; AI parameters while finding master &amp; publishing splits instantly.</p>
+          <p>Import by CSV, DDEX, Drive or upload. Synkro tags 20+ musical attributes and finds every master and publishing split.</p>
         </div>
         <div class="ui">
           <span class="cap">Import sources</span>
           <div class="chips">{["CSV", "DDEX Feed", "Drive", "Manual"].map((c, i) => <span class="chip light" style={`--i: ${i}`}>{c}</span>)}</div>
           <span class="cap">20+ acoustic &amp; AI parameters</span>
-          <div class="chips">{["G-Major · 124 BPM", "Rising Arc", "Chord: I-V-vi-IV", "Nostalgic Synth"].map((c, i) => <span class="chip a" style={`--i: ${i}; --d: 900ms`}>{c}</span>)}</div>
+          <div class="chips">{["G-Major · 124 BPM", "Rising arc", "Chord: I-V-vi-IV", "Nostalgic synth"].map((c, i) => <span class="chip a" style={`--i: ${i}; --d: 900ms`}>{c}</span>)}</div>
           <div class="holder a" style="--i: 0; --d: 1500ms">
             <div><span class="cap">Finding splits</span><b>Live lookup</b></div>
             <span class="fill" style="--i: 0; --d: 1600ms"><i style="--to: 100%"></i></span>
             <div><span>Believe (50%)</span><span>Sony (25%) / Warner (25%)</span></div>
           </div>
-          <div class="done a" style="--i: 0; --d: 3000ms"><span class="tick" style="--d: 3100ms">✓</span>Splits &amp; Parameters Extracted</div>
+          <div class="done a" style="--i: 0; --d: 3000ms"><span class="tick" style="--d: 3100ms">✓</span>Splits &amp; parameters extracted</div>
         </div>
       </article>
 
-      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
         <div class="text">
           <h3>Direct rights <span class="hl">lookups</span></h3>
-          <p>Surface splits and send license requests instantly for any song.</p>
+          <p>See the splits for any song and send a license request.</p>
         </div>
         <div class="ui">
-          <div class="field"><small>Song Name</small><b data-type>Starboy</b></div>
-          <div class="field"><small>Artist Name</small><b data-type data-delay="500">The Weeknd</b></div>
+          <div class="field"><small>Song name</small><b data-type>Starboy</b></div>
+          <div class="field"><small>Artist name</small><b data-type data-delay="500">The Weeknd</b></div>
           <div class="field"><small>Territory</small><b data-type data-delay="1100">Worldwide</b></div>
-          <span class="btnlike a" style="--d: 1700ms">Surface Splits &amp; Request</span>
+          <span class="btnlike a" style="--d: 1700ms">Surface splits &amp; request</span>
         </div>
       </article>
 
 
-      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
         <div class="text">
           <h3>Custom terms <span class="hl">license requests</span></h3>
-          <p>Create custom terms for license requests by packaging media scope, paid options, territories, and much more.</p>
+          <p>Package media, territory, term and options into one request.</p>
         </div>
         <div class="ui">
-          <div class="row a" style="--i: 0"><span>Media Scope</span><span>Paid &amp; Unpaid Social</span></div>
+          <div class="row a" style="--i: 0"><span>Media scope</span><span>Paid &amp; unpaid social</span></div>
           <div class="row a" style="--i: 1"><span>Territory</span><span>Worldwide</span></div>
-          <div class="row a" style="--i: 2"><span>Options</span><span>+1 Year Option (10% lift)</span></div>
+          <div class="row a" style="--i: 2"><span>Options</span><span>+1 year option (10% lift)</span></div>
           <span class="chip on a" style="--i: 3">+ 5 more terms</span>
         </div>
       </article>
 
-      <article class="fcard wide" data-reveal data-play data-loop="8000">
+      <article class="fcard wide" data-reveal data-play>
         <div class="text">
           <h3>Search as a <span class="hl">workspace</span></h3>
-          <p>Upload briefs, drag in audio &amp; video reference files, and have real-time back and forths with your search agent to continuously refine results.</p>
+          <p>Drop in briefs, reference tracks and video, then refine the results in conversation.</p>
         </div>
         <div class="ui">
-          <div class="row"><span class="cap">Creative Brief</span><span class="chip on">🔒 NDA Secure</span></div>
+          <div class="row"><span class="cap">Creative brief</span><span class="chip on lock"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>NDA secure</span></div>
           <div class="field"><small>Brief</small><b data-type>TV Spot: Upbeat electronic for luxury watch...</b></div>
           <div class="split">
             <div class="file a" style="--i: 0; --d: 1400ms"><span class="ficon" set:html={file} /><span>Audio_Ref.wav</span></div>

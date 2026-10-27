@@ -3,24 +3,23 @@ import Waveform from "./Waveform.astro";
 import TrackLabel from "./TrackLabel.astro";
 import "../styles/cards.css";
 const file = `<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z M14 3v4h4"/></svg>`;
-const holders = ["Master Approval (Believe)", "Publisher 1 (Sony Publishing)", "Publisher 2 (Universal Publishing)"];
-const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web Only", "All Media & Social"], ["Term Length", "1 Year", "3 Years + Options"]];
+const holders = ["Master approval (Believe)", "Publisher 1 (Sony Publishing)", "Publisher 2 (Universal Publishing)"];
+const diffs = [["Territory", "North America", "Worldwide"], ["Media scope", "Web only", "All media & social"], ["Term length", "1 year", "3 years + options"]];
 ---
 <section class="section ink" id="clearance" aria-labelledby="clearance-title">
-  <div class="dots dots-bl"></div>
   <div class="wrap">
     <div class="part-head" data-reveal>
       <TrackLabel n={4} label="Clearance" />
-      <h2 id="clearance-title">The Clearance <span class="hl">Workspace</span></h2>
-      <p class="lede">The commercial project management layer for deals. Bring master rights holders and publishers into secure Deal Rooms to align splits, counter terms, redline contracts, and execute binding licenses instantly.</p>
+      <h2 id="clearance-title" class="poster">The Clearance <span class="hl">Workspace</span></h2>
+      <p class="lede">Bring every rights holder into one deal room to agree splits, redline and sign.</p>
       <Waveform seed={4} />
     </div>
 
     <div class="cards-grid">
-      <article class="fcard wide" data-reveal data-play data-loop="8000">
+      <article class="fcard wide" data-reveal data-play>
         <div class="text">
           <h3>All holders on one <span class="hl">thread</span></h3>
-          <p>Negotiate splits, counter terms, and MFN requirements dynamically in a single project thread.</p>
+          <p>Negotiate splits, counters and MFN terms in a single thread.</p>
         </div>
         <div class="ui">
           {holders.map((h, i) => (
@@ -32,22 +31,22 @@ const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web
         </div>
       </article>
 
-      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
         <div class="text">
           <h3>Secure digital <span class="hl">signatures</span></h3>
-          <p>Execute binding licenses legally in seconds with multi-party digital signature tracking.</p>
+          <p>Every party signs in one place, with each signature tracked.</p>
         </div>
         <div class="ui">
-          {["Licensee Signed", "Publisher Signed", "Master Owner Signed"].map((s, i) => (
+          {["Licensee signed", "Publisher signed", "Master owner signed"].map((s, i) => (
             <div class="sig"><span class="tick" style={`--i: ${i}; --d: 200ms`}>✓</span>{s}</div>
           ))}
         </div>
       </article>
 
-      <article class="fcard" data-reveal data-play data-loop="8000">
+      <article class="fcard" data-reveal data-play>
         <div class="text">
           <h3>Synkro Contract <span class="hl">Assistant</span></h3>
-          <p>Compare contract drafts to agreed terms and flag split or territory mismatches automatically.</p>
+          <p>Checks each draft against the agreed terms and flags any mismatch.</p>
         </div>
         <div class="ui">
           {diffs.map(([k, from, to], i) => (
@@ -60,10 +59,10 @@ const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web
       </article>
 
 
-      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 120ms">
+      <article class="fcard" data-reveal data-play style="--rd: 120ms">
         <div class="text">
           <h3>Simplified global <span class="hl">payments</span></h3>
-          <p>The licensee pays once. We split it across every holder, handle withholding and VAT, and settle over RTP, SEPA, and more.</p>
+          <p>The licensee pays once. We split it across every holder and handle the tax.</p>
         </div>
         <div class="ui">
           <div class="row"><span>One payment in</span><span class="money" data-count="42000" data-prefix="€">€42,000</span></div>
@@ -73,10 +72,10 @@ const diffs = [["Territory", "North America", "Worldwide"], ["Media Scope", "Web
         </div>
       </article>
 
-      <article class="fcard" data-reveal data-play data-loop="8000" style="--rd: 240ms">
+      <article class="fcard" data-reveal data-play style="--rd: 240ms">
         <div class="text">
           <h3>Clearance pack <span class="hl">delivery</span></h3>
-          <p>Access broadcast-ready WAV files, stems, metadata sheets, and signed license agreements instantly.</p>
+          <p>Broadcast-ready WAVs, stems and the signed license in one download.</p>
         </div>
         <div class="ui">
           {["Master.wav", "Stems.zip", "License.pdf"].map((f, i) => (

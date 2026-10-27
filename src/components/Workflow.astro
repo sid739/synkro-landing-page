@@ -13,8 +13,7 @@ const wave = (seed: number) => {
   }).join("");
 };
 ---
-<section class="section band" id="how" aria-labelledby="how-title">
-  <div class="dots dots-tr"></div>
+<section class="section ink" id="how" aria-labelledby="how-title">
   <div class="wrap">
     <div class="section-head" data-reveal>
       <TrackLabel n={2} label="How it works" />
@@ -112,7 +111,7 @@ const wave = (seed: number) => {
   .playhead { --pos: 0; position: absolute; top: 8px; bottom: 8px; left: calc(20px + var(--head) + var(--pos) * ((100% - 76px - var(--head)) / 8 + 6px)); width: 2px; background: #fff; box-shadow: 0 0 12px rgba(255,255,255,.7); pointer-events: none; z-index: 2; transition: left .45s cubic-bezier(.3,.7,.2,1); }
   .playhead i { position: absolute; top: -6px; left: -5px; width: 12px; height: 10px; background: #fff; clip-path: polygon(0 0, 100% 0, 50% 100%); }
 
-  .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #000; color: #fff; border-radius: var(--radius-lg); align-items: center; min-height: 320px; }
+  .panel { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); padding: clamp(26px, 4vw, 48px); background: #0d0d11; color: #fff; border: 1px solid #26262e; border-radius: var(--radius-lg); align-items: center; min-height: 320px; }
   .panel[hidden] { display: none; }
   .copy { display: grid; gap: 12px; justify-items: start; }
   .badge { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #8b7dff; border: 1.5px solid #8b7dff; border-radius: 999px; padding: 6px 14px; }
@@ -147,7 +146,7 @@ const wave = (seed: number) => {
     :global(.js) [data-play].play .cap { transition: bottom 1.2s cubic-bezier(.3,.8,.2,1); transition-delay: calc(var(--i) * 180ms + 300ms); }
   }
 
-  .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--on-band-muted); }
+  .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--muted); }
   .speed strong { color: #fff; }
   @media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
 </style>

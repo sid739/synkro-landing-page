@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import IntroFilm from "../components/IntroFilm.astro";
 import Hero from "../components/Hero.astro";
+import LogoStrip from "../components/LogoStrip.astro";
 import BigMarquee from "../components/BigMarquee.astro";
 import SearchShowcase from "../components/SearchShowcase.astro";
 import Workflow from "../components/Workflow.astro";
@@ -18,6 +19,7 @@ import { faqLd, softwareLd } from "../data/schema";
 <Base title="Music Licensing, in One Place" description={site.description} jsonLd={[softwareLd(), faqLd(homeFaq)]}>
   <IntroFilm slot="intro" />
   <Hero />
+  <LogoStrip />
   <BigMarquee rows={[["Film", "TV", "Ads", "Trailers", "Games", "Streaming"], ["Search", "Clear", "Sign", "Deliver", "Get paid"]]} />
   <SearchShowcase />
   <Workflow />
@@ -32,6 +34,6 @@ import { faqLd, softwareLd } from "../data/schema";
     eyebrow="FAQ"
     track={9}
     title='Frequently Asked <span class="hl">Questions</span>'
-    lede="Everything you need to know about Synkro search, rights verification, and clearance workflow."
+    lede="Search, rights and clearance, answered."
   />
 </Base>

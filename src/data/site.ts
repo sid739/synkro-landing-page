@@ -44,7 +44,7 @@ export const artists = [
   { name: "Petit Biscuit", genre: "Melodic Electronic", photo: "/artists/petit-biscuit.jpg" },
 ] as const;
 
-export const phases = ["Discover & Search", "Clearance & Drafting", "Deliver"] as const;
+export const phases = ["Discover & search", "Clearance & drafting", "Deliver"] as const;
 
 export type Step = {
   n: string;
@@ -59,31 +59,31 @@ export type Step = {
 };
 
 export const steps: Step[] = [
-  { n: "01", phase: 0, title: "Find Music", badge: "Instant", feature: "Intelligent Search", tagline: "Find the perfect song, instantly",
+  { n: "01", phase: 0, title: "Find music", badge: "Instant", feature: "Intelligent search", tagline: "Find the perfect song, instantly",
     body: "Find the right song instantly. Input briefs or reference tracks to locate matching acoustics in sub-seconds.",
     mock: [{ text: "Search: upbeat electronic, energetic chord progressions", kind: "label" }, { text: "01_horizon_cut.wav · 98% Acoustic Match", kind: "play" }] },
-  { n: "02", phase: 0, title: "Verify Rights", badge: "Instant", feature: "Instant Splits Audit", tagline: "100% ownership transparency",
+  { n: "02", phase: 0, title: "Verify rights", badge: "Instant", feature: "Instant splits audit", tagline: "100% ownership transparency",
     body: "Clear splits automatically. Reconciles master and publishing registries in real-time to avoid production delays.",
-    mock: [{ text: "Split Registry Audit Complete", kind: "ok" }],
+    mock: [{ text: "Split registry audit complete", kind: "ok" }],
     mixer: [{ label: "Master", holder: "Believe", value: 50 }, { label: "Publishing", holder: "Sony", value: 25 }, { label: "Publishing", holder: "Warner", value: 25 }] },
-  { n: "03", phase: 1, title: "Pitch Clients", badge: "Instant", feature: "Portal Pitching", tagline: "Frictionless client portals",
+  { n: "03", phase: 1, title: "Pitch clients", badge: "Instant", feature: "Portal pitching", tagline: "Frictionless client portals",
     body: "Pitch with synced video. Creative leads audition, rate, and approve track placements directly in-browser.",
-    mock: [{ text: "Pitch Link: Campaign Horizon", kind: "label" }, { text: "scene_cut_v2.mp4", kind: "file" }, { text: "Linked Player", kind: "play" }] },
-  { n: "04", phase: 1, title: "Request Sync", badge: "Instant", feature: "One-Click Requests", tagline: "Pre-populated deal terms",
+    mock: [{ text: "Pitch link: Campaign Horizon", kind: "label" }, { text: "scene_cut_v2.mp4", kind: "file" }, { text: "Linked player", kind: "play" }] },
+  { n: "04", phase: 1, title: "Request sync", badge: "Instant", feature: "One-click requests", tagline: "Pre-populated deal terms",
     body: "Automate intake. Key deal parameters are pre-validated and routed directly to verified sync desks.",
     mock: [{ text: "Outgoing license request", kind: "label" }, { text: "Territory: Worldwide" }, { text: "Term: 1 Year" }, { text: "Pre-populated terms routed to verified holders", kind: "ok" }] },
-  { n: "05", phase: 1, title: "Negotiate", badge: "A few days", feature: "Unified Deal Rooms", tagline: "Secure workspace bidding",
+  { n: "05", phase: 1, title: "Negotiate", badge: "A few days", feature: "Unified deal rooms", tagline: "Secure workspace bidding",
     body: "Banish email chains. Align counter-offers, terms, and chat in one secure, transparent workspace.",
-    mock: [{ text: "Buyer proposed: $5,000 all-in" }, { text: "Holder counter: $6,000" }, { text: "Deal Workspace Aligned", kind: "ok" }] },
-  { n: "06", phase: 1, title: "Draft Contract", badge: "1-2 days", feature: "Assisted Drafting", tagline: "AI redlining in minutes",
+    mock: [{ text: "Buyer proposed: $5,000 all-in" }, { text: "Holder counter: $6,000" }, { text: "Deal workspace aligned", kind: "ok" }] },
+  { n: "06", phase: 1, title: "Draft contract", badge: "1-2 days", feature: "Assisted drafting", tagline: "AI redlining in minutes",
     body: "Draft sync agreements in minutes. Built-in compliance checks catch territory and split conflicts instantly.",
     mock: [{ text: "Clause 7.1: worldwide rights approved", kind: "plus" }, { text: "Clause 7.2: split payouts enabled", kind: "plus" }, { text: "Checked against 14 compliance rules", kind: "ok" }] },
-  { n: "07", phase: 2, title: "Payout Splits", badge: "Instant", feature: "Instant Settlement", tagline: "Escrow-based split payouts",
+  { n: "07", phase: 2, title: "Payout splits", badge: "Instant", feature: "Instant settlement", tagline: "Escrow-based split payouts",
     body: "Direct split payouts. Escrow funds disburse directly to all rights holders upon signature, with no quarterly delays.",
     mock: [{ text: "$6,000 Escrow Disbursed", kind: "label" }, { text: "Believe: 50%" }, { text: "Sony: 25%" }, { text: "Warner: 25%" }] },
-  { n: "08", phase: 2, title: "Get Files", badge: "Instant", feature: "Broadcast Delivery", tagline: "Certified clearance package",
+  { n: "08", phase: 2, title: "Get files", badge: "Instant", feature: "Broadcast delivery", tagline: "Certified clearance package",
     body: "Ready to air. Download broadcast WAVs, stem files, signed license PDFs, and cue sheets in one package.",
-    mock: [{ text: "clearance_pack_certified.zip", kind: "file" }, { text: "Download Package", kind: "ok" }] },
+    mock: [{ text: "clearance_pack_certified.zip", kind: "file" }, { text: "Download package", kind: "ok" }] },
 ];
 
 export type Stat = { value?: number; suffix?: string; text?: string; label: string; body: string; wide?: boolean };
@@ -95,7 +95,7 @@ export const catalogStats: Stat[] = [
   { value: 11000, suffix: "+", label: "Albums & Releases", body: "distinct releases spanning singles, EPs, and full-length records.", wide: true },
   { value: 60000, suffix: "+", label: "One-Stop", body: "tracks cleared for both master and publishing, ready for immediate sync licensing.", wide: true },
   { value: 20, suffix: "+", label: "Labels & Publishers", body: "labels, publishers and music companies, from Believe and Nuclear Blast to R&S Records and Bella Figura.", wide: true },
-  { text: "1956–2026", label: "Catalog Era", body: "seven decades of recordings, from early masters to this week's releases.", wide: true },
+  { text: "1956–2026", label: "Catalog era", body: "seven decades of recordings, from early masters to this week's releases.", wide: true },
 ];
 
 export const labels = [

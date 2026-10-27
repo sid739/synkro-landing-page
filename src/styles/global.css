@@ -25,8 +25,8 @@
 
   --font-display: "Archivo Variable", "Arial Black", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Manrope Variable", "Helvetica Neue", Arial, sans-serif;
-  --radius-lg: 28px;
-  --radius-md: 18px;
+  --radius-lg: 22px;
+  --radius-md: 14px;
   --max: 1200px;
   --gutter: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
@@ -54,8 +54,9 @@ p, h1, h2, h3, h4, ul, ol, dl, dd, figure { margin: 0; }
 .display, h1, h2 { font-family: var(--font-display); font-weight: 850; letter-spacing: -.055em; line-height: .95; text-wrap: balance; }
 h3, h4 { font-family: var(--font-display); font-weight: 800; letter-spacing: -.04em; line-height: 1.08; text-wrap: balance; }
 h1 { font-size: clamp(52px, 8.4vw, 120px); }
-/* Section titles: tall, condensed capitals, like a film poster. Long-form headings opt out. */
-h2 { font-size: clamp(44px, 6.6vw, 100px); font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em; line-height: .9; }
+h2 { font-size: clamp(36px, 4.8vw, 64px); }
+/* Poster titles: tall, condensed capitals, kept for the page's few key moments. */
+h2.poster { font-size: clamp(44px, 6.6vw, 100px); font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em; line-height: .9; }
 h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .hl { color: var(--accent-text); }
 .band .hl { color: var(--on-band); opacity: .72; }
@@ -69,7 +70,8 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .section { padding-block: clamp(64px, 8vw, 104px); position: relative; overflow: clip; }
 /* Two sections on the same background read as one stretch of page, so the second doesn't add its own
    full top padding on top of the first's bottom padding. (Component scripts can sit between sections.) */
-.section:not(.band, .ink):is(.section:not(.band, .ink) + script + *, .section:not(.band, .ink) + *) { padding-top: clamp(16px, 3vw, 40px); }
+.section:not(.band, .ink):is(.section:not(.band, .ink) + script + *, .section:not(.band, .ink) + *),
+.section.ink:is(.section.ink + script + *, .section.ink + *) { padding-top: clamp(16px, 3vw, 40px); }
 .section-head { display: grid; gap: 20px; max-width: 900px; margin-bottom: clamp(40px, 5vw, 64px); }
 .band { background: var(--band); color: var(--on-band); }
 .band .eyebrow, .band .lede, .band .prose p { color: var(--on-band-muted); }
@@ -88,11 +90,6 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 .band .btn-secondary:hover { border-color: #fff; }
 .pill { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border-radius: 999px; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; border: 1.5px solid var(--line); color: var(--fg); }
 
-/* Deck motifs */
-.dots { position: absolute; pointer-events: none; z-index: 0; background-image: radial-gradient(circle, var(--dot) 1.4px, transparent 1.9px); background-size: 16px 16px; }
-.dots-tr { top: 0; right: 0; width: min(560px, 46vw); height: 420px; mask-image: linear-gradient(to bottom left, #000 25%, transparent 80%); -webkit-mask-image: linear-gradient(to bottom left, #000 25%, transparent 80%); }
-.dots-bl { bottom: 0; left: 0; width: 320px; height: 300px; mask-image: linear-gradient(to top right, #000 20%, transparent 80%); -webkit-mask-image: linear-gradient(to top right, #000 20%, transparent 80%); }
-.band .dots { --dot: rgba(0, 0, 0, .55); }
 .section > .wrap { position: relative; z-index: 1; }
 
 /* Breadcrumbs */
@@ -127,4 +124,8 @@ h3 { font-size: clamp(22px, 2.2vw, 28px); }
 @keyframes caret { 50% { opacity: 0; } }
 .fill { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
 .fill > i { display: block; height: 100%; width: var(--to, 100%); border-radius: inherit; background: var(--accent); }
-.tick { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; flex: none; }
+/* A round check badge. The ✓ in the markup is only a fallback; the mark itself is drawn as an icon. */
+.tick { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0; flex: none; }
+.tick::before { content: ""; width: 12px; height: 12px; background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }

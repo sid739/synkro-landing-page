@@ -4,7 +4,6 @@
 //
 //   data-reveal       fades and lifts in when it enters the viewport
 //   data-play         gets `.play` when 35% visible; CSS keys staggered children off it
-//   data-loop="ms"    (with data-play) plays again every ms milliseconds while on screen
 //   data-type         (inside data-play) types its text out
 //   data-count="n"    (inside data-play) counts up from 0 to n
 
@@ -58,15 +57,8 @@ if (reduce) {
   }, { rootMargin: "0px 0px -8% 0px" });
   document.querySelectorAll("[data-reveal]").forEach((el) => reveal.observe(el));
 
-  const loops = new Map<Element, number>();
   const player = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      const el = e.target as HTMLElement, every = Number(el.dataset.loop);
-      if (!every) { if (e.isIntersecting) { play(el); player.unobserve(el); } continue; }
-      clearInterval(loops.get(el));
-      loops.delete(el);
-      if (e.isIntersecting) { play(el); loops.set(el, window.setInterval(() => play(el), every)); }
-    }
+    for (const e of entries) if (e.isIntersecting) { play(e.target as HTMLElement); player.unobserve(e.target); }
   }, { threshold: 0.35 });
   document.querySelectorAll("[data-play]:not([data-manual])").forEach((el) => player.observe(el));
 }

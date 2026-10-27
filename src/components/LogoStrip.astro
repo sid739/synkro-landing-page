@@ -1,0 +1,21 @@
+---
+import { labels } from "../data/site";
+---
+<section class="logos" aria-labelledby="logos-title">
+  <div class="wrap">
+    <p class="eyebrow" id="logos-title">Catalogs from labels and publishers including</p>
+    <ul>
+      {labels.map((l) => <li><img src={`/labels/${l.file}`} alt={l.name} height="30" loading="lazy" decoding="async" /></li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .logos { padding-block: clamp(28px, 4vw, 48px); border-block: 1px solid var(--line); }
+  .wrap { display: grid; justify-items: center; gap: 24px; }
+  .eyebrow { text-align: center; }
+  ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 22px clamp(28px, 4vw, 52px); max-width: 1080px; }
+  img { height: 30px; width: auto; max-width: 140px; object-fit: contain; filter: brightness(0); opacity: .55; transition: opacity .2s; }
+  li:hover img { opacity: .9; }
+  @media (max-width: 560px) { img { height: 24px; max-width: 110px; } }
+</style>

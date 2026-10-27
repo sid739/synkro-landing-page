@@ -36,7 +36,7 @@ export const roles: Role[] = [
       { title: "Ownership on every result", body: "Master and publishing splits are reconciled as you search, so you only pitch what you can clear." },
       { title: "Every holder, one thread", body: "Counter terms and MFN requirements with every owner in one deal room. Co-publishers who aren't on Synkro join through a secure link." },
     ],
-    features: ["Intelligent Search", "Search as a workspace", "Instant Splits Audit", "Unified Deal Rooms"],
+    features: ["Intelligent search", "Search as a workspace", "Instant splits audit", "Unified deal rooms"],
     faq: [
       { q: "Can I search with a reference track or a scene cut?", a: "Yes. Upload a brief, drag in audio and video references, and refine the results in a back-and-forth with your search agent." },
       { q: "What if a co-publisher isn't on Synkro?", a: "They receive a secure, sign-in-free link by email to review the terms, join the negotiation thread, upload redlines and sign, without creating an account." },
@@ -61,7 +61,7 @@ export const roles: Role[] = [
       { title: "Pitch against picture", body: "Share a pitch link with the music synced to your cut. Clients audition, rate and approve in the browser." },
       { title: "Drafts checked against the deal", body: "The contract assistant compares each draft with the agreed terms and flags territory, media or term mismatches." },
     ],
-    features: ["Custom terms license requests", "Portal Pitching", "Synkro Contract Assistant", "One-Click Requests"],
+    features: ["Custom terms license requests", "Portal pitching", "Synkro Contract Assistant", "One-click requests"],
     faq: [
       { q: "Can I add territories or extend the term later?", a: "Yes. Media scope, territories, term and options are set in the request, and changes are negotiated on the same deal thread." },
     ],
@@ -85,7 +85,7 @@ export const roles: Role[] = [
       { title: "One payment out", body: "Pay once. Synkro splits it across every holder and handles withholding and VAT." },
       { title: "A certified clearance pack", body: "Broadcast WAVs, stems, metadata sheets and the signed license, ready the moment the deal closes." },
     ],
-    features: ["Search as a workspace", "Simplified global payments", "Clearance pack delivery", "Broadcast Delivery"],
+    features: ["Search as a workspace", "Simplified global payments", "Clearance pack delivery", "Broadcast delivery"],
     faq: [
       { q: "What's in the clearance pack?", a: "Broadcast-ready WAV files, stems, metadata sheets and the signed license agreements, available as soon as the license is signed and paid." },
     ],
@@ -109,7 +109,7 @@ export const roles: Role[] = [
       { title: "One-stop when it matters", body: "60,000+ tracks are cleared for both master and publishing, ready for immediate licensing." },
       { title: "Every use on one deal", body: "Package in-game, trailer and marketing media into one request with custom terms." },
     ],
-    features: ["Intelligent Search", "Custom terms license requests", "One-Click Requests", "Instant Settlement"],
+    features: ["Intelligent search", "Custom terms license requests", "One-click requests", "Instant settlement"],
     faq: [
       { q: "Can one license cover in-game and marketing use?", a: "Yes. Media scope is set in the license request, so in-game, trailer and social use can be negotiated together." },
     ],
@@ -133,7 +133,7 @@ export const roles: Role[] = [
       { title: "Their contracts, one workspace", body: "Rights holders upload their own contracts. You review, redline and negotiate them in one place." },
       { title: "Multi-party signatures", body: "Licensee, publisher and master owner sign digitally, with every signature tracked." },
     ],
-    features: ["Portal Pitching", "Instant Splits Audit", "Assisted Drafting", "Secure digital signatures"],
+    features: ["Portal pitching", "Instant splits audit", "Assisted drafting", "Secure digital signatures"],
     faq: [
       { q: "Whose contracts are used?", a: "The rights holders' own. Synkro doesn't impose a template; buyers review, redline and negotiate the holder's contract in the workspace." },
     ],
@@ -157,7 +157,7 @@ export const roles: Role[] = [
       { title: "One payment in", body: "Synkro splits each payment across every holder, handles withholding and VAT, and settles over RTP, SEPA and more." },
       { title: "Every deal in one place", body: "Requests, negotiations, contracts and deliveries for all titles live in one workspace." },
     ],
-    features: ["One-Click Requests", "Simplified global payments", "Unified Deal Rooms", "Clearance pack delivery"],
+    features: ["One-click requests", "Simplified global payments", "Unified deal rooms", "Clearance pack delivery"],
     faq: [
       { q: "How are rights holders in different countries paid?", a: "The licensee pays once. Synkro splits the payment across every holder, handles withholding and VAT, and settles over RTP, SEPA and more." },
     ],
@@ -181,7 +181,7 @@ export const roles: Role[] = [
       { title: "Your contracts, your call", body: "Approve, counter or decline every request on your own contract, in one deal room." },
       { title: "Paid on signature", body: "Escrow funds pay every rights holder directly when the license is signed, with no quarterly wait." },
     ],
-    features: ["Instant catalog ingestion & AI enrichment", "Unified Deal Rooms", "Instant Settlement", "Secure digital signatures"],
+    features: ["Instant catalog ingestion & AI enrichment", "Unified deal rooms", "Instant settlement", "Secure digital signatures"],
     faq: [
       { q: "Is our catalog used to train AI?", a: "No. Music on Synkro is never used to train AI generation models. Audio analysis is descriptive only: tempo, key, structure and emotional profile." },
       { q: "How is our music protected?", a: "Catalogs are held in encrypted cloud storage with strict access controls. Previews are low-bitrate streams, and master WAVs are released only when a license is fully signed and paid for." },
@@ -206,7 +206,7 @@ export const roles: Role[] = [
       { title: "Splits found for you", body: "Master and publishing splits are looked up during ingestion, so tracks are ready to license." },
       { title: "Settlement handled", body: "One payment in, split across every holder, with withholding and VAT handled." },
     ],
-    features: ["Instant catalog ingestion & AI enrichment", "Direct rights lookups", "Instant Splits Audit", "Simplified global payments"],
+    features: ["Instant catalog ingestion & AI enrichment", "Direct rights lookups", "Instant splits audit", "Simplified global payments"],
     faq: [
       { q: "Which import formats are supported?", a: "CSV, DDEX feed, Drive and manual upload." },
     ],

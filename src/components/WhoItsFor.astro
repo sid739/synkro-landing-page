@@ -7,8 +7,7 @@ const groups = [
   { label: "For rights holders", side: "rights-holder" },
 ] as const;
 ---
-<section class="section band" id="roles" aria-labelledby="roles-title">
-  <div class="dots dots-tr"></div>
+<section class="section ink" id="roles" aria-labelledby="roles-title">
   <div class="wrap">
     <div class="section-head" data-reveal>
       <TrackLabel n={6} label="Who it's for" />
@@ -64,11 +63,11 @@ const groups = [
   .group { display: grid; gap: 6px; }
   .group .eyebrow { color: rgba(255,255,255,.75); margin-bottom: 4px; }
   .tab { text-align: left; border: 0; background: transparent; color: rgba(255,255,255,.82); font: 700 16px var(--font-body); padding: 12px 16px; border-radius: 14px; cursor: pointer; transition: background .2s, color .2s; position: relative; }
-  .tab:hover { background: rgba(0,0,0,.2); color: #fff; }
-  .tab[aria-selected="true"] { background: #000; color: #fff; }
+  .tab:hover { background: #17171d; color: #fff; }
+  .tab[aria-selected="true"] { background: var(--accent); color: #fff; }
   .tab[aria-selected="true"]::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #8b7dff; }
 
-  .panel { background: #000; color: #fff; border-radius: var(--radius-lg); padding: clamp(26px, 4vw, 48px); display: grid; gap: 16px; }
+  .panel { background: #0d0d11; color: #fff; border: 1px solid #26262e; border-radius: var(--radius-lg); padding: clamp(26px, 4vw, 48px); display: grid; gap: 16px; }
   .panel[hidden] { display: none; }
   .panel .eyebrow { color: #8b7dff; }
   .panel h3 { font-size: clamp(32px, 3.8vw, 52px); line-height: 1; }

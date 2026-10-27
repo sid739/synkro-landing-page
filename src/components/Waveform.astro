@@ -1,6 +1,6 @@
 ---
 // A short audio waveform used as a rule under section titles. A bright copy sweeps across it from the
-// left each time it scrolls into view, like a track playing. The bar heights come from the seed, so
+// left the first time it scrolls into view, like a track playing. The bar heights come from the seed, so
 // each section's waveform has its own shape and every build draws the same one.
 interface Props { seed?: number; bars?: number }
 const { seed = 1, bars = 72 } = Astro.props;
@@ -34,12 +34,12 @@ const rects = heights.map((h, i) => `<rect x="${i * (W + GAP)}" y="${(H - h) / 2
 </style>
 
 <script>
-  // Plays the sweep each time a waveform comes into view.
+  // Plays the sweep once, when a waveform first comes into view.
   const waves = document.querySelectorAll<HTMLElement>("[data-wave]");
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const el = e.target as HTMLElement;
-      if (e.isIntersecting) { el.classList.remove("play"); void el.offsetWidth; el.classList.add("play"); }
+      if (e.isIntersecting) { el.classList.add("play"); io.unobserve(el); }
     }
   }, { threshold: 1 });
   waves.forEach((w) => io.observe(w));
