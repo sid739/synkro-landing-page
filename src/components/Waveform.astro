@@ -14,7 +14,7 @@ const heights = Array.from({ length: bars }, (_, i) => {
 const width = bars * (W + GAP) - GAP;
 const rects = heights.map((h, i) => `<rect x="${i * (W + GAP)}" y="${(H - h) / 2}" width="${W}" height="${h}" rx="1.5"/>`).join("");
 ---
-<div class="wave" aria-hidden="true" data-wave>
+<div class="wave" aria-hidden="true" data-waveform>
   <svg class="base" viewBox={`0 0 ${width} ${H}`} set:html={rects} />
   <svg class="lit" viewBox={`0 0 ${width} ${H}`} set:html={rects} />
 </div>
@@ -35,7 +35,7 @@ const rects = heights.map((h, i) => `<rect x="${i * (W + GAP)}" y="${(H - h) / 2
 
 <script>
   // Plays the sweep once, when a waveform first comes into view.
-  const waves = document.querySelectorAll<HTMLElement>("[data-wave]");
+  const waves = document.querySelectorAll<HTMLElement>("[data-waveform]");
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       const el = e.target as HTMLElement;
