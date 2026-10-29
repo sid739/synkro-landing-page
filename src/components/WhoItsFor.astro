@@ -27,7 +27,7 @@ const fileIcon = `<svg viewBox="0 0 16 16"><path d="M4 1.5h5l3 3v10H4z"/><path d
               {roles.filter((r) => r.side === g.side).map((r) => (
                 <li data-item>
                   <a class:list={["name", { on: r === roles[0] }]} href={`/for/${r.slug}/`} data-role={r.slug}>
-                    <span class="arrow" aria-hidden="true">→</span><span>{r.name}</span>
+                    {r.name}
                   </a>
                 </li>
               ))}
@@ -113,18 +113,14 @@ const fileIcon = `<svg viewBox="0 0 16 16"><path d="M4 1.5h5l3 3v10H4z"/><path d
 <style>
   .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 
-  /* The role names: big poster type; the one in view is lit violet with an arrow. */
+  /* The role names: big poster type; the one in view is lit violet. */
   .names { display: grid; gap: clamp(28px, 3vw, 40px); }
   .group { display: grid; gap: 12px; }
   .group ul { list-style: none; padding: 0; display: grid; gap: 4px; }
-  /* A fixed slot for the arrow on every row, so lighting a name never shifts or rewraps the list. */
-  .name { display: grid; grid-template-columns: .8em minmax(0, 1fr); align-items: baseline; font-family: var(--font-display); font-weight: 850; font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em;
+  .name { display: inline-block; font-family: var(--font-display); font-weight: 850; font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em;
     font-size: clamp(32px, 3.8vw, 54px); line-height: .98; color: rgba(255, 255, 255, .3); text-decoration: none; transition: color .25s; }
   .name:hover, .name:focus-visible { color: rgba(255, 255, 255, .75); }
   .name.on { color: var(--accent-text); }
-  .arrow { opacity: 0; transform: translateX(-.3em); transition: opacity .3s, transform .3s cubic-bezier(.2, .8, .2, 1); }
-  .name.on .arrow { opacity: 1; transform: none; }
-  .group > .eyebrow { padding-left: calc(.8 * clamp(32px, 3.8vw, 54px)); }
 
   /* Every panel sits in the same cell, so the stage is as tall as the tallest and never jumps. */
   .stage { position: sticky; top: 96px; display: grid; }
