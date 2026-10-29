@@ -11,6 +11,8 @@ export const site = {
     "Synkro helps creative teams find the right music by feeling, understand the rights behind every track, and clear sync licenses in days, not months. Discovery, rights, negotiation, and payment in one workflow.",
   locale: "en_US",
   email: "hello@zenmusicgroup.com",
+  // A Calendly or Cal.com link. Until one is set, "Book a demo" opens the sign-up form with a demo selected.
+  bookingUrl: "",
   contactEmail: "contact@zenmusicgroup.com",
   terms: "https://www.zenmusicgroup.com/terms",
   privacy: "https://www.zenmusicgroup.com/privacy",
@@ -20,8 +22,9 @@ export const site = {
   },
 } as const;
 
-export const earlyAccessHref = `mailto:${site.email}?subject=${encodeURIComponent(`${site.name} early access`)}`;
-export const demoHref = `mailto:${site.email}?subject=${encodeURIComponent(`${site.name} demo request`)}`;
+// The sign-up form lives in the homepage's early-access section; #book-demo opens it with a demo selected.
+export const earlyAccessHref = "/#early-access";
+export const demoHref: string = site.bookingUrl || "/#book-demo";
 
 export const nav = [
   { href: "/#how", label: "How it works" },

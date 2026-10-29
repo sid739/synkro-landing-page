@@ -1,20 +1,168 @@
 ---
 import TrackLabel from "./TrackLabel.astro";
-import { demoHref, earlyAccessHref } from "../data/site";
+import { site } from "../data/site";
+import { LIMITS, roleChoices } from "../lib/lead";
 ---
 <section class="section band cta" id="early-access" aria-labelledby="cta-title">
-  <div class="wrap inner" data-reveal>
-    <TrackLabel n={7} label="Early access" />
-    <h2 id="cta-title">We aren't just building a bigger catalog. <span class="hl">We're building the infrastructure sync always needed</span></h2>
-    <div class="ctas">
-      <a class="btn btn-primary" href={earlyAccessHref}>Request early access <span aria-hidden="true">→</span></a>
-      <a class="btn btn-secondary" href={demoHref}>Book a live demo</a>
+  <div class="wrap inner">
+    <div class="pitch" data-reveal>
+      <TrackLabel n={7} label="Early access" />
+      <h2 id="cta-title">We aren't just building a bigger catalog. <span class="hl">We're building the infrastructure sync always needed</span></h2>
+      {site.bookingUrl && <p class="alt">Rather talk it through? <a href={site.bookingUrl} data-demo>Pick a time for a live demo <span aria-hidden="true">→</span></a></p>}
     </div>
+
+    <div class="card" data-reveal style="--rd: 120ms">
+      <form id="book-demo" novalidate data-lead>
+        <fieldset class="want">
+          <legend class="sr">I'd like to</legend>
+          <label><input type="radio" name="interest" value="waitlist" checked /><span>Join the waitlist</span></label>
+          <label><input type="radio" name="interest" value="demo" /><span>Book a demo</span></label>
+        </fieldset>
+        <div class="two">
+          <label class="field"><span>Name</span><input name="name" autocomplete="name" required maxlength={LIMITS.name} /></label>
+          <label class="field"><span>Work email</span><input name="email" type="email" autocomplete="email" required maxlength={LIMITS.email} /></label>
+        </div>
+        <div class="two">
+          <label class="field"><span>Company</span><input name="company" autocomplete="organization" required maxlength={LIMITS.company} /></label>
+          <label class="field"><span>I'm with</span>
+            <select name="role" required>
+              <option value="" selected disabled>Choose one</option>
+              {roleChoices.map((r) => <option value={r}>{r}</option>)}
+            </select>
+          </label>
+        </div>
+        <label class="field"><span>Anything we should know? <small>Optional</small></span><textarea name="message" rows="3" maxlength={LIMITS.message}></textarea></label>
+        <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off" /></label>
+        <p class="status" role="status" aria-live="polite" data-status></p>
+        <button class="btn btn-primary send" type="submit" data-send>Request early access <span aria-hidden="true">→</span></button>
+        <p class="fine">We'll only use this to reply about Synkro. <a href={site.privacy}>Privacy policy</a></p>
+      </form>
+      <div class="done" hidden data-done tabindex="-1">
+        <span class="tick">✓</span>
+        <h3 data-done-title>You're on the list</h3>
+        <p data-done-text>Thanks. We'll be in touch soon.</p>
       </div>
+    </div>
+  </div>
 </section>
 
 <style>
-  .inner { display: grid; justify-items: center; text-align: center; gap: 26px; }
-  .inner h2 { font-size: clamp(36px, 4.8vw, 64px); max-width: 24ch; }
-  .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+  .inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+  .pitch { display: grid; gap: 22px; justify-items: start; }
+  .pitch h2 { font-size: clamp(34px, 4vw, 56px); max-width: 18ch; }
+  .alt { color: var(--on-band-muted); }
+  .alt a { color: #fff; font-weight: 700; text-underline-offset: 4px; }
+
+  .card { background: #fff; color: #0b0b0f; border-radius: var(--radius-lg); padding: clamp(20px, 3vw, 32px); box-shadow: 0 30px 80px -40px rgba(10, 5, 60, .6); }
+  /* Room for the sticky header, plus the card still rising in when a link lands here. */
+  form, .done { scroll-margin-top: 140px; }
+  form { display: grid; gap: 14px; }
+  form[hidden] { display: none; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .field { display: grid; gap: 6px; font-size: 13px; font-weight: 700; color: #3a3a44; }
+  .field small { font-weight: 500; color: #8a8a96; margin-left: 4px; }
+  .field input, .field select, .field textarea { width: 100%; min-height: 48px; padding: 12px 14px; border-radius: 12px; border: 1.5px solid #dcdce4; background: #f6f6f9; color: #0b0b0f;
+    font: 500 16px var(--font-body); transition: border-color .15s, background-color .15s; }
+  .field textarea { resize: vertical; min-height: 84px; }
+  .field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%236b6b76' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 12px; padding-right: 36px; }
+  .field :is(input, select, textarea):focus { outline: none; border-color: var(--accent); background-color: #fff; }
+  .field :is(input, select, textarea)[aria-invalid="true"] { border-color: #d93036; }
+
+  .want { border: 0; padding: 4px; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: 999px; background: #f0f0f4; }
+  .want label { position: relative; }
+  .want input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .want span { display: grid; place-items: center; min-height: 44px; border-radius: 999px; font-weight: 700; font-size: 15px; color: #4a4a55; transition: background-color .15s, color .15s; }
+  .want input:checked + span { background: var(--accent); color: #fff; }
+  .want input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .send { width: 100%; }
+  .band .card .send { background: var(--accent); }
+  .band .card .send:hover { background: #6152e6; }
+  .send[disabled] { opacity: .6; cursor: progress; }
+  .status { font-size: 14px; font-weight: 600; color: #d93036; min-height: 0; }
+  .status:empty { display: none; }
+  .status a { color: inherit; }
+  .fine { font-size: 13px; color: #6b6b76; text-align: center; }
+  .fine a { color: inherit; }
+  .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  .done { display: grid; justify-items: center; text-align: center; gap: 12px; padding: 36px 8px; outline: none; }
+  .done[hidden] { display: none; }
+  .done .tick { width: 48px; height: 48px; }
+  .done .tick::before { width: 24px; height: 24px; }
+  .done h3 { font-size: 30px; }
+  .done p { color: #4a4a55; max-width: 30ch; }
+
+  @media (max-width: 900px) { .inner { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 520px) { .two { grid-template-columns: minmax(0, 1fr); } }
 </style>
+
+<script>
+  // Sends the sign-up to /api/lead. #book-demo (from any "Book a demo" link) opens it with a demo chosen.
+  import { track } from "../scripts/track";
+  import { site } from "../data/site";
+  const form = document.querySelector<HTMLFormElement>("[data-lead]");
+  if (form) {
+    const startedAt = Date.now();
+    const send = form.querySelector<HTMLButtonElement>("[data-send]")!;
+    const status = form.querySelector<HTMLElement>("[data-status]")!;
+    const done = document.querySelector<HTMLElement>("[data-done]")!;
+    const label = { waitlist: "Request early access", demo: "Request a demo" };
+    const interest = () => (new FormData(form).get("interest") === "demo" ? "demo" : "waitlist");
+    const syncButton = () => { send.firstChild!.textContent = `${label[interest()]} `; };
+
+    const fromHash = () => {
+      if (location.hash !== "#book-demo") return;
+      form.querySelector<HTMLInputElement>('input[value="demo"]')!.checked = true;
+      syncButton();
+    };
+    form.addEventListener("change", syncButton);
+    addEventListener("hashchange", fromHash);
+    fromHash();
+
+    const fail = (msg: string, withEmail = false) => {
+      status.textContent = msg;
+      if (withEmail) {
+        status.append(" Please email ");
+        const a = Object.assign(document.createElement("a"), { href: `mailto:${site.email}`, textContent: site.email });
+        status.append(a, " instead.");
+      }
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "";
+      const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>("input[required], select[required]")];
+      fields.forEach((f) => f.removeAttribute("aria-invalid"));
+      const bad = fields.find((f) => !f.checkValidity());
+      if (bad) {
+        bad.setAttribute("aria-invalid", "true");
+        bad.focus();
+        const what = bad.name === "email" ? "a valid work email" : bad.name === "role" ? "what describes you best" : `your ${bad.name}`;
+        return fail(`Please add ${what}.`);
+      }
+
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      send.disabled = true;
+      try {
+        const res = await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...data, startedAt }) });
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) return fail(body.error ?? "Something went wrong.", res.status >= 500);
+        track("Lead submitted", { interest: interest(), role: data.role ?? "" });
+        const demo = interest() === "demo";
+        done.querySelector("[data-done-title]")!.textContent = demo ? "Demo requested" : "You're on the list";
+        done.querySelector("[data-done-text]")!.textContent = demo
+          ? `Thanks, ${data.name}. We'll email ${data.email} to find a time.`
+          : `Thanks, ${data.name}. We'll email ${data.email} as soon as there's a place for you.`;
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+      } catch {
+        fail("We couldn't reach the server.", true);
+      } finally {
+        send.disabled = false;
+      }
+    });
+  }
+</script>

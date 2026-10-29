@@ -24,6 +24,8 @@ npm run preview   # serve the built site
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
 | `src/scripts/cards.ts` | The light that follows the pointer across feature cards. |
+| `src/components/Cta.astro`, `api/lead.ts`, `src/lib/lead.ts` | The early-access form, the Vercel Function that emails each sign-up through Resend, and the checks both apply. See "Sign-ups and analytics" below. |
+| `src/scripts/track.ts` | Custom events for Vercel Web Analytics ("Demo click", "Lead submitted"). |
 | `src/scripts/hero.ts` | The homepage hero: sizes the search demo beside the headline and swaps the headline's word with each brief's category. |
 | `src/components/SearchDemo.astro` | The hero's search demo: one example brief per category types itself, then its results drop in with their rights holders (`src/data/search.ts`). |
 | `src/components/TrackLabel.astro`, `Waveform.astro` | Music details: section labels as numbered tracks with an equaliser, and a waveform under each section title that sweeps into colour. |
@@ -75,6 +77,20 @@ All product copy comes from the current zenmusicgroup.com landing page, with the
 Animations are driven by `src/scripts/motion.ts` with data attributes (`data-reveal`, `data-play`, `data-type`, `data-count`). Every animated element is complete in the HTML, so crawlers, visitors without JavaScript and visitors with reduced motion see the finished content.
 
 The production domain is set in `astro.config.mjs` (`site`), `src/data/site.ts` (`site.url`) and `public/robots.txt`. Change all three if the domain changes.
+
+## Sign-ups and analytics
+
+Every "Join the waitlist" and "Book a demo" link leads to the form in the homepage's early-access section (`/#early-access`; `/#book-demo` opens it with a demo chosen). The form posts to `api/lead.ts`, a Vercel Function, which emails each sign-up to the team through [Resend](https://resend.com), with Reply-To set to the person who signed up. It needs these environment variables in Vercel (Settings, Environment Variables), then a redeploy:
+
+| Variable | |
+|---|---|
+| `RESEND_API_KEY` | Required. Resend, API Keys. Until it is set the form says sign-ups aren't set up yet. |
+| `LEAD_FROM` | A sender on a domain verified in Resend, e.g. `Synkro <signups@synkro.com>`. Without it Resend's test sender is used, which only delivers to the Resend account's own email. |
+| `LEAD_TO` | Where sign-ups go (comma-separated for several). Defaults to `site.email`. |
+
+To send demo requests to a booking page instead, set `bookingUrl` in `src/data/site.ts` to the Calendly or Cal.com link.
+
+Analytics are Vercel Web Analytics: turn them on in the project's Analytics tab. Page views work on every plan; the custom events in `src/scripts/track.ts` are recorded on Pro plans only.
 
 ## Before launch
 

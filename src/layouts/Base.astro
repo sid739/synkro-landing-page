@@ -24,6 +24,9 @@ const props = Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />
     <script is:inline>document.documentElement.classList.add("js");</script>
+    <!-- Vercel Web Analytics: page views, plus the events in src/scripts/track.ts. The script exists only on Vercel deployments. -->
+    <script is:inline>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+    <script is:inline defer src="/_vercel/insights/script.js"></script>
     <Seo {...props} path={Astro.url.pathname} />
   </head>
   <body>
@@ -34,6 +37,10 @@ const props = Astro.props;
       <slot />
     </main>
     <Footer />
-    <script>import "../scripts/motion";</script>
+    <script>
+      import "../scripts/motion";
+      import { trackDemoLinks } from "../scripts/track";
+      trackDemoLinks();
+    </script>
   </body>
 </html>
