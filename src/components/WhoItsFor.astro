@@ -2,10 +2,13 @@
 import Waveform from "./Waveform.astro";
 import TrackLabel from "./TrackLabel.astro";
 import { roles } from "../data/roles";
+import "../styles/cards.css";
+
 const groups = [
-  { label: "For licensees", side: "licensee" },
-  { label: "For rights holders", side: "rights-holder" },
+  { label: "Licensees", side: "licensee" },
+  { label: "Rights holders", side: "rights-holder" },
 ] as const;
+const fileIcon = `<svg viewBox="0 0 16 16"><path d="M4 1.5h5l3 3v10H4z"/><path d="M9 1.5v3h3"/></svg>`;
 ---
 <section class="section ink" id="roles" aria-labelledby="roles-title">
   <div class="wrap">
@@ -16,113 +19,181 @@ const groups = [
     </div>
 
     <div class="layout" data-roles>
-      <div class="picker" role="tablist" aria-label="Who it's for" aria-orientation="vertical" data-reveal>
+      <div class="names" data-reveal>
         {groups.map((g) => (
           <div class="group">
             <p class="eyebrow">{g.label}</p>
-            {roles.filter((r) => r.side === g.side).map((r, i) => (
-              <button class="tab" type="button" role="tab" id={`role-tab-${r.slug}`} aria-controls={`role-${r.slug}`}
-                aria-selected={g.side === "licensee" && i === 0 ? "true" : "false"} tabindex={g.side === "licensee" && i === 0 ? 0 : -1} data-role={r.slug}>
-                {r.name}
-              </button>
-            ))}
+            <ul>
+              {roles.filter((r) => r.side === g.side).map((r) => (
+                <li data-item>
+                  <a class:list={["name", { on: r === roles[0] }]} href={`/for/${r.slug}/`} data-role={r.slug}>
+                    <span class="arrow" aria-hidden="true">→</span><span>{r.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
 
-      <div class="panels" data-reveal style="--rd: 120ms">
-        {roles.map((r, i) => (
-          <article class="panel" role="tabpanel" id={`role-${r.slug}`} aria-labelledby={`role-tab-${r.slug}`} data-panel={r.slug} data-play data-manual hidden={i !== 0}>
+      <div class="stage" data-reveal style="--rd: 120ms" data-stage>
+        {roles.map((r, k) => (
+          <article class:list={["panel", { on: k === 0 }]} data-panel={r.slug} data-play data-manual aria-hidden={k === 0 ? undefined : "true"}>
             <p class="eyebrow a">For {r.name.toLowerCase()}</p>
             <h3 class="a" style="--i: 1">{r.headline}</h3>
-            <p class="intro a" style="--i: 2">{r.intro}</p>
-            <div class="cols">
-              <div>
-                <p class="label a" style="--i: 3">The problem</p>
-                <ul class="pains">{r.pains.map((p, j) => <li class="a" style={`--i: ${j + 4}`}><b>{p.title}</b> {p.body}</li>)}</ul>
-              </div>
-              <div>
-                <p class="label a" style="--i: 3">How Synkro helps</p>
-                <ul class="gains">{r.gains.map((g, j) => <li class="a" style={`--i: ${j + 4}`}><span class="tick" style={`--i: ${j + 1}; --d: 500ms`}>✓</span><span><b>{g.title}</b> {g.body}</span></li>)}</ul>
-              </div>
+
+            <div class="ui scene a" style="--i: 2" aria-hidden="true">
+              {r.slug === "music-supervisors" && <>
+                <p class="cap">Search</p>
+                <div class="field"><small>Brief</small><b>Quiet strings for a goodbye, lifts at the end</b></div>
+                <div class="row a" style="--i: 3"><span>Slow strings, late lift</span><span class="hl">One-stop</span></div>
+                <div class="row a" style="--i: 4"><span>Solo cello over soft piano</span><span>2 holders</span></div>
+                <div class="row a" style="--i: 5"><span>Bittersweet chamber waltz</span><span class="hl">One-stop</span></div>
+              </>}
+              {r.slug === "ad-agencies" && <>
+                <p class="cap">License request</p>
+                <div class="chips"><span class="chip on">TV</span><span class="chip on">Paid social</span><span class="chip on">OOH</span><span class="chip">Cinema</span></div>
+                <div class="row a" style="--i: 3"><span>Territory</span><span>US, UK and 3 more</span></div>
+                <div class="row a" style="--i: 4"><span>Term</span><span>12 months, option to extend</span></div>
+                <div class="done a" style="--i: 5"><span class="tick" style="--i: 0; --d: 700ms">✓</span>Client approved the track</div>
+              </>}
+              {r.slug === "production-houses" && <>
+                <p class="cap">Clearance pack</p>
+                {[["Master.wav", "Ready"], ["Stems.zip", "Ready"], ["License.pdf", "Signed"]].map(([f, s], j) => (
+                  <div class="file a" style={`--i: ${j + 3}`}><span class="ficon" set:html={fileIcon} /><span>{f}</span><em>{s}</em></div>
+                ))}
+                <div class="row a" style="--i: 6"><span>One payment</span><span>Split across 3 holders</span></div>
+              </>}
+              {r.slug === "game-studios" && <>
+                <p class="cap">One deal, every use</p>
+                <div class="chips"><span class="chip on">In-game</span><span class="chip on">Trailers</span><span class="chip on">Marketing</span></div>
+                <div class="row a" style="--i: 3"><span>Territory</span><span>Worldwide</span></div>
+                <div class="row a" style="--i: 4"><span>Platforms</span><span>All</span></div>
+                <div class="done a" style="--i: 5"><span class="tick" style="--i: 0; --d: 700ms">✓</span>One-stop: master and publishing</div>
+              </>}
+              {r.slug === "film-and-tv" && <>
+                <p class="cap">Signatures</p>
+                <div class="sig a" style="--i: 3"><span class="tick" style="--i: 1; --d: 400ms">✓</span>Licensee</div>
+                <div class="sig a" style="--i: 4"><span class="tick" style="--i: 2; --d: 400ms">✓</span>Publisher</div>
+                <div class="sig a" style="--i: 5"><span class="tick" style="--i: 3; --d: 400ms">✓</span>Master owner</div>
+                <div class="row a" style="--i: 6"><span>Picture lock</span><span>In 6 days</span></div>
+              </>}
+              {r.slug === "streaming-platforms" && <>
+                <p class="cap">Deals</p>
+                <div class="row a" style="--i: 3"><span>Series, season 2</span><span class="hl">Signed</span></div>
+                <div class="row a" style="--i: 4"><span>Documentary feature</span><span>Countered</span></div>
+                <div class="row a" style="--i: 5"><span>Launch trailer</span><span>Sent</span></div>
+                <div class="row a" style="--i: 6"><span>Territory, every deal</span><span>Worldwide</span></div>
+              </>}
+              {r.slug === "labels-and-publishers" && <>
+                <p class="cap">New requests</p>
+                <div class="row a" style="--i: 3"><span>Sneaker ad, US and UK</span><span>$18,000</span></div>
+                <div class="row a" style="--i: 4"><span>Series title sequence</span><span>$42,000</span></div>
+                <div class="chips a" style="--i: 5"><span class="chip on">Approve</span><span class="chip">Counter</span><span class="chip">Decline</span></div>
+                <div class="done a" style="--i: 6"><span class="tick" style="--i: 0; --d: 800ms">✓</span>Paid on signature</div>
+              </>}
+              {r.slug === "distributors-and-catalog-owners" && <>
+                <p class="cap">Ingestion</p>
+                <div class="row a" style="--i: 3"><span>DDEX feed</span><span>48,210 tracks</span></div>
+                {[["Fingerprinted", 100], ["Tagged", 100], ["Splits found", 97]].map(([l, v], j) => (
+                  <div class="meter a" style={`--i: ${j + 4}`}><span>{l}</span><div class="fill"><i style={`--to: ${v}%; --i: ${j + 1}; --d: 300ms`}></i></div><b>{v}%</b></div>
+                ))}
+              </>}
             </div>
-            <div class="foot a" style="--i: 7">
-              <ul class="features" aria-label="Features you'll use">{r.features.map((f) => <li>{f}</li>)}</ul>
-              <a class="more" href={`/for/${r.slug}/`}>More for {r.name.toLowerCase()} <span aria-hidden="true">→</span></a>
-            </div>
+
+            <a class="more a" style="--i: 3" href={`/for/${r.slug}/`} tabindex={k === 0 ? undefined : -1}>More for {r.name.toLowerCase()} <span aria-hidden="true">→</span></a>
           </article>
         ))}
+        <p class="note">Illustrative examples.</p>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; }
-  .picker { display: grid; gap: 22px; position: sticky; top: 96px; }
-  .group { display: grid; gap: 6px; }
-  .group .eyebrow { color: rgba(255,255,255,.75); margin-bottom: 4px; }
-  .tab { text-align: left; border: 0; background: transparent; color: rgba(255,255,255,.82); font: 700 16px var(--font-body); padding: 12px 16px; border-radius: 14px; cursor: pointer; transition: background .2s, color .2s; position: relative; }
-  .tab:hover { background: #17171d; color: #fff; }
-  .tab[aria-selected="true"] { background: var(--accent); color: #fff; }
-  .tab[aria-selected="true"]::after { content: ""; position: absolute; right: 16px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #8b7dff; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
 
-  .panel { background: #0d0d11; color: #fff; border: 1px solid #26262e; border-radius: var(--radius-lg); padding: clamp(26px, 4vw, 48px); display: grid; gap: 16px; }
-  .panel[hidden] { display: none; }
-  .panel .eyebrow { color: #8b7dff; }
-  .panel h3 { font-size: clamp(32px, 3.8vw, 52px); line-height: 1; }
-  .intro { color: #b9b9c4; font-size: 18px; max-width: 46em; }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 12px; }
-  .label { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #a8a8b4; margin-bottom: 12px; }
-  .pains, .gains { list-style: none; padding: 0; display: grid; gap: 10px; }
-  .pains li, .gains li { padding: 14px 16px; border-radius: 14px; background: #0d0d11; border: 1px solid #26262e; color: #b9b9c4; font-size: 15px; line-height: 1.5; }
-  .pains b, .gains b { color: #fff; display: block; margin-bottom: 2px; }
-  .pains li { border-left: 3px solid #e5484d; }
-  .gains li { display: flex; gap: 12px; align-items: flex-start; }
-  .gains .tick { margin-top: 2px; }
-  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding-top: 18px; margin-top: 8px; border-top: 1px solid #26262e; }
-  .features { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .features li { padding: 6px 12px; border-radius: 999px; background: #17171d; color: #d6d6de; font-size: 13px; font-weight: 600; }
-  .more { color: #fff; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  /* The role names: big poster type; the one in view is lit violet with an arrow. */
+  .names { display: grid; gap: clamp(28px, 3vw, 40px); }
+  .group { display: grid; gap: 12px; }
+  .group ul { list-style: none; padding: 0; display: grid; gap: 4px; }
+  /* A fixed slot for the arrow on every row, so lighting a name never shifts or rewraps the list. */
+  .name { display: grid; grid-template-columns: .8em minmax(0, 1fr); align-items: baseline; font-family: var(--font-display); font-weight: 850; font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em;
+    font-size: clamp(32px, 3.8vw, 54px); line-height: .98; color: rgba(255, 255, 255, .3); text-decoration: none; transition: color .25s; }
+  .name:hover, .name:focus-visible { color: rgba(255, 255, 255, .75); }
+  .name.on { color: var(--accent-text); }
+  .arrow { opacity: 0; transform: translateX(-.3em); transition: opacity .3s, transform .3s cubic-bezier(.2, .8, .2, 1); }
+  .name.on .arrow { opacity: 1; transform: none; }
+  .group > .eyebrow { padding-left: calc(.8 * clamp(32px, 3.8vw, 54px)); }
+
+  /* Every panel sits in the same cell, so the stage is as tall as the tallest and never jumps. */
+  .stage { position: sticky; top: 96px; display: grid; }
+  .panel { grid-area: 1 / 1; display: grid; gap: 16px; align-content: start; padding: clamp(22px, 3vw, 36px); border-radius: var(--radius-lg); background: #0d0d11; border: 1px solid #26262e;
+    visibility: hidden; opacity: 0; transition: opacity .3s, visibility 0s .3s; }
+  .panel.on { visibility: visible; opacity: 1; transition: opacity .3s; }
+  .panel .eyebrow { color: var(--accent-text); }
+  .panel h3 { font-size: clamp(26px, 2.6vw, 38px); line-height: 1.02; }
+  .scene { align-self: start; }
+  .scene .hl { color: var(--accent-text); }
+  .meter { display: grid; grid-template-columns: 110px minmax(0, 1fr) 44px; align-items: center; gap: 12px; padding: 12px 14px; background: #0d0d11; border: 1px solid #26262e; border-radius: 12px; }
+  .meter span { color: var(--muted); }
+  .meter b { text-align: right; font-variant-numeric: tabular-nums; }
+  .more { justify-self: start; color: #fff; font-weight: 700; text-decoration: none; }
   .more:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .note { grid-area: 2 / 1; margin-top: 10px; font-size: 12px; color: var(--muted); }
 
+  /* One column: the panel opens under the chosen name. */
   @media (max-width: 960px) {
-    .layout { grid-template-columns: 1fr; }
-    .picker { position: static; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
-    .picker::-webkit-scrollbar { display: none; }
-    .group { display: flex; gap: 8px; align-items: center; }
-    .group .eyebrow { display: none; }
-    .tab { white-space: nowrap; background: rgba(0,0,0,.2); }
-    .tab[aria-selected="true"]::after { display: none; }
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .stage { position: static; margin: 12px 0 18px; }
+    .stage[data-reveal] { opacity: 1; transform: none; }
+    .panel:not(.on) { display: none; }
   }
-  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
 </style>
 
 <script>
+  // Pointing at a role (or focusing it) shows its panel; clicking goes to the role's page. On touch
+  // screens and in one column a tap shows the panel instead, and there it opens under the name.
   import { play } from "../scripts/motion";
   const root = document.querySelector<HTMLElement>("[data-roles]");
-  if (root) {
-    const tabs = [...root.querySelectorAll<HTMLButtonElement>("[data-role]")];
-    const select = (i: number, focus = false) => {
-      tabs.forEach((t, j) => {
-        const on = j === i;
-        t.setAttribute("aria-selected", String(on));
-        t.tabIndex = on ? 0 : -1;
-        const panel = root.querySelector<HTMLElement>(`[data-panel="${t.dataset.role}"]`);
-        if (panel) { panel.hidden = !on; if (on) play(panel); }
-      });
-      if (focus) { tabs[i]!.focus(); tabs[i]!.scrollIntoView({ block: "nearest", inline: "nearest" }); }
+  const stage = root?.querySelector<HTMLElement>("[data-stage]");
+  if (root && stage) {
+    const names = [...root.querySelectorAll<HTMLAnchorElement>("[data-role]")];
+    const panels = new Map([...root.querySelectorAll<HTMLElement>("[data-panel]")].map((p) => [p.dataset.panel!, p]));
+    const hover = matchMedia("(hover: hover) and (pointer: fine)");
+    const narrow = matchMedia("(max-width: 960px)");
+    const home = stage.parentElement!, after = stage.previousElementSibling!;
+    let current = names[0]!;
+
+    const place = () => {
+      if (narrow.matches) current.closest("[data-item]")!.append(stage);
+      else if (stage.previousElementSibling !== after) home.append(stage);
     };
-    tabs.forEach((t, i) => {
-      t.addEventListener("click", () => select(i));
-      t.addEventListener("keydown", (e) => {
-        const d = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : ["ArrowUp", "ArrowLeft"].includes(e.key) ? -1 : 0;
-        if (!d) return;
-        e.preventDefault();
-        select((i + d + tabs.length) % tabs.length, true);
-      });
-    });
-    const first = root.querySelector<HTMLElement>("[data-panel]:not([hidden])");
-    if (first) new IntersectionObserver(([e], o) => { if (e?.isIntersecting) { play(first); o.disconnect(); } }, { threshold: 0.3 }).observe(first);
+    const select = (a: HTMLAnchorElement) => {
+      if (a === current) return;
+      current = a;
+      for (const n of names) n.classList.toggle("on", n === a);
+      for (const [slug, p] of panels) {
+        const on = slug === a.dataset.role;
+        p.classList.toggle("on", on);
+        if (on) p.removeAttribute("aria-hidden"); else p.setAttribute("aria-hidden", "true");
+        p.querySelector<HTMLElement>(".more")!.tabIndex = on ? 0 : -1;
+        if (on) play(p);
+      }
+      place();
+    };
+
+    for (const a of names) {
+      // In one column the panel moves under the name, so only a tap (not hovering) may move it.
+      const browse = () => hover.matches && !narrow.matches;
+      a.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && browse()) select(a); });
+      a.addEventListener("focus", () => { if (browse()) select(a); });
+      a.addEventListener("click", (e) => { if (!browse()) { e.preventDefault(); select(a); } });
+    }
+    narrow.addEventListener("change", place);
+    place();
+
+    const first = panels.get(names[0]!.dataset.role!)!;
+    new IntersectionObserver(([e], o) => { if (e?.isIntersecting) { play(first); o.disconnect(); } }, { threshold: 0.3 }).observe(first);
   }
 </script>
