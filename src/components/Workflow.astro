@@ -45,6 +45,19 @@ const wave = (seed: number) => {
       </div>
     </div>
 
+    <div class="strip" data-reveal>
+      <p class="phase-now"><span class="num" data-phase-num>Phase 1</span><b data-phase-name>{phases[0]}</b></p>
+      <div class="blocks">
+        {steps.map((s) => (
+          <button class:list={["block", { on: s.n === "01" }]} type="button" data-strip={s.n} data-phase={s.phase}
+            aria-label={`Step ${s.n}: ${s.title}`} aria-current={s.n === "01" ? "step" : undefined}
+            style={`--gap: ${s.phase > 0 && steps[Number(s.n) - 2]?.phase !== s.phase ? 1 : 0}`}>
+            <span class="num">{s.n}</span><i aria-hidden="true"></i>
+          </button>
+        ))}
+      </div>
+    </div>
+
     {steps.map((s) => (
       <article class="panel" role="tabpanel" id={`panel-${s.n}`} aria-labelledby={`tab-${s.n}`} data-panel={s.n} data-play data-manual hidden={s.n !== "01"}>
         <div class="copy">
@@ -146,9 +159,27 @@ const wave = (seed: number) => {
     :global(.js) [data-play].play .cap { transition: bottom 1.2s cubic-bezier(.3,.8,.2,1); transition-delay: calc(var(--i) * 180ms + 300ms); }
   }
 
+  /* Phones and narrow windows: the timeline becomes a strip of eight steps that fits the width. The
+     current step's bar fills while it plays, standing in for the playhead. */
+  .strip { display: none; gap: 12px; }
+  .phase-now { display: flex; align-items: baseline; gap: 10px; min-height: 1.4em; }
+  .phase-now .num { font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+  .phase-now b { font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em; font-size: 18px; }
+  .blocks { display: flex; gap: 6px; }
+  .block { position: relative; flex: 1; min-width: 0; height: 48px; margin-left: calc(var(--gap) * 8px); border: 0; border-radius: 10px; background: rgba(255,255,255,.12); color: rgba(255,255,255,.75);
+    font: 700 12px var(--font-body); cursor: pointer; overflow: hidden; display: grid; place-items: center; padding: 0 0 6px; }
+  .block i { position: absolute; left: 6px; right: 6px; bottom: 6px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.18); overflow: hidden; }
+  .block i::after { content: ""; position: absolute; inset: 0; background: #8b7dff; transform: scaleX(0); transform-origin: left; }
+  .block.past i::after, .block.on i::after { transform: none; }
+  .block.on { background: #000; color: #fff; box-shadow: inset 0 0 0 1.5px #8b7dff; }
+  .block.on .num { color: #8b7dff; }
+  .block.on.run i::after { animation: stepfill var(--dur, 5s) linear both; }
+  @keyframes stepfill { from { transform: scaleX(0); } }
+
   .speed { margin-top: 28px; text-align: center; font-size: clamp(18px, 1.8vw, 22px); color: var(--muted); }
   .speed strong { color: #fff; }
   @media (max-width: 860px) { .panel { grid-template-columns: 1fr; } }
+  @media (max-width: 960px) { .daw-scroll { display: none; } .strip { display: grid; } }
 </style>
 
 <script>
@@ -176,8 +207,29 @@ const wave = (seed: number) => {
       }, 460);
     };
 
+    // The phone strip mirrors the timeline: the phase name, and which step is playing.
+    const blocks = [...root.querySelectorAll<HTMLButtonElement>("[data-strip]")];
+    const phaseNum = root.querySelector<HTMLElement>("[data-phase-num]")!;
+    const phaseName = root.querySelector<HTMLElement>("[data-phase-name]")!;
+    const lanes = [...root.querySelectorAll<HTMLElement>(".lane-head b")].map((b) => b.textContent ?? "");
+    root.style.setProperty("--dur", `${DUR}ms`);
+    const showStrip = (i: number) => {
+      const ph = Number(blocks[i]!.dataset.phase);
+      phaseNum.textContent = `Phase ${ph + 1}`;
+      phaseName.textContent = lanes[ph] ?? "";
+      blocks.forEach((b, j) => {
+        b.classList.toggle("on", j === i);
+        b.classList.toggle("past", j < i);
+        b.classList.remove("run");
+        if (j === i) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      });
+      void blocks[i]!.offsetWidth; // restart the fill
+      blocks[i]!.classList.toggle("run", auto && visible);
+    };
+
     const select = (i: number, focus = false) => {
       index = i;
+      showStrip(i);
       tabs.forEach((t, j) => {
         const on = j === i;
         t.setAttribute("aria-selected", String(on));
@@ -195,6 +247,7 @@ const wave = (seed: number) => {
     };
     const stopAuto = () => { auto = false; window.clearTimeout(timer); };
 
+    blocks.forEach((b, i) => b.addEventListener("click", () => { stopAuto(); select(i); }));
     tabs.forEach((t, i) => {
       t.addEventListener("click", () => { stopAuto(); select(i); });
       t.addEventListener("keydown", (e) => {
