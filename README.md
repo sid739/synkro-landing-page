@@ -38,7 +38,7 @@ Adding a glossary term or a user type is a data change only: add an entry to `gl
 
 ## Intro film
 
-The homepage opens on a 9-second muted film (`public/intro/`) that plays once per browser session, full screen over the site, in 4K on large or high-resolution screens. It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
+The homepage opens on a 9-second muted film (`public/intro/`) that plays once per browser session, full screen over the site, in 4K on large or high-resolution screens. The footage plays inset, in a rounded 16:9 screen on a dark ground (a band across the middle on phones), with the headline full size across it. It is drawn frame by frame on a canvas by `tools/intro-film/render.html` in Playwright's Chromium and encoded with ffmpeg; both need to be installed. To change it, edit that file, then from `tools/intro-film/`:
 
 ```bash
 cp ../../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2 archivo.woff2
@@ -56,8 +56,8 @@ I=../../public/intro
 ffmpeg -y -i /tmp/master-4k.mp4 $X -level:v 5.1 -crf 24 $I/synkro-intro-4k.mp4
 ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $X -level:v 4.0 -crf 24 $I/synkro-intro.mp4
 ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $V -crf 35 $I/synkro-intro.webm
-ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 25 $I/synkro-intro-portrait.mp4
-ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 36 $I/synkro-intro-portrait.webm
+ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 21 $I/synkro-intro-portrait.mp4
+ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
 ```
 
 Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. A needle dropping onto a spinning record plays behind the closing Sync Anything (the `music` clip). The clips are from Pexels, which allows commercial use without credit.

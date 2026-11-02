@@ -67,11 +67,11 @@ function catBackground(i, t) {                    // t: seconds into this catego
 function sceneCategories(t) {
   const i = Math.min(CATS.length - 1, Math.floor(t / CAT_LEN)), local = t - i * CAT_LEN;
   if (i > 0 && local < TR) {
-    // Zoom through: the last shot pushes in and blurs away as the next settles into place.
+    // Zoom through, inside the screen: the last shot pushes in and blurs away as the next settles in.
     const p = easeIO(local / TR), blur = Math.sin(Math.PI * p) * 10 * (M / 1080);
     drawTo(layerA, () => catBackground(i - 1, CAT_LEN + local));
     drawTo(layerB, () => catBackground(i, local));
-    ctx.save(); ctx.filter = `blur(${blur}px)`; ctx.translate(W / 2, H / 2);
+    ctx.save(); clipToScreen(); ctx.filter = `blur(${blur}px)`; ctx.translate(W / 2, H / 2);
     ctx.save(); ctx.scale(1 + .18 * p, 1 + .18 * p); ctx.drawImage(layerA, -W / 2, -H / 2); ctx.restore();
     ctx.globalAlpha = p; ctx.scale(1.15 - .15 * p, 1.15 - .15 * p); ctx.drawImage(layerB, -W / 2, -H / 2);
     ctx.restore();
@@ -79,15 +79,27 @@ function sceneCategories(t) {
   headline(CATS[i].word, local, t);
 }
 
+// The footage plays inset, like a screen: a rounded 16:9 window on the dark ground, 86% of a
+// landscape frame, or a band across the middle of a phone frame showing the whole wide shot.
+function screen() {
+  const w = W >= H ? W * .86 : W * .92, h = W >= H ? H * .86 : w * 9 / 16;
+  return { x: (W - w) / 2, y: (H - h) / 2, w, h, r: M * .03 };
+}
+function clipToScreen() {
+  const s = screen();
+  ctx.beginPath(); ctx.roundRect(s.x, s.y, s.w, s.h, s.r); ctx.clip();
+  return s;
+}
+
 // Graded footage frames, by clip name (see prepare-footage.sh).
 const CLIPS = {}, FOOT_FPS = 30;
-async function loadClip(name, shape) {
+async function loadClip(name) {
   const frames = CLIPS[name] = [];
   for (let i = 1; ; i++) {
     // Wait for the file, not for decode(): decode() is refused once many frames are held decoded,
     // while a loaded image is decoded when drawn and can be dropped again.
     const img = new Image();
-    const ok = await new Promise((done) => { img.onload = () => done(true); img.onerror = () => done(false); img.src = `footage/frames/${name}/${shape}/${String(i).padStart(3, "0")}.jpg`; });
+    const ok = await new Promise((done) => { img.onload = () => done(true); img.onerror = () => done(false); img.src = `footage/frames/${name}/${String(i).padStart(3, "0")}.jpg`; });
     if (!ok) break;                                // past the last frame
     frames.push(img);
   }
@@ -95,9 +107,12 @@ async function loadClip(name, shape) {
 function footage(name, t, dim, push) {            // t: seconds into the clip; push: zoom beyond 1
   const frames = CLIPS[name] ?? [], f = frames[Math.min(frames.length - 1, Math.floor(t * FOOT_FPS))];
   if (!f) return;
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(1 + push, 1 + push);
-  ctx.drawImage(f, -W / 2, -H / 2, W, H); ctx.restore();
-  ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(0, 0, W, H);
+  ctx.save();
+  const s = clipToScreen();
+  ctx.translate(s.x + s.w / 2, s.y + s.h / 2); ctx.scale(1 + push, 1 + push);
+  ctx.drawImage(f, -s.w / 2, -s.h / 2, s.w, s.h);
+  ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(-s.w / 2, -s.h / 2, s.w, s.h);
+  ctx.restore();
 }
 
 // Sync Anything plays over the music shot: a needle dropping onto a spinning record.
@@ -117,6 +132,10 @@ function renderFrame(t) {
   ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
   if (t < 6) sceneCategories(t);
   else sceneEnd(t - 6, t);
+  // A faint edge, so the screen still reads where a shot is as dark as the ground around it.
+  const sc = screen();
+  ctx.beginPath(); ctx.roundRect(sc.x, sc.y, sc.w, sc.h, sc.r);
+  ctx.lineWidth = Math.max(1, M * .0016); ctx.strokeStyle = "rgba(255,255,255,.14)"; ctx.stroke();
   // Flash on the cuts.
   for (const cut of CUTS) { const d = t - cut; if (d >= 0 && d < .12) { ctx.fillStyle = `rgba(160,150,255,${.5 * (1 - d / .12)})`; ctx.fillRect(0, 0, W, H); } }
   // Vignette.
@@ -129,8 +148,7 @@ window.setup = async (w, h) => {
   W = canvas.width = w; H = canvas.height = h; M = Math.min(w, h);
   await document.fonts.load("900 100px Archivo"); await document.fonts.ready;
   layerA.width = layerB.width = w; layerA.height = layerB.height = h;
-  const shape = W > H ? "landscape" : "portrait";
-  for (const name of ["music", ...CATS.map((c) => c.clip)]) await loadClip(name, shape);
+  for (const name of ["music", ...CATS.map((c) => c.clip)]) await loadClip(name);
 };
 window.LEN = LEN;
 window.frame = (t) => { renderFrame(t); return canvas.toDataURL("image/jpeg", 0.95); };
