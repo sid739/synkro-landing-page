@@ -1,5 +1,5 @@
 ---
-// Two rows of oversized words drifting in opposite directions, nudged further as the page scrolls.
+// Rows of oversized words drifting (alternate rows in opposite directions), nudged further as the page scrolls.
 // Decorative: the same words appear in the page's text, so screen readers skip it.
 interface Props { rows: string[][] }
 const { rows } = Astro.props;
@@ -25,9 +25,9 @@ const { rows } = Astro.props;
   .row { --shift: 0px; transform: translateX(var(--shift)); will-change: transform; }
   .track { display: flex; width: max-content; }
   .set { display: flex; align-items: center; flex: none; }
-  .w { font-family: var(--font-display); font-weight: 850; font-stretch: 62%; text-transform: uppercase; letter-spacing: -.01em; line-height: .9; font-size: clamp(72px, 13vw, 210px); color: var(--fg); padding-inline: .12em; white-space: nowrap; }
+  .w { font-family: var(--font-display); font-weight: 850; font-stretch: 62%; text-transform: uppercase; letter-spacing: -.01em; line-height: .9; font-size: clamp(48px, 7vw, 116px); color: var(--fg); padding-inline: .12em; white-space: nowrap; }
   .w.outline { color: transparent; -webkit-text-stroke: max(1.5px, .012em) var(--fg); }
-  .dot { width: clamp(12px, 1.6vw, 24px); height: clamp(12px, 1.6vw, 24px); border-radius: 50%; background: var(--accent-text); flex: none; margin-inline: .3em; }
+  .dot { width: clamp(9px, 1vw, 16px); height: clamp(9px, 1vw, 16px); border-radius: 50%; background: var(--accent-text); flex: none; margin-inline: .3em; }
   @media (prefers-reduced-motion: no-preference) {
     .track { animation: drift 48s linear infinite; }
     .rev .track { animation-direction: reverse; }
