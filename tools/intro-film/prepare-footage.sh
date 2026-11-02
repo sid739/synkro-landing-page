@@ -42,8 +42,9 @@ clip flatlay pexels-3944271.mp4 0 5.24 "" "$INVERT" "transpose=2,"
 clip film pexels-7984182.mp4 3.4 1.3 "" "$BRIGHT" "crop=2160:1215:0:1500,"
 # TV: New York skyline at dusk, someone watching from a pier.
 clip tv pexels-15370550.mp4 3.0 1.3 "" "$BRIGHT" ""
-# Ads: cheerleaders in a white studio, with the team crest on their shirts and a trainer logo softened.
-clip ads ads-cheer.mp4 3.0 1.3 "$(soften 1 1360 345 225 190 141)$(soften 2 235 425 150 165 140)$(soften 3 2470 425 140 165 140)$(soften 4 140 1090 220 150 145)" "$LIGHT" ""
+# Ads: lemons and limes plunging into water on black, like a drinks commercial. The phone cut follows
+# the lemon in, right of centre.
+clip ads pexels-2583472.mp4 0.55 1.3 "" "$CLEAR" "" "crop=1215:2160:1650:0,"
 # Trailers: aerial of the Schilthorn summit, with the 007 marks on the building softened.
 clip trailers pexels-4395386.mp4 2.0 1.3 "delogo=x=735:y=635:w=275:h=120,delogo=x=1185:y=625:w=170:h=120,delogo=x=515:y=625:w=90:h=110," "$LIGHT" ""
 # Games: first-person view down a gun sight along a brick wall, with the logo on the glove softened.
