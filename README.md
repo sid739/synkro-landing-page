@@ -48,18 +48,19 @@ npx http-server -p 8765 -s . &
 # Near-lossless masters, one per shape (large; keep them out of the repo).
 CRF=12 LEVEL=5.1 node render.cjs 3840 2160 /tmp/master-4k.mp4
 CRF=12 node render.cjs 1080 1920 /tmp/master-portrait.mp4
-# What the page serves.
+# What the page serves. The sparks, splash and film grain are costly to encode, so these quality
+# settings keep each file near 5 MB with no visible loss.
 X="-an -c:v libx264 -preset slow -profile:v high -pix_fmt yuv420p -movflags +faststart"
 V="-an -c:v libvpx-vp9 -b:v 0 -row-mt 1 -deadline good -cpu-used 2 -pix_fmt yuv420p"
 I=../../public/intro
-ffmpeg -y -i /tmp/master-4k.mp4 $X -level:v 5.1 -crf 22 $I/synkro-intro-4k.mp4
-ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $X -level:v 4.0 -crf 21 $I/synkro-intro.mp4
-ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $V -crf 30 $I/synkro-intro.webm
-ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 22 $I/synkro-intro-portrait.mp4
-ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 31 $I/synkro-intro-portrait.webm
+ffmpeg -y -i /tmp/master-4k.mp4 $X -level:v 5.1 -crf 24 $I/synkro-intro-4k.mp4
+ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $X -level:v 4.0 -crf 24 $I/synkro-intro.mp4
+ffmpeg -y -i /tmp/master-4k.mp4 -vf scale=1920:1080:flags=lanczos $V -crf 35 $I/synkro-intro.webm
+ffmpeg -y -i /tmp/master-portrait.mp4 $X -level:v 4.0 -crf 25 $I/synkro-intro-portrait.mp4
+ffmpeg -y -i /tmp/master-portrait.mp4 $V -crf 36 $I/synkro-intro-portrait.webm
 ```
 
-Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. The overhead guitar-and-records clip plays behind the closing Sync Anything. The clips are from Pexels, which allows commercial use without credit.
+Each category (Film, TV, Ads, Trailers, Games, Streaming) has its own clip. To change one, put the new clip in `footage/`, point its `clip` line in `prepare-footage.sh` at it (start time, length, grade), and re-run the steps above. A needle dropping onto a spinning record plays behind the closing Sync Anything (the `music` clip). The clips are from Pexels, which allows commercial use without credit.
 
 ## SEO and AEO built in
 

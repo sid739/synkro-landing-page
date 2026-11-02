@@ -100,9 +100,9 @@ function footage(name, t, dim, push) {            // t: seconds into the clip; p
   ctx.fillStyle = `rgba(5,5,8,${dim})`; ctx.fillRect(0, 0, W, H);
 }
 
-// Sync Anything plays over the music shot: the overhead guitar, headphones, cassettes and record player.
+// Sync Anything plays over the music shot: a needle dropping onto a spinning record.
 const MUSIC_LEN = 2.6;                            // seconds of the music shot
-function music(t) { footage("flatlay", t, .08, .04 * t / MUSIC_LEN); }
+function music(t) { footage("music", t, .08, .04 * t / MUSIC_LEN); }
 
 function sceneEnd(t, total) {                      // Sync Anything over the music shot, to the last frame
   music(t);
@@ -130,7 +130,7 @@ window.setup = async (w, h) => {
   await document.fonts.load("900 100px Archivo"); await document.fonts.ready;
   layerA.width = layerB.width = w; layerA.height = layerB.height = h;
   const shape = W > H ? "landscape" : "portrait";
-  for (const name of ["flatlay", ...CATS.map((c) => c.clip)]) await loadClip(name, shape);
+  for (const name of ["music", ...CATS.map((c) => c.clip)]) await loadClip(name, shape);
 };
 window.LEN = LEN;
 window.frame = (t) => { renderFrame(t); return canvas.toDataURL("image/jpeg", 0.95); };
