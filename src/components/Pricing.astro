@@ -1,0 +1,61 @@
+---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
+
+const plans = [
+  {
+    side: "licensee", who: "For licensees", title: "Free during the beta",
+    points: ["Search the catalog by brief, reference track or video", "Send license requests and negotiate in deal rooms", "Sign and receive clearance packs"],
+  },
+  {
+    side: "rights-holder", who: "For rights holders", title: "Free to list your catalog",
+    points: ["Catalog ingestion and AI tagging", "Incoming requests, counters and deal rooms", "Signatures and payment on signature"],
+  },
+] as const;
+const tick = `<svg viewBox="0 0 16 16"><path d="M3.5 8.3l3 3 6-6.6"/></svg>`;
+---
+<section class="section" id="pricing" aria-labelledby="pricing-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <TrackLabel n={6} label="Pricing" />
+      <h2 id="pricing-title">Free while we're <span class="hl">in beta</span></h2>
+      <p class="lede">No subscriptions and no fees during the beta. We'll publish launch pricing, with at least 30 days' notice, before we charge for anything.</p>
+      <Waveform seed={8} />
+    </div>
+
+    <div class="plans">
+      {plans.map((p, i) => (
+        <article class="plan" data-reveal style={`--rd: ${i * 120}ms`}>
+          <p class="eyebrow">{p.who}</p>
+          <h3>{p.title}</h3>
+          <ul>{p.points.map((t) => <li><span class="ok" aria-hidden="true" set:html={tick} />{t}</li>)}</ul>
+          <a class="btn btn-secondary" href={`/#join-${p.side}`} data-join={p.side}>Join the beta</a>
+        </article>
+      ))}
+      <aside class="plan launch" data-reveal style="--rd: 240ms">
+        <p class="eyebrow">At launch</p>
+        <h3>Founding partners keep preferential terms</h3>
+        <p>Pricing will be simple and published, with no surprises in the middle of a deal.</p>
+        <a class="estimate" href="/sync-fee-estimator/">What does a license cost? <b>Try the fee estimator <span aria-hidden="true">→</span></b></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(24px, 2.8vw, 36px); display: grid; gap: 16px; align-content: start; box-shadow: var(--shadow); }
+  .plan h3 { font-size: clamp(26px, 2.4vw, 34px); line-height: 1.02; }
+  .plan ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .plan li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; color: var(--muted); line-height: 1.45; }
+  .ok { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); }
+  .ok :global(svg) { width: 12px; height: 12px; fill: none; stroke: var(--accent-text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .plan .btn { justify-self: start; margin-top: 6px; }
+  .launch { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .launch .eyebrow, .launch p { color: rgba(255, 255, 255, .82); }
+  .estimate { margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, .25); color: #fff; text-decoration: none; display: grid; gap: 4px; font-size: 15px; }
+  .estimate b { font-size: 17px; }
+  .estimate:hover b { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 960px) { .plans { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .launch { grid-column: 1 / -1; } }
+  @media (max-width: 620px) { .plans { grid-template-columns: minmax(0, 1fr); } }
+</style>

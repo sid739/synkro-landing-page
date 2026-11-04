@@ -4,9 +4,11 @@ import IntroFilm from "../components/IntroFilm.astro";
 import Hero from "../components/Hero.astro";
 import LogoStrip from "../components/LogoStrip.astro";
 import BigMarquee from "../components/BigMarquee.astro";
+import Doors from "../components/Doors.astro";
+import Problem from "../components/Problem.astro";
 import Workflow from "../components/Workflow.astro";
-import Discovery from "../components/Discovery.astro";
-import Clearance from "../components/Clearance.astro";
+import Product from "../components/Product.astro";
+import Pricing from "../components/Pricing.astro";
 import Catalog from "../components/Catalog.astro";
 import WhoItsFor from "../components/WhoItsFor.astro";
 import Principles from "../components/Principles.astro";
@@ -19,18 +21,20 @@ import { faqLd, softwareLd } from "../data/schema";
   <IntroFilm slot="intro" />
   <Hero />
   <LogoStrip />
+  <Doors />
   <BigMarquee rows={[["Film", "TV", "Ads", "Trailers", "Games", "Streaming"]]} />
+  <Problem />
   <Workflow />
-  <Discovery />
-  <Clearance />
+  <Product />
   <Catalog />
   <WhoItsFor />
+  <Pricing />
   <Principles />
   <Cta />
   <Faq
     items={homeFaq}
     eyebrow="FAQ"
-    track={8}
+    track={9}
     title='Frequently Asked <span class="hl">Questions</span>'
     lede="Search, rights and clearance, answered."
   />

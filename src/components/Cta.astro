@@ -2,18 +2,37 @@
 import TrackLabel from "./TrackLabel.astro";
 import { site } from "../data/site";
 import { LIMITS, roleChoices } from "../lib/lead";
+
+// What founding partners get, on each side. The list shown follows the form's side switch.
+const perks = {
+  licensee: ["Early access before the public launch", "Free throughout the beta", "A direct line to the team, and a say in the roadmap", "Founding-partner pricing at launch"],
+  "rights-holder": ["Catalog onboarding done with you, free", "Featured placement for your catalog at launch", "A direct line to the team, and a say in the roadmap", "Founding-partner terms at launch"],
+} as const;
+const tick = `<svg viewBox="0 0 16 16"><path d="M3.5 8.3l3 3 6-6.6"/></svg>`;
 ---
 <section class="section band cta" id="early-access" aria-labelledby="cta-title">
   <div class="wrap inner">
     <div class="pitch" data-reveal>
-      <TrackLabel n={7} label="Early access" />
-      <h2 id="cta-title">We aren't just building a bigger catalog. <span class="hl">We're building the infrastructure sync always needed</span></h2>
+      <TrackLabel n={8} label="Founding partners" />
+      <h2 id="cta-title">Become a <span class="hl">founding partner</span></h2>
+      <p class="lede">We're bringing on a limited number of founding partners on each side before launch.</p>
+      {Object.entries(perks).map(([side, list]) => (
+        <ul class="perks" data-perks={side} hidden={side !== "licensee"}>
+          {list.map((p) => <li><span class="ok" aria-hidden="true" set:html={tick} />{p}</li>)}
+        </ul>
+      ))}
       {site.bookingUrl && <p class="alt">Rather talk it through? <a href={site.bookingUrl} data-demo>Pick a time for a live demo <span aria-hidden="true">→</span></a></p>}
     </div>
 
     <div class="card" data-reveal style="--rd: 120ms">
+      <span class="anchor" id="join-licensee"></span><span class="anchor" id="join-rights-holder"></span>
       <form id="book-demo" novalidate data-lead>
         <fieldset class="want">
+          <legend class="sr">Which side are you on?</legend>
+          <label><input type="radio" name="side" value="licensee" checked /><span>I license music</span></label>
+          <label><input type="radio" name="side" value="rights-holder" /><span>I own music</span></label>
+        </fieldset>
+        <fieldset class="want minor">
           <legend class="sr">I'd like to</legend>
           <label><input type="radio" name="interest" value="waitlist" checked /><span>Join the waitlist</span></label>
           <label><input type="radio" name="interest" value="demo" /><span>Book a demo</span></label>
@@ -27,7 +46,7 @@ import { LIMITS, roleChoices } from "../lib/lead";
           <label class="field"><span>I'm with</span>
             <select name="role" required>
               <option value="" selected disabled>Choose one</option>
-              {roleChoices.map((r) => <option value={r}>{r}</option>)}
+              {roleChoices.map((r) => <option value={r.name} data-side={r.side} hidden={r.side === "rights-holder"} disabled={r.side === "rights-holder"}>{r.name}</option>)}
             </select>
           </label>
         </div>
@@ -51,6 +70,12 @@ import { LIMITS, roleChoices } from "../lib/lead";
   .pitch { display: grid; gap: 22px; justify-items: start; }
   .pitch h2 { font-size: clamp(34px, 4vw, 56px); max-width: 18ch; }
   .alt { color: var(--on-band-muted); }
+  .perks { list-style: none; padding: 0; display: grid; gap: 12px; }
+  .perks[hidden] { display: none; }
+  .perks li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; font-weight: 600; font-size: 17px; line-height: 1.4; }
+  .perks .ok { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #fff; }
+  .perks .ok :global(svg) { width: 13px; height: 13px; fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .anchor { display: block; scroll-margin-top: 140px; }
   .alt a { color: #fff; font-weight: 700; text-underline-offset: 4px; }
 
   .card { background: #fff; color: #0b0b0f; border-radius: var(--radius-lg); padding: clamp(20px, 3vw, 32px); box-shadow: 0 30px 80px -40px rgba(10, 5, 60, .6); }
@@ -74,6 +99,10 @@ import { LIMITS, roleChoices } from "../lib/lead";
   .want span { display: grid; place-items: center; min-height: 44px; border-radius: 999px; font-weight: 700; font-size: 15px; color: #4a4a55; transition: background-color .15s, color .15s; }
   .want input:checked + span { background: var(--accent); color: #fff; }
   .want input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* The second switch (waitlist or demo) is lighter, so the side switch above reads first. */
+  .want.minor { background: transparent; border: 1.5px solid #e4e4ea; width: fit-content; justify-self: center; grid-template-columns: auto auto; }
+  .want.minor span { min-height: 34px; padding: 0 16px; font-size: 14px; }
+  .want.minor input:checked + span { background: #f0f0f4; color: #0b0b0f; }
 
   .send { width: 100%; }
   .band .card .send { background: var(--accent); }
@@ -99,7 +128,8 @@ import { LIMITS, roleChoices } from "../lib/lead";
 </style>
 
 <script>
-  // Sends the sign-up to /api/lead. #book-demo (from any "Book a demo" link) opens it with a demo chosen.
+  // Sends the sign-up to /api/lead. #book-demo (from any "Book a demo" link) opens it with a demo
+  // chosen; #join-licensee and #join-rights-holder (from the two doors) open it on that side.
   import { track } from "../scripts/track";
   import { site } from "../data/site";
   const form = document.querySelector<HTMLFormElement>("[data-lead]");
@@ -112,12 +142,25 @@ import { LIMITS, roleChoices } from "../lib/lead";
     const interest = () => (new FormData(form).get("interest") === "demo" ? "demo" : "waitlist");
     const syncButton = () => { send.firstChild!.textContent = `${label[interest()]} `; };
 
-    const fromHash = () => {
-      if (location.hash !== "#book-demo") return;
-      form.querySelector<HTMLInputElement>('input[value="demo"]')!.checked = true;
-      syncButton();
+    // The side switch picks the perks shown and the roles on offer.
+    const role = form.querySelector<HTMLSelectElement>("select[name=role]")!;
+    const syncSide = () => {
+      const side = new FormData(form).get("side") as string;
+      document.querySelectorAll<HTMLElement>("[data-perks]").forEach((l) => { l.hidden = l.dataset.perks !== side; });
+      for (const o of role.options) {
+        if (!o.dataset.side) continue;
+        const off = o.dataset.side !== "any" && o.dataset.side !== side;
+        o.hidden = off; o.disabled = off;
+        if (off && o.selected) role.value = "";
+      }
     };
-    form.addEventListener("change", syncButton);
+    const fromHash = () => {
+      const side = { "#join-licensee": "licensee", "#join-rights-holder": "rights-holder" }[location.hash];
+      if (side) form.querySelector<HTMLInputElement>(`input[name=side][value="${side}"]`)!.checked = true;
+      if (location.hash === "#book-demo") form.querySelector<HTMLInputElement>('input[value="demo"]')!.checked = true;
+      syncSide(); syncButton();
+    };
+    form.addEventListener("change", (e) => { if ((e.target as HTMLInputElement).name === "side") syncSide(); syncButton(); });
     addEventListener("hashchange", fromHash);
     fromHash();
 
@@ -149,7 +192,7 @@ import { LIMITS, roleChoices } from "../lib/lead";
         const res = await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...data, startedAt }) });
         const body = (await res.json().catch(() => ({}))) as { error?: string };
         if (!res.ok) return fail(body.error ?? "Something went wrong.", res.status >= 500);
-        track("Lead submitted", { interest: interest(), role: data.role ?? "" });
+        track("Lead submitted", { interest: interest(), side: data.side ?? "", role: data.role ?? "" });
         const demo = interest() === "demo";
         done.querySelector("[data-done-title]")!.textContent = demo ? "Demo requested" : "You're on the list";
         done.querySelector("[data-done-text]")!.textContent = demo

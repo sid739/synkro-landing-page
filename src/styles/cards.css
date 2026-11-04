@@ -1,4 +1,4 @@
-/* Feature cards shared by the Discovery engine and Clearance workspace sections: a mosaic of wide
+/* Feature cards for the product section (and the small demos in Who it's for): a mosaic of wide
    and narrow tiles whose small demos replay while on screen, with a light that follows the pointer. */
 .part-head { display: grid; justify-items: center; text-align: center; gap: 18px; max-width: 860px; margin: 0 auto clamp(40px, 5vw, 64px); }
 .part-head .lede { margin-inline: auto; }

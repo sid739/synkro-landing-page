@@ -1,0 +1,60 @@
+---
+// A long-form guide: the page hero with a short answer, a contents list beside the article, links to
+// the other guides, its FAQ and the sign-up section. The page passes the article as the default slot
+// and the short answer as the "answer" slot.
+import Base from "./Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Faq from "../components/Faq.astro";
+import Cta from "../components/Cta.astro";
+import { site, type Faq as FaqItem } from "../data/site";
+import { guides } from "../data/guides";
+import { breadcrumbLd, faqLd } from "../data/schema";
+import "../styles/guide.css";
+
+interface Props {
+  path: string; title: string; description: string; published: string; heading: string;
+  crumb: string; toc: [string, string][]; faq: FaqItem[]; faqTitle: string;
+}
+const { path, title, description, published, heading, crumb, toc, faq, faqTitle } = Astro.props;
+const crumbs = [{ name: crumb, href: path }];
+const date = new Date(published).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const others = guides.filter((g) => g.path !== path);
+
+const articleLd = {
+  "@type": "Article",
+  headline: title,
+  description,
+  datePublished: published,
+  dateModified: published,
+  author: { "@id": `${site.url}/#organization` },
+  publisher: { "@id": `${site.url}/#organization` },
+  mainEntityOfPage: new URL(path, site.url).href,
+};
+---
+<Base title={title} description={description} type="article" jsonLd={[articleLd, breadcrumbLd(crumbs), faqLd(faq)]}>
+  <PageHero eyebrow="Guide" title={heading} crumbs={crumbs}>
+    <div class="guide-answer">
+      <p class="eyebrow">The short answer</p>
+      <slot name="answer" />
+    </div>
+    <p class="guide-meta">By the {site.name} team · Updated <time datetime={published}>{date}</time></p>
+  </PageHero>
+
+  <div class="wrap guide">
+    <nav class="toc" aria-label="On this page">
+      <p class="eyebrow">On this page</p>
+      <ol>{toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol>
+    </nav>
+
+    <article class="body">
+      <slot />
+      <aside class="more" aria-label="More guides">
+        <p class="eyebrow">Keep reading</p>
+        <ul>{others.map((g) => <li><a href={g.path}>{g.title}</a><span>{g.short}</span></li>)}</ul>
+      </aside>
+    </article>
+  </div>
+
+  <Faq items={faq} title={faqTitle} />
+  <Cta />
+</Base>

@@ -24,7 +24,14 @@ npm run preview   # serve the built site
 | `src/pages/llms.txt.ts` | Generates `/llms.txt`, a plain-text summary of the site for AI assistants. |
 | `src/scripts/motion.ts` | Scroll-triggered animations (reveal, staggered card sequences, typing, count-up). |
 | `src/scripts/cards.ts` | The light that follows the pointer across feature cards. |
-| `src/components/Cta.astro`, `api/lead.ts`, `src/lib/lead.ts` | The early-access form, the Vercel Function that emails each sign-up through Resend, and the checks both apply. See "Sign-ups and analytics" below. |
+| `src/components/Cta.astro`, `api/lead.ts`, `src/lib/lead.ts` | The founding partner programme and early-access form (a licensee / rights holder switch picks the perks and roles shown), the Vercel Function that emails each sign-up through Resend, and the checks both apply. See "Sign-ups and analytics" below. |
+| `src/components/Doors.astro` | Two ways in under the hero, "I license music" and "I own music"; each opens the form on its side (`/#join-licensee`, `/#join-rights-holder`). |
+| `src/components/Problem.astro` | Clearing one song the usual way against the same steps on Synkro. |
+| `src/components/Product.astro` | The product's feature cards in two tabs: find the music, and clear it and get paid. |
+| `src/components/Pricing.astro` | Pricing during the beta and at launch. |
+| `src/components/MobileCta.astro` | The sign-up bar on phones, shown once the first screen has scrolled away. |
+| `src/pages/sync-fee-estimator.astro`, `src/data/fees.ts` | The fee estimator. `fees.ts` holds the indicative ranges and multipliers, which the cost guide also shows; change the numbers there. |
+| `src/layouts/Guide.astro`, `src/data/guides.ts` | The layout every long-form guide uses, and the list of guides (linked from each guide, the footer and `llms.txt`). To add a guide, add a page using the layout and an entry in `guides.ts`. |
 | `src/scripts/track.ts` | Custom events for Vercel Web Analytics ("Demo click", "Lead submitted"). |
 | `src/scripts/hero.ts` | The homepage hero: sizes the search demo beside the headline and swaps the headline's word with each brief's category. |
 | `src/components/SearchDemo.astro` | The hero's search demo: one example brief per category types itself, then its results drop in with their rights holders (`src/data/search.ts`). |

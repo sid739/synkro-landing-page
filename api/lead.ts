@@ -5,7 +5,7 @@
 //   LEAD_FROM       a sender on a domain verified in Resend, e.g. "Synkro <signups@synkro.com>".
 //                   Without one, Resend's test sender is used, which only delivers to the Resend
 //                   account's own address.
-import { interests, parseLead, type Lead } from "../src/lib/lead";
+import { interests, parseLead, sides, type Lead } from "../src/lib/lead";
 import { site } from "../src/data/site";
 
 const MAX_BODY = 16 * 1024;
@@ -18,6 +18,7 @@ const escape = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<":
 
 const rows = (lead: Lead): [string, string][] => [
   ["Wants", interests[lead.interest]],
+  ["Side", sides[lead.side]],
   ["Name", lead.name],
   ["Email", lead.email],
   ["Company", lead.company],
@@ -71,7 +72,7 @@ export async function POST(request: Request): Promise<Response> {
     console.error("lead: Resend refused the email:", detail);
     return json(502, { error: "We couldn't send that just now." });
   }
-  console.log("lead: sent", lead.interest, lead.role);
+  console.log("lead: sent", lead.interest, lead.side, lead.role);
   return json(200, { ok: true });
 }
 

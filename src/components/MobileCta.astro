@@ -1,0 +1,44 @@
+---
+import { earlyAccessHref } from "../data/site";
+---
+<div class="mobile-cta" aria-hidden="true" data-mobile-cta>
+  <span>Free while we're in beta</span>
+  <a class="btn btn-primary" href={earlyAccessHref} tabindex="-1">Join the waitlist</a>
+</div>
+
+<style>
+  /* Phones only: a slim bar that rises in once the first screen has scrolled away, and steps aside
+     while the sign-up form or the footer is on screen. */
+  .mobile-cta { display: none; }
+  @media (max-width: 720px) {
+    .mobile-cta { position: fixed; z-index: 30; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+      background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line);
+      transform: translateY(110%); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+    .mobile-cta.show { transform: none; }
+    .mobile-cta span { font-size: 14px; font-weight: 600; color: var(--muted); }
+    .mobile-cta .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+  }
+  @media (max-width: 720px) and (prefers-reduced-motion: reduce) { .mobile-cta { transition: none; } }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>("[data-mobile-cta]");
+  if (bar) {
+    const link = bar.querySelector("a")!;
+    const inView = new Set<Element>();
+    const update = () => {
+      const show = scrollY > innerHeight * .7 && inView.size === 0 && !document.documentElement.classList.contains("intro");
+      bar.classList.toggle("show", show);
+      bar.setAttribute("aria-hidden", String(!show));
+      link.tabIndex = show ? 0 : -1;
+    };
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) e.isIntersecting ? inView.add(e.target) : inView.delete(e.target);
+      update();
+    });
+    document.querySelectorAll("#early-access, footer").forEach((el) => io.observe(el));
+    addEventListener("scroll", update, { passive: true });
+    update();
+  }
+</script>

@@ -1,6 +1,7 @@
 ---
 import { site } from "../data/site";
 import { roles } from "../data/roles";
+import { guides } from "../data/guides";
 const year = new Date().getFullYear();
 ---
 <footer class="footer ink">
@@ -17,6 +18,7 @@ const year = new Date().getFullYear();
             <li><a href="/#how">How it works</a></li>
             <li><a href="/#catalog">Catalog</a></li>
             <li><a href="/#roles">Who it's for</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
             <li><a href="/#principles">AI principles</a></li>
           </ul>
         </div>
@@ -27,7 +29,8 @@ const year = new Date().getFullYear();
         <div>
           <h2 class="eyebrow">Learn</h2>
           <ul>
-            <li><a href="/sync-licensing/">Sync licensing guide</a></li>
+            {guides.map((g) => <li><a href={g.path}>{g.title}</a></li>)}
+            <li><a href="/sync-fee-estimator/">Sync fee estimator</a></li>
             <li><a href="/glossary/">Licensing glossary</a></li>
           </ul>
         </div>

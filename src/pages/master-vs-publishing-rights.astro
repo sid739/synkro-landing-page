@@ -1,0 +1,82 @@
+---
+import Guide from "../layouts/Guide.astro";
+import { site, type Faq as FaqItem } from "../data/site";
+
+const toc: [string, string][] = [
+  ["two", "Two copyrights in every song"],
+  ["owners", "Who owns each side"],
+  ["licenses", "Which licenses you need"],
+  ["royalties", "How each side gets paid"],
+  ["find", "How to find the owners"],
+];
+
+const faq: FaqItem[] = [
+  { q: "Is the master or the publishing worth more?", a: "Neither by default. In sync licensing the two sides are commonly paid the same fee, often on most favoured nations (MFN) terms. Over a song's life the balance depends on how it earns: streaming pays more to the recording, while radio, TV and covers pay the writers and publishers through performance and mechanical royalties." },
+  { q: "If I re-record a song, do I need the master license?", a: "No. A new recording of the song (a cover, or a sound-alike made for you) needs only the sync license from the publishers, because you own your new recording. It must not imitate the original recording so closely that it copies it." },
+  { q: "Can an artist own both the master and the publishing?", a: "Yes. Independent artists who write their own songs and release without a label often own both, which makes their tracks one-stop: one agreement covers everything." },
+  { q: "What are ISRC and ISWC codes?", a: "An ISRC identifies a specific recording (the master). An ISWC identifies a musical work (the composition). One song has one ISWC but can have many ISRCs, one for each recording of it." },
+];
+---
+<Guide
+  path="/master-vs-publishing-rights/"
+  title="Master vs publishing rights: what's the difference?"
+  description="Master rights cover a recording; publishing rights cover the song itself. Who owns each, which licenses you need to use music in video, how each side is paid, and how to find the owners."
+  published="2026-11-04"
+  heading='Master vs <span class="hl">publishing rights</span>'
+  crumb="Master vs publishing rights"
+  toc={toc}
+  faq={faq}
+  faqTitle="Master and publishing questions"
+>
+  <p slot="answer">Every recorded song has two copyrights. The <strong>master</strong> is the recording itself, usually owned by a record label or the artist. The <strong>publishing</strong> is the composition, meaning the melody and lyrics, owned by the songwriters and their publishers. To use an existing recording in a video, you need permission from both.</p>
+
+  <section id="two">
+    <h2>Two copyrights in every song</h2>
+    <div class="split">
+      <div><h3>The master</h3><p>One specific recorded performance: the sound file you hear. A song can have many masters (the original, a live version, a remix, a cover by another artist), each a separate copyright.</p></div>
+      <div><h3>The publishing</h3><p>The song as written: its melody, harmony and lyrics, whoever performs it. There is one composition copyright, shared between everyone who wrote it.</p></div>
+    </div>
+    <table>
+      <thead><tr><th scope="col"></th><th scope="col">Master</th><th scope="col">Publishing</th></tr></thead>
+      <tbody>
+        <tr><td>Covers</td><td>A recording</td><td>The composition</td></tr>
+        <tr><td>Usually owned by</td><td>Record label, distributor or artist</td><td>Songwriters and their publishers</td></tr>
+        <tr><td>License for video</td><td>Master use license</td><td>Sync license</td></tr>
+        <tr><td>Identifier</td><td>ISRC</td><td>ISWC</td></tr>
+        <tr><td>Typical owners per song</td><td>Often one</td><td>Often several, by share</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="owners">
+    <h2>Who owns each side</h2>
+    <p><strong>Masters</strong> are usually owned by the record label that paid for the recording, or by the artist when they release independently. Distributors and catalog owners may control them by licence or purchase. A master is often owned outright by one party, though collaborations and joint releases can split it.</p>
+    <p><strong>Publishing</strong> starts with the songwriters. Most writers assign or license their share to a music publisher, which licenses it and collects for them. A song written by three people can have three publishers, each owning a percentage of the composition: the <a href="/glossary/publishing-split/">publishing split</a>, which adds up to 100%.</p>
+  </section>
+
+  <section id="licenses">
+    <h2>Which licenses you need</h2>
+    <ul class="bullets">
+      <li><strong>Using an existing recording:</strong> a <a href="/glossary/master-use-license/">master use license</a> from the master owner, and a <a href="/glossary/sync-license/">sync license</a> from every publisher, for their share.</li>
+      <li><strong>Re-recording the song:</strong> only the sync license, because the new recording is yours.</li>
+      <li><strong>A one-stop track:</strong> one agreement, because a single party controls both sides. See <a href="/glossary/one-stop/">one-stop</a>.</li>
+    </ul>
+    <p>Every owner has to agree. If one co-publisher declines, the song can't be used, which is why seeing every owner before you shortlist saves time. Fees across owners are often aligned on <a href="/glossary/mfn/">MFN</a> terms.</p>
+  </section>
+
+  <section id="royalties">
+    <h2>How each side gets paid</h2>
+    <p><strong>From sync:</strong> both sides receive their share of the one-off fee, as agreed in each license. See <a href="/sync-licensing-cost/">how much it costs to license a song</a>.</p>
+    <p><strong>After release:</strong> when the film, show or ad is broadcast or performed in public, broadcasters pay performance royalties to <a href="/glossary/pro/">performing rights organisations</a>, which pay writers and publishers based on the <a href="/glossary/cue-sheet/">cue sheet</a>. In many countries, recordings also earn neighbouring-rights income for performers and labels when they're broadcast.</p>
+  </section>
+
+  <section id="find">
+    <h2>How to find the owners</h2>
+    <ol class="howto">
+      <li><strong>Start with the recording.</strong> The label or distributor on the release usually controls the master. Its ISRC identifies it.</li>
+      <li><strong>Look up the song.</strong> Performing rights organisations' public repertoire searches (such as ASCAP and BMI's Songview) list the writers and publishers of a work, and its ISWC.</li>
+      <li><strong>Confirm the splits.</strong> Check each publisher's share and whether an administrator licenses on its behalf.</li>
+    </ol>
+    <p>On {site.name}, every search result shows the master owner and each publisher with their share, and one license request reaches all of them.</p>
+  </section>
+</Guide>

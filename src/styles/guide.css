@@ -1,0 +1,42 @@
+/* Long-form guides (src/layouts/Guide.astro): the short-answer box, a sticky contents list beside the
+   article, and the article's building blocks (side-by-side cards, term lists, numbered steps, tables). */
+.guide-answer { max-width: 760px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius-md); padding: 24px 28px; display: grid; gap: 10px; box-shadow: var(--shadow); }
+.guide-answer p:last-child { font-size: 18px; }
+.guide-answer a, .guide .body a:not(.btn) { color: var(--accent-text); text-underline-offset: 3px; }
+.guide-meta { font-size: 14px; color: var(--faint); }
+.guide { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); padding-bottom: clamp(64px, 8vw, 112px); }
+.guide .toc { position: sticky; top: 100px; align-self: start; display: grid; gap: 14px; }
+.guide .toc ol { list-style: none; padding: 0; display: grid; gap: 10px; border-left: 1px solid var(--line); }
+.guide .toc a { display: block; padding-left: 16px; text-decoration: none; color: var(--muted); font-size: 15px; }
+.guide .toc a:hover { color: var(--fg); }
+.guide .body { display: grid; gap: clamp(48px, 6vw, 72px); max-width: 760px; }
+.guide .body section { display: grid; gap: 16px; scroll-margin-top: 100px; }
+.guide .body h2 { font-size: clamp(30px, 3.4vw, 44px); line-height: 1; }
+.guide .body p, .guide .body dd, .guide .body li { color: var(--muted); }
+.guide .body strong { color: var(--fg); }
+.guide .split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.guide .split > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 22px; display: grid; gap: 10px; align-content: start; }
+.guide .terms { display: grid; border-top: 1px solid var(--line); }
+.guide .terms div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.guide .terms dt { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; }
+.guide .howto { padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.guide .howto li { counter-increment: s; display: block; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); font-size: 15px; line-height: 1.55; }
+.guide .howto li::before { content: counter(s, decimal-leading-zero); display: block; margin-bottom: 12px; font-family: var(--font-display); font-weight: 850; font-stretch: 125%; color: var(--accent-text); font-size: 22px; line-height: 1; }
+.guide .howto strong { display: block; margin-bottom: 6px; font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; font-size: 17px; }
+.guide .bullets { display: grid; gap: 10px; padding-left: 1.2em; }
+.guide table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.guide th, .guide td { text-align: left; padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.guide th { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.guide td { color: var(--muted); }
+.guide td:first-child { color: var(--fg); font-weight: 600; }
+.guide .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.guide .callout { background: var(--accent-soft); border-radius: var(--radius-md); padding: 20px 22px; display: grid; gap: 12px; justify-items: start; }
+.guide .callout p { color: var(--fg); }
+.guide .more { border-top: 1px solid var(--line); padding-top: 32px; display: grid; gap: 14px; }
+.guide .more ul { list-style: none; padding: 0; display: grid; gap: 12px; }
+.guide .more a { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; font-size: 19px; text-decoration: none; color: var(--fg); }
+.guide .more a:hover { color: var(--accent-text); }
+.guide .more li span { display: block; color: var(--muted); font-size: 15px; }
+@media (max-width: 1100px) { .guide .howto { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .guide { grid-template-columns: 1fr; } .guide .toc { position: static; } }
+@media (max-width: 560px) { .guide .howto, .guide .split { grid-template-columns: 1fr; } .guide .terms div { grid-template-columns: 1fr; gap: 4px; } .guide th, .guide td { padding-right: 8px; font-size: 14px; } }

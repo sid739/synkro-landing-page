@@ -28,9 +28,10 @@ export const demoHref: string = site.bookingUrl || "/#book-demo";
 
 export const nav = [
   { href: "/#how", label: "How it works" },
-  { href: "/#catalog", label: "Catalog" },
   { href: "/#roles", label: "Who it's for" },
-  { href: "/sync-licensing/", label: "Guide" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/sync-fee-estimator/", label: "Fee estimator" },
+  { href: "/sync-licensing/", label: "Guides" },
 ] as const;
 
 export const builtFor = ["Music Supervisors", "Labels & Publishers", "Creative Teams"] as const;
@@ -126,6 +127,7 @@ export const rightsHolders = ["Record Labels", "Publishers", "Distributors", "Ca
 export type Faq = { q: string; a: string };
 
 export const homeFaq: Faq[] = [
+  { q: "How much does Synkro cost?", a: "Nothing during the beta, for licensees and rights holders alike. We'll publish launch pricing, with at least 30 days' notice, before we charge for anything, and founding partners keep preferential terms." },
   { q: "Can we clear tracks if one of the co-publishers is not a registered Synkro user?", a: "Yes. Unregistered co-owners receive secure, sign-in-free portal links via email. They can review the terms sheet, chat directly in the negotiation thread, upload redlines, and execute digital signatures without needing to create a permanent account." },
   { q: "Does Synkro use AI-generated music?", a: "No. Synkro has no AI-generated catalog. Every track in the platform was recorded by a human artist. AI is used only to power the search and discovery experience. Every license on Synkro pays a human being for their work." },
   { q: "Does Synkro use my uploaded briefs, videos, or reference tracks to train AI models?", a: "Absolutely not. We enforce strict privacy boundaries. Any creative briefs, script PDFs, reference audio tracks, or videos you upload to Synkro are processed in isolated, transient memory buffers for search calculations only. Your confidential assets are never used to train public or proprietary models, nor are they ever shared with third parties." },

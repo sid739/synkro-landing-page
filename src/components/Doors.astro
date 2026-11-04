@@ -1,0 +1,47 @@
+---
+// Two ways in, near the top: one for people who license music and one for people who own it. Each
+// door makes its own short pitch and opens the sign-up form set to that side.
+const doors = [
+  {
+    side: "licensee", title: "I license music", who: "For music supervisors, ad agencies, production houses, game studios, film, TV and streaming teams.",
+    points: ["Search by brief, reference track or video", "See who owns every master and publishing share before you shortlist", "Clear with every rights holder in one thread"],
+    join: "Join as a licensee", more: { href: "/for/music-supervisors/", label: "More for licensees" },
+  },
+  {
+    side: "rights-holder", title: "I own music", who: "For record labels, publishers, distributors and catalog owners.",
+    points: ["Put your catalog in front of buyers searching right now", "Approve, counter or decline every request on your own contract", "Paid on signature, with no quarterly wait"],
+    join: "List your catalog", more: { href: "/for/labels-and-publishers/", label: "More for rights holders" },
+  },
+] as const;
+const tick = `<svg viewBox="0 0 16 16"><path d="M3.5 8.3l3 3 6-6.6"/></svg>`;
+---
+<section class="section doors-section" aria-label="Choose your side">
+  <div class="wrap doors">
+    {doors.map((d, i) => (
+      <article class:list={["door", d.side]} data-reveal style={`--rd: ${i * 120}ms`}>
+        <h2>{d.title}</h2>
+        <p class="who">{d.who}</p>
+        <ul>{d.points.map((p) => <li><span class="ok" aria-hidden="true" set:html={tick} />{p}</li>)}</ul>
+        <div class="go">
+          <a class="btn btn-primary" href={`/#join-${d.side}`} data-join={d.side}>{d.join} <span aria-hidden="true">→</span></a>
+          <a class="more" href={d.more.href}>{d.more.label}</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .doors { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  .door { border-radius: var(--radius-lg); padding: clamp(26px, 3.4vw, 44px); display: grid; gap: 18px; align-content: start; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+  .door.rights-holder { background: #000; color: #fff; border-color: #000; --muted: #a8a8b4; --accent-text: #8b7dff; }
+  h2 { font-family: var(--font-display); font-weight: 850; font-stretch: 68%; text-transform: uppercase; letter-spacing: -.005em; line-height: .92; font-size: clamp(44px, 5.4vw, 80px); }
+  .who { color: var(--muted); font-size: 17px; max-width: 40ch; }
+  ul { list-style: none; padding: 0; display: grid; gap: 10px; margin-top: 4px; }
+  li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start; font-weight: 600; line-height: 1.4; }
+  .ok { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); margin-top: -1px; }
+  .ok :global(svg) { width: 12px; height: 12px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .go { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 10px; }
+  .more { font-weight: 700; text-underline-offset: 5px; text-decoration-thickness: 1.5px; min-height: 44px; display: inline-flex; align-items: center; }
+  @media (max-width: 860px) { .doors { grid-template-columns: minmax(0, 1fr); } }
+</style>

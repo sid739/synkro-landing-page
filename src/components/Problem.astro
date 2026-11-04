@@ -1,0 +1,61 @@
+---
+import Waveform from "./Waveform.astro";
+import TrackLabel from "./TrackLabel.astro";
+
+// Clearing one song the usual way, step by step, against the same steps on Synkro.
+const steps: [string, string][] = [
+  ["Hunt through playlists, libraries and inboxes for options", "Search by brief, reference track or video"],
+  ["Look up the owners in registries and society databases", "See every owner and split on each result"],
+  ["Email the label and every publisher separately", "Send one request to all of them"],
+  ["Reconcile counter-offers across separate threads", "Agree terms with everyone in one thread"],
+  ["Chase each signature one by one", "Everyone signs in one place"],
+  ["Pay each owner separately", "Pay once; it's split automatically"],
+];
+const cross = `<svg viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>`;
+---
+<section class="section" id="problem" aria-labelledby="problem-title">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <TrackLabel n={1} label="The problem" />
+      <h2 id="problem-title">One song. <span class="hl">Two ways to clear it</span></h2>
+      <p class="lede">Most of the time it takes to license a song goes on finding owners and chasing replies, not on the deal itself.</p>
+      <Waveform seed={1} />
+    </div>
+
+    <div class="compare" data-play>
+      <div class="side old" data-reveal>
+        <p class="eyebrow">The usual way</p>
+        <ol>
+          {steps.map(([before], i) => <li class="a" style={`--i: ${i}`}><span class="mark" aria-hidden="true" set:html={cross} />{before}</li>)}
+        </ol>
+        <p class="total"><span>Typical time</span><b>Weeks to months</b></p>
+      </div>
+      <div class="side new" data-reveal style="--rd: 120ms">
+        <p class="eyebrow">On Synkro</p>
+        <ol>
+          {steps.map(([, after], i) => <li class="a" style={`--i: ${i}; --d: 300ms`}><span class="tick" style={`--i: ${i}; --d: 500ms`}>✓</span>{after}</li>)}
+        </ol>
+        <p class="total"><span>Typical time</span><b>Instantly to a week</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+  .side { border-radius: var(--radius-lg); padding: clamp(24px, 3vw, 40px); display: grid; gap: 22px; align-content: start; }
+  .old { background: var(--surface); border: 1px solid var(--line); }
+  .new { background: #000; color: #fff; border: 1px solid #000; --muted: #a8a8b4; }
+  .new .eyebrow { color: #8b7dff; }
+  ol { list-style: none; padding: 0; display: grid; gap: 4px; counter-reset: step; }
+  li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 16px; line-height: 1.4; }
+  .new li { border-color: #26262e; font-weight: 600; }
+  .old li { color: var(--muted); }
+  .mark { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); }
+  .mark :global(svg) { width: 12px; height: 12px; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; padding-top: 6px; }
+  .total span { font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .total b { font-family: var(--font-display); font-weight: 850; letter-spacing: -.03em; font-size: clamp(24px, 2.4vw, 32px); }
+  .new .total b { color: #8b7dff; }
+  @media (max-width: 760px) { .compare { grid-template-columns: minmax(0, 1fr); } }
+</style>

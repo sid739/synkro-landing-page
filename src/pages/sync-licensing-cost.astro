@@ -1,0 +1,89 @@
+---
+import Guide from "../layouts/Guide.astro";
+import { site, type Faq as FaqItem } from "../data/site";
+import { media, usd } from "../data/fees";
+
+const toc: [string, string][] = [
+  ["by-media", "Typical sync fees by media"],
+  ["drivers", "What drives the price"],
+  ["split", "How the fee is split"],
+  ["other-costs", "Other costs to budget for"],
+  ["save", "How to pay less"],
+];
+
+const faq: FaqItem[] = [
+  { q: "How much does it cost to license a famous song?", a: "Well-known songs in national or worldwide advertising are commonly licensed for six figures, and the most famous can cost far more. Some are not available for advertising at any price, because the artist or writers refuse." },
+  { q: "Can I license a song for free?", a: "Sometimes. Some independent artists agree to free or low-cost uses for exposure, and some catalogs offer no-fee licenses for non-commercial or student projects. Always get the permission in writing from every owner, even when no fee is paid." },
+  { q: "Is a sync fee a one-off payment?", a: "Usually, yes. The fee covers the agreed media, territory and term. Extending any of those later, for example running an ad for another year, is a new fee, often agreed in advance as an option." },
+  { q: "Who pays the performance royalties?", a: "Not the licensee. When the finished work is broadcast or performed publicly, broadcasters and venues pay performance royalties to performing rights organisations, which pay writers and publishers. They are separate from the sync fee." },
+];
+---
+<Guide
+  path="/sync-licensing-cost/"
+  title="How much does it cost to license a song? Sync fees explained"
+  description="Typical sync licensing fees for ads, TV, film, trailers and games, what drives the price, how the fee is split between master and publishing owners, and how to pay less."
+  published="2026-11-04"
+  heading='How much does it cost to <span class="hl">license a song?</span>'
+  crumb="Sync licensing costs"
+  toc={toc}
+  faq={faq}
+  faqTitle="Sync fee questions"
+>
+  <p slot="answer">Anywhere from a few hundred dollars to six figures or more. A track by an emerging artist in an independent film can cost under $1,000; a well-known song in a national TV campaign can cost $100,000 or more. Each fee is negotiated for one use and is usually shared between the recording's owner and the song's publishers.</p>
+
+  <section id="by-media">
+    <h2>Typical sync fees by media</h2>
+    <p>These are broad, indicative totals for a track by an emerging or independent artist: in one country for up to a year for ads, trailers and corporate video, and worldwide in perpetuity for film, TV and games, which are normally licensed that way. Established artists typically cost several times more, and hits many times more.</p>
+    <table>
+      <thead><tr><th scope="col">Media</th><th scope="col">Typical total fee</th></tr></thead>
+      <tbody>{media.map((m) => <tr><td>{m.label}</td><td class="num">{usd(m.low)}–{usd(m.high)}</td></tr>)}</tbody>
+    </table>
+    <div class="callout">
+      <p>Want a range for your own use? Pick the media, the territory, the term and how well known the track is.</p>
+      <a class="btn btn-primary" href="/sync-fee-estimator/">Try the fee estimator</a>
+    </div>
+  </section>
+
+  <section id="drivers">
+    <h2>What drives the price</h2>
+    <dl class="terms">
+      <div><dt>The song</dt><dd>How well known the track and the artist are. A current hit costs far more than a deep cut or a new release.</dd></div>
+      <div><dt>The use</dt><dd>Whether the music is featured (a main title, an ad built around the song) or in the background, how long it plays, and whether it's edited or re-recorded.</dd></div>
+      <div><dt>Media</dt><dd>Advertising pays most, then trailers and studio films; independent film, online video and series episodes pay less.</dd></div>
+      <div><dt>Territory</dt><dd>One country costs less than a region, and a region less than worldwide.</dd></div>
+      <div><dt>Term</dt><dd>Ads are licensed for months or years and pay again to extend. Film, TV and games are usually licensed in perpetuity.</dd></div>
+      <div><dt>Exclusivity</dt><dd>Stopping other brands in your category from using the track adds a premium.</dd></div>
+      <div><dt>Owners</dt><dd>The more owners, the longer clearance takes, and every one of them must agree on the price.</dd></div>
+    </dl>
+  </section>
+
+  <section id="split">
+    <h2>How the fee is split</h2>
+    <p>Using an existing recording needs two permissions: a <a href="/glossary/master-use-license/">master use license</a> from the recording's owner and a <a href="/glossary/sync-license/">sync license</a> from the song's publishers (see <a href="/master-vs-publishing-rights/">master vs publishing rights</a>).</p>
+    <p>The total is commonly split evenly between the two sides, and often on <a href="/glossary/mfn/">most favoured nations (MFN)</a> terms, so neither side gets less than the other. The publishing half is then shared according to the <a href="/glossary/publishing-split/">publishing split</a>.</p>
+    <p><strong>Example:</strong> a $20,000 fee pays $10,000 to the label for the master and $10,000 to the publishing side. If two publishers own 50% of the song each, they receive $5,000 each.</p>
+  </section>
+
+  <section id="other-costs">
+    <h2>Other costs to budget for</h2>
+    <ul class="bullets">
+      <li><strong>Options and extensions.</strong> Extra territories, media or time are cheaper when agreed up front as options than negotiated later.</li>
+      <li><strong>Agency or supervisor fees.</strong> A music supervisor or clearance service may charge for finding and clearing the track.</li>
+      <li><strong>Legal review.</strong> Large uses usually involve lawyers on both sides.</li>
+      <li><strong>Re-records and edits.</strong> A custom version or a cover needs the sync license and the cost of recording, but no master license.</li>
+    </ul>
+    <p>Performance royalties are not one of your costs: when the finished work is broadcast, broadcasters pay them to <a href="/glossary/pro/">performing rights organisations</a>, based on the <a href="/glossary/cue-sheet/">cue sheet</a>.</p>
+  </section>
+
+  <section id="save">
+    <h2>How to pay less</h2>
+    <ul class="bullets">
+      <li><strong>Choose one-stop tracks.</strong> When one party controls both sides, there's one negotiation and often a lower price. See <a href="/glossary/one-stop/">one-stop</a>.</li>
+      <li><strong>Look beyond the hits.</strong> Emerging and independent artists, and older catalog, often give the same feel for a fraction of the fee.</li>
+      <li><strong>Narrow the scope.</strong> License only the media, territory and term you need, and add options for the rest.</li>
+      <li><strong>Skip exclusivity</strong> unless the campaign needs it.</li>
+      <li><strong>Start early.</strong> Rush clearance gives owners less reason to negotiate.</li>
+      <li><strong>Know every owner before you shortlist.</strong> A track that can't clear in time costs more than its fee. On {site.name}, ownership is shown on every result and one request reaches every holder.</li>
+    </ul>
+  </section>
+</Guide>

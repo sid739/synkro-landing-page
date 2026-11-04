@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { catalogStats, glossary, homeFaq, site, steps } from "../data/site";
 import { principles, roles } from "../data/roles";
+import { guides } from "../data/guides";
 
 // llms.txt: a plain-text map of the site for AI assistants and answer engines (llmstxt.org).
 export const GET: APIRoute = () => {
@@ -28,7 +29,8 @@ export const GET: APIRoute = () => {
     "## Pages",
     `- [Home](${url("/")})`,
     `- [How it works](${url("/how-it-works/")})`,
-    `- [What is sync licensing?](${url("/sync-licensing/")}): a practical guide to sync licenses`,
+    ...guides.map((g) => `- [${g.title}](${url(g.path)}): ${g.short}`),
+    `- [Sync fee estimator](${url("/sync-fee-estimator/")}): an indicative fee range for a sync license, by media, territory, term and how well known the track is`,
     `- [Glossary](${url("/glossary/")}): music licensing terms in plain English`,
     ...glossary.map((t) => `  - [${t.term}](${url(`/glossary/${t.slug}/`)}): ${t.short}`),
     "",
